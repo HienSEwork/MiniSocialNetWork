@@ -1,0 +1,275 @@
+﻿@implements IDisposable
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IProfileService ProfileService
+@inject IGroupService GroupService
+@inject IChatService ChatService
+
+<aside class="nav-shell">
+    <AuthorizeView>
+        <Authorized>
+            <NavLink class="shortcut-item profile-shortcut" href="/profile">
+                <span class="shortcut-avatar">
+                    @if (!string.IsNullOrWhiteSpace(currentUserAvatarUrl))
+                    {
+                        <img src="@currentUserAvatarUrl" alt="@currentUserDisplayName" />
+                    }
+                    else
+                    {
+                        @GetInitials(currentUserDisplayName)
+                    }
+                </span>
+                <span class="shortcut-copy">
+                    <strong class="shortcut-label">@currentUserDisplayName</strong>
+                    <small>Trang cá nhân và cài đặt nhanh</small>
+                </span>
+            </NavLink>
+
+            <section class="shortcut-section shortcut-primary">
+                <div class="shortcut-section-head">
+                    <strong>Khám phá</strong>
+                </div>
+                <div class="shortcut-list">
+                    <NavLink class="shortcut-item" href="/" Match="NavLinkMatch.All">
+                        <span class="shortcut-icon-circle accent home">
+                            <AppIcon Name="feed-solid" />
+                        </span>
+                        <span class="shortcut-copy">
+                            <strong class="shortcut-label">Trang chủ</strong>
+                            <small>Bảng tin, stories và gợi ý mới</small>
+                        </span>
+                    </NavLink>
+                    <NavLink class="shortcut-item" href="/friends">
+                        <span class="shortcut-icon-circle accent friends">
+                            <AppIcon Name="friends-solid" />
+                        </span>
+                        <span class="shortcut-copy">
+                            <strong class="shortcut-label">Bạn bè</strong>
+                            <small>Quản lý lời mời và kết nối</small>
+                        </span>
+                    </NavLink>
+                    <NavLink class="shortcut-item" href="/groups">
+                        <span class="shortcut-icon-circle accent groups">
+                            <AppIcon Name="groups-solid" />
+                        </span>
+                        <span class="shortcut-copy">
+                            <strong class="shortcut-label">Nhóm</strong>
+                            <small>Không gian cộng đồng của bạn</small>
+                        </span>
+                    </NavLink>
+                    <NavLink class="shortcut-item" href="/chat">
+                        <span class="shortcut-icon-circle accent chat">
+                            <AppIcon Name="chat-solid" />
+                        </span>
+                        <span class="shortcut-copy">
+                            <strong class="shortcut-label">Tin nhắn</strong>
+                            <small>Chat realtime với bạn bè</small>
+                        </span>
+                    </NavLink>
+                    <NavLink class="shortcut-item" href="/saved">
+                        <span class="shortcut-icon-circle accent saved">
+                            <AppIcon Name="heart" />
+                        </span>
+                        <span class="shortcut-copy">
+                            <strong class="shortcut-label">Đã lưu</strong>
+                            <small>Xem lại các bài viết quan trọng</small>
+                        </span>
+                    </NavLink>
+                    <NavLink class="shortcut-item" href="/notifications">
+                        <span class="shortcut-icon-circle accent notify">
+                            <AppIcon Name="notifications-solid" />
+                        </span>
+                        <span class="shortcut-copy">
+                            <strong class="shortcut-label">Thông báo</strong>
+                            <small>Cập nhật tương tác mới nhất</small>
+                        </span>
+                    </NavLink>
+                </div>
+            </section>
+
+            <section class="shortcut-section">
+                <div class="shortcut-section-head">
+                    <strong>Nhóm của bạn</strong>
+                    <small>@groups.Count</small>
+                </div>
+                <div class="shortcut-list">
+                    @if (!string.IsNullOrWhiteSpace(loadError))
+                    {
+                        <p class="shortcut-fallback">@loadError</p>
+                    }
+                    else if (groups.Count == 0)
+                    {
+                        <p class="shortcut-fallback">Bạn chưa tham gia nhóm nào.</p>
+                    }
+                    else
+                    {
+                        @foreach (var group in groups)
+                        {
+                            <a class="shortcut-item" href="@($"/groups/{group.Id}")">
+                                <span class="shortcut-icon-circle group">
+                                    <AppIcon Name="groups" />
+                                </span>
+                                <span class="shortcut-copy">
+                                    <strong class="shortcut-label">@group.Name</strong>
+                                    <small>@group.MemberCount thành viên</small>
+                                </span>
+                            </a>
+                        }
+                    }
+                </div>
+            </section>
+
+            <section class="shortcut-section">
+                <div class="shortcut-section-head">
+                    <strong>Đang trò chuyện</strong>
+                    <small>@chatUsers.Count</small>
+                </div>
+                <div class="shortcut-list">
+                    @if (!string.IsNullOrWhiteSpace(loadError))
+                    {
+                        <p class="shortcut-fallback">@loadError</p>
+                    }
+                    else if (chatUsers.Count == 0)
+                    {
+                        <p class="shortcut-fallback">Chưa có cuộc trò chuyện gần đây.</p>
+                    }
+                    else
+                    {
+                        @foreach (var user in chatUsers)
+                        {
+                            <a class="shortcut-item" href="@($"/chat/{user.Id}")">
+                                <span class="shortcut-avatar small">
+                                    @if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
+                                    {
+                                        <img src="@user.AvatarUrl" alt="@user.DisplayName" />
+                                    }
+                                    else
+                                    {
+                                        @GetInitials(user.DisplayName)
+                                    }
+                                </span>
+                                <span class="shortcut-copy">
+                                    <strong class="shortcut-label">@user.DisplayName</strong>
+                                    <small>@(!string.IsNullOrWhiteSpace(user.Bio) ? user.Bio : user.Email)</small>
+                                </span>
+                            </a>
+                        }
+                    }
+                </div>
+            </section>
+
+            <form action="Account/Logout" method="post" class="logout-form shortcut-footer">
+                <AntiforgeryToken />
+                <input type="hidden" name="ReturnUrl" value="/Account/Login" />
+                <button type="submit" class="shortcut-item shortcut-button">
+                    <span class="shortcut-icon-circle logout">
+                        <AppIcon Name="logout" />
+                    </span>
+                    <span class="shortcut-copy">
+                        <strong class="shortcut-label">Đăng xuất</strong>
+                        <small>Thoát khỏi tài khoản hiện tại</small>
+                    </span>
+                </button>
+            </form>
+        </Authorized>
+        <NotAuthorized>
+            <div class="shortcut-list guest-list">
+                <a class="shortcut-item" href="/Account/Login">
+                    <span class="shortcut-icon-circle accent home">
+                        <AppIcon Name="profile" />
+                    </span>
+                    <span class="shortcut-copy">
+                        <strong class="shortcut-label">Đăng nhập</strong>
+                        <small>Vào bảng tin cá nhân của bạn</small>
+                    </span>
+                </a>
+                <a class="shortcut-item" href="/Account/Register">
+                    <span class="shortcut-icon-circle accent groups">
+                        <AppIcon Name="friends" />
+                    </span>
+                    <span class="shortcut-copy">
+                        <strong class="shortcut-label">Đăng ký</strong>
+                        <small>Tạo tài khoản để bắt đầu kết nối</small>
+                    </span>
+                </a>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</aside>
+
+@code {
+    private readonly List<GroupSummaryDto> groups = new();
+    private readonly List<UserSummaryDto> chatUsers = new();
+    private string? loadError;
+    private string currentUserId = string.Empty;
+    private string currentUserDisplayName = "Trang cá nhân";
+    private string? currentUserAvatarUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        NavigationManager.LocationChanged += OnLocationChanged;
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated != true)
+        {
+            return;
+        }
+
+        try
+        {
+            currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            var profile = await ProfileService.GetProfileAsync(currentUserId);
+
+            currentUserDisplayName = profile?.DisplayName ?? "Trang cá nhân";
+            currentUserAvatarUrl = profile?.AvatarUrl;
+
+            groups.Clear();
+            groups.AddRange((await GroupService.GetGroupsAsync(currentUserId))
+                .Where(group => group.IsJoined)
+                .Take(6));
+
+            chatUsers.Clear();
+            chatUsers.AddRange((await ChatService.GetChatUsersAsync(currentUserId))
+                .Take(6));
+
+            loadError = null;
+        }
+        catch
+        {
+            loadError = "Không thể tải dữ liệu bảng điều hướng.";
+        }
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    private static string GetInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "MS";
+        }
+
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "MS";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}

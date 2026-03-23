@@ -1,0 +1,884 @@
+# Project Plan — Mini Social Network (ASP.NET Core Blazor)
+## 1. Thiết kế cơ sở dữ liệu (Database Design / ERD)
+
+Hệ thống **Mini Social Network** được thiết kế theo mô hình quan hệ với các thực thể chính gồm **Users, Posts, Comments, Reactions, Messages, Groups và GroupMembers**. Cấu trúc này nhằm đảm bảo hệ thống có thể hỗ trợ các chức năng cốt lõi như xác thực người dùng, đăng bài viết, tương tác với bài viết, trò chuyện realtime và hoạt động nhóm.
+
+---
+
+### Users
+
+Bảng **Users** lưu trữ thông tin tài khoản của người dùng trong hệ thống. Đây là bảng trung tâm, liên kết với hầu hết các bảng khác như Posts, Comments, Messages và Groups.
+
+Các trường chính gồm:
+
+* **Id**: khóa chính của người dùng.
+* **Username**: tên hiển thị của người dùng.
+* **Email**: email dùng cho đăng nhập.
+* **PasswordHash**: mật khẩu được mã hóa bằng thuật toán hash.
+* **AvatarUrl**: đường dẫn ảnh đại diện.
+* **Bio**: mô tả ngắn về người dùng.
+* **CreatedDate**: thời điểm tạo tài khoản.
+
+Một người dùng có thể:
+
+* tạo nhiều bài viết
+* viết nhiều bình luận
+* gửi nhiều tin nhắn
+* tham gia nhiều nhóm
+
+Do đó bảng **Users** có quan hệ **1-n** với nhiều bảng khác.
+
+---
+
+### Posts
+
+Bảng **Posts** lưu các bài đăng của người dùng trên news feed. Bài viết có thể chứa nội dung văn bản, hình ảnh hoặc video.
+
+Các trường gồm:
+
+* **Id**: khóa chính của bài viết.
+* **UserId**: khóa ngoại tham chiếu đến bảng Users.
+* **Content**: nội dung văn bản của bài viết.
+* **MediaUrl**: đường dẫn đến file media (ảnh hoặc video).
+* **MediaType**: loại media (text, image, video).
+* **CreatedDate**: thời điểm tạo bài viết.
+* **IsDeleted**: cờ đánh dấu soft delete.
+
+Một người dùng có thể đăng nhiều bài viết nên quan hệ giữa **Users và Posts là 1-n**.
+
+---
+
+### Comments
+
+Bảng **Comments** lưu các bình luận trên bài viết.
+
+Các trường gồm:
+
+* **Id**: khóa chính của bình luận.
+* **PostId**: khóa ngoại tham chiếu đến bảng Posts.
+* **UserId**: người viết bình luận.
+* **Content**: nội dung bình luận.
+* **CreatedDate**: thời điểm bình luận.
+
+Quan hệ:
+
+* Một bài viết có thể có nhiều bình luận → **Posts 1-n Comments**.
+* Một người dùng có thể viết nhiều bình luận → **Users 1-n Comments**.
+
+---
+
+### Reactions
+
+Bảng **Reactions** lưu thông tin người dùng tương tác với bài viết.
+
+Các loại reaction có thể gồm:
+
+* Like
+* Love
+* Haha
+
+Các trường gồm:
+
+* **Id**: khóa chính.
+* **PostId**: bài viết được react.
+* **UserId**: người thực hiện react.
+* **Type**: loại reaction.
+
+Mỗi người dùng chỉ nên có **1 reaction cho mỗi bài viết**, do đó có thể áp dụng ràng buộc unique trên cặp **(PostId, UserId)**.
+
+---
+
+### Messages
+
+Bảng **Messages** dùng cho chức năng chat realtime. Tin nhắn có thể là tin nhắn riêng hoặc tin nhắn trong group.
+
+Các trường:
+
+* **Id**: khóa chính của tin nhắn.
+* **SenderId**: người gửi.
+* **ReceiverId**: người nhận (trong chat riêng).
+* **Content**: nội dung tin nhắn.
+* **CreatedDate**: thời gian gửi.
+* **IsGroupMessage**: xác định đây là tin nhắn group hay private.
+* **GroupId**: nếu là group message thì liên kết đến bảng Groups.
+
+Quan hệ:
+
+* Users 1-n Messages (sender)
+* Groups 1-n Messages (group chat)
+
+---
+
+### Groups
+
+Bảng **Groups** lưu thông tin các nhóm trong hệ thống.
+
+Các trường:
+
+* **Id**: khóa chính.
+* **Name**: tên nhóm.
+* **Description**: mô tả nhóm.
+* **OwnerId**: người tạo nhóm.
+* **CreatedDate**: thời gian tạo nhóm.
+
+Một nhóm có thể:
+
+* có nhiều thành viên
+* có nhiều tin nhắn
+* có nhiều bài viết
+
+---
+
+### GroupMembers
+
+Bảng **GroupMembers** dùng để quản lý thành viên của nhóm.
+
+Các trường:
+
+* **GroupId**: khóa ngoại tham chiếu Groups.
+* **UserId**: khóa ngoại tham chiếu Users.
+* **Role**: vai trò trong nhóm (Owner, Admin, Member).
+
+Bảng này tạo quan hệ **n-n giữa Users và Groups**, vì một người có thể tham gia nhiều nhóm và một nhóm có nhiều thành viên.
+
+---
+
+### Quan hệ tổng thể
+
+Cấu trúc quan hệ chính của hệ thống như sau:
+
+* Users 1-n Posts
+* Users 1-n Comments
+* Users 1-n Messages
+* Posts 1-n Comments
+* Posts 1-n Reactions
+* Groups n-n Users (thông qua GroupMembers)
+* Groups 1-n Messages
+
+Thiết kế này đảm bảo hệ thống có thể mở rộng và vẫn giữ cấu trúc dữ liệu rõ ràng.
+
+---
+
+# 2. Cấu trúc Solution theo kiến trúc 3-Layer
+
+Hệ thống được tổ chức theo **kiến trúc 3 layer**, nhằm tách biệt trách nhiệm giữa các thành phần của ứng dụng. Điều này giúp hệ thống dễ bảo trì, dễ mở rộng và phù hợp với các dự án sử dụng ASP.NET Core.
+
+Ba tầng chính gồm:
+
+* **DAL – Data Access Layer**
+* **BLL – Business Logic Layer**
+* **Presentation Layer (Web / Blazor)**
+
+---
+
+## Data Access Layer (DAL)
+
+Data Access Layer chịu trách nhiệm làm việc trực tiếp với cơ sở dữ liệu. Tầng này bao gồm các entity models, DbContext và các repository.
+
+Trong DAL sẽ định nghĩa các entity tương ứng với bảng trong database, ví dụ như User, Post, Comment, Reaction, Message và Group.
+
+Ngoài ra, DAL cũng chứa lớp **DbContext** của Entity Framework Core. Lớp này định nghĩa các DbSet tương ứng với bảng dữ liệu và cấu hình các quan hệ giữa các bảng.
+
+Ví dụ DbContext:
+
+* DbSet<User>
+* DbSet<Post>
+* DbSet<Comment>
+* DbSet<Reaction>
+* DbSet<Message>
+* DbSet<Group>
+
+DAL cũng có thể sử dụng **Repository Pattern** để tách logic truy vấn dữ liệu khỏi business logic. Ví dụ các repository như UserRepository, PostRepository hoặc MessageRepository sẽ chứa các phương thức truy vấn dữ liệu như GetById, GetAll, Add, Update và Delete.
+
+Mục tiêu của DAL là đảm bảo các tầng phía trên không phải thao tác trực tiếp với database.
+
+---
+
+## Business Logic Layer (BLL)
+
+Business Logic Layer chứa các logic nghiệp vụ của hệ thống. Tầng này xử lý các quy tắc hoạt động của ứng dụng và đóng vai trò trung gian giữa Web Layer và DAL.
+
+Ví dụ, khi người dùng tạo bài viết, Blazor UI sẽ gọi PostService trong BLL. Service này sẽ kiểm tra dữ liệu hợp lệ, xử lý nghiệp vụ và sau đó gọi repository trong DAL để lưu dữ liệu.
+
+Một số service chính trong hệ thống gồm:
+
+* **AuthService**: xử lý đăng ký, đăng nhập và xác thực người dùng.
+* **PostService**: quản lý bài viết, bao gồm tạo, sửa, xóa và lấy danh sách bài viết.
+* **CommentService**: xử lý bình luận trên bài viết.
+* **ReactionService**: quản lý các loại reaction trên bài viết.
+* **ChatService**: xử lý logic liên quan đến tin nhắn.
+* **GroupService**: quản lý nhóm và thành viên nhóm.
+
+BLL giúp đảm bảo rằng mọi quy tắc nghiệp vụ được xử lý tại một nơi thống nhất, tránh việc logic bị phân tán trong giao diện hoặc trong tầng truy cập dữ liệu.
+
+---
+
+## Presentation Layer (Blazor Web)
+
+Presentation Layer là tầng giao diện người dùng. Trong dự án này, tầng này được xây dựng bằng **ASP.NET Core Blazor**, chịu trách nhiệm hiển thị dữ liệu và nhận tương tác từ người dùng.
+
+Các trang chính của hệ thống gồm:
+
+* Login Page
+* Register Page
+* News Feed Page
+* Post Detail Page
+* Chat Page
+* Group Page
+* Profile Page
+
+Ngoài ra, Blazor cho phép xây dựng các **component tái sử dụng**, ví dụ như PostCard, CommentSection hoặc ChatBox. Những component này giúp giao diện được tổ chức rõ ràng và dễ bảo trì.
+
+Tầng Web cũng chứa các **SignalR Hub** để xử lý các chức năng realtime như chat hoặc cập nhật reaction.
+
+Ví dụ:
+
+* **ChatHub**: xử lý gửi và nhận tin nhắn realtime.
+* **NotificationHub**: gửi thông báo khi có comment hoặc reaction mới.
+
+---
+
+## Luồng hoạt động của hệ thống
+
+Luồng xử lý trong kiến trúc 3 layer diễn ra theo thứ tự sau:
+
+1. Người dùng thực hiện thao tác trên giao diện Blazor, ví dụ tạo bài viết.
+
+2. Blazor component gửi request đến **PostService** trong Business Logic Layer.
+
+3. PostService kiểm tra dữ liệu, xử lý nghiệp vụ và gọi **PostRepository** trong DAL.
+
+4. Repository sử dụng Entity Framework Core để lưu dữ liệu vào database.
+
+5. Kết quả được trả ngược lại qua BLL và hiển thị trên giao diện.
+
+Với các chức năng realtime như chat hoặc reaction, Blazor client sẽ kết nối tới **SignalR Hub**, sau đó hub sẽ broadcast dữ liệu đến các client khác đang kết nối.
+
+---
+
+## Tổng kết
+
+Kiến trúc 3 layer giúp dự án được tổ chức rõ ràng và phù hợp với các ứng dụng web hiện đại. DAL chịu trách nhiệm truy cập dữ liệu, BLL xử lý nghiệp vụ và Web Layer hiển thị giao diện người dùng.
+
+Cấu trúc này không chỉ giúp dự án dễ phát triển trong giai đoạn đầu mà còn hỗ trợ mở rộng hệ thống trong tương lai, đặc biệt khi thêm các chức năng mới như notification system, media storage hoặc analytics dashboard.
+
+Mục tiêu: **đủ tính năng để demo + không quá phức tạp**
+
+Kiến trúc đề xuất:
+```
+BlazorSocialNetwork
+│
+├── SocialNetwork.DAL
+│      Entities
+│      DbContext
+│      Repositories
+│
+├── SocialNetwork.BLL
+│      Services
+│      Business Logic
+│
+└── SocialNetwork.Web
+       Blazor UI
+       SignalR Hubs
+```
+
+---
+
+# 1. Kiến trúc 3 Layer
+
+## 1. DAL (Data Access Layer)
+
+Chức năng:
+
+* Entity models
+* DbContext
+* Repository
+
+Ví dụ:
+
+```
+DAL
+ ├── Entities
+ │      User.cs
+ │      Post.cs
+ │      Comment.cs
+ │      Reaction.cs
+ │      Message.cs
+ │      Group.cs
+ │
+ ├── Repositories
+ │      IUserRepository
+ │      IPostRepository
+ │
+ └── SocialDbContext.cs
+```
+
+---
+
+## 2. BLL (Business Logic Layer)
+
+Chứa logic:
+
+```
+BLL
+ ├── Services
+ │      AuthService
+ │      PostService
+ │      CommentService
+ │      ChatService
+ │      GroupService
+```
+
+BLL gọi DAL.
+
+---
+
+## 3. Web Layer
+
+Blazor UI:
+
+```
+Web
+ ├── Pages
+ │      Login
+ │      Register
+ │      Feed
+ │      PostDetail
+ │      Chat
+ │      Groups
+ │
+ ├── Components
+ │      PostCard
+ │      CommentSection
+ │      ChatBox
+ │
+ └── SignalR
+        ChatHub
+        NotificationHub
+```
+
+---
+
+# 2. Database Design
+
+## Users
+
+```
+Users
+------
+Id
+Username
+Email
+PasswordHash
+AvatarUrl
+Bio
+CreatedDate
+```
+
+---
+
+## Posts
+
+```
+Posts
+------
+Id
+UserId
+Content
+MediaUrl
+MediaType (text/image/video)
+CreatedDate
+```
+
+---
+
+## Comments
+
+```
+Comments
+-------
+Id
+PostId
+UserId
+Content
+CreatedDate
+```
+
+---
+
+## Reactions
+
+```
+Reactions
+---------
+Id
+PostId
+UserId
+Type
+```
+
+Types:
+
+```
+Like
+Love
+Haha
+```
+
+---
+
+## Messages
+
+```
+Messages
+--------
+Id
+SenderId
+ReceiverId
+Content
+CreatedDate
+IsGroup
+GroupId
+```
+
+---
+
+## Groups
+
+```
+Groups
+-------
+Id
+Name
+Description
+OwnerId
+CreatedDate
+```
+
+---
+
+## GroupMembers
+
+```
+GroupMembers
+------------
+GroupId
+UserId
+Role
+```
+
+---
+
+# 3. Authentication
+
+### Features
+
+```
+Register
+Login
+Logout
+Forgot Password
+```
+
+Tech:
+
+```
+ASP.NET Identity
+JWT or Cookie Auth
+```
+
+Flow:
+
+```
+Register
+→ create user
+→ hash password
+
+Login
+→ verify password
+→ create auth cookie
+```
+
+Forgot password (simple version):
+
+```
+enter email
+generate reset token
+reset password page
+```
+
+Nếu muốn đơn giản:
+
+**có thể bỏ forgot password email**
+→ chỉ reset local.
+
+---
+
+# 4. Post System
+
+## CRUD Flow
+
+### Create Post
+
+User nhập:
+
+```
+Text
+Image
+Video
+```
+
+Flow:
+
+```
+UI
+→ PostService
+→ Repository
+→ Save DB
+```
+
+---
+
+### Read Post
+
+Feed query:
+
+```
+latest posts
+order by CreatedDate desc
+```
+
+---
+
+### Update Post
+
+Chỉ owner được sửa.
+
+---
+
+### Delete Post
+
+Soft delete:
+
+```
+IsDeleted
+```
+
+---
+
+# 5. Comment System
+
+CRUD:
+
+```
+Create comment
+Edit comment
+Delete comment
+Load comments
+```
+
+---
+
+# 6. Reaction System
+
+Realtime reaction.
+
+Types:
+
+```
+Like
+Love
+Haha
+```
+
+Table:
+
+```
+Reaction(PostId, UserId)
+```
+
+User chỉ react 1 lần.
+
+---
+
+# 7. Realtime Chat (SignalR)
+
+### ChatHub
+
+```
+public class ChatHub : Hub
+{
+    SendMessage()
+    JoinGroup()
+}
+```
+
+---
+
+### Private chat
+
+Flow:
+
+```
+User A → Hub
+Hub → User B
+```
+
+---
+
+### Group chat
+
+```
+Hub.Groups.AddToGroupAsync
+Hub.Clients.Group
+```
+
+---
+
+# 8. Group System
+
+Group CRUD:
+
+```
+Create group
+Edit group
+Delete group
+Join group
+Leave group
+```
+
+---
+
+## Group posts
+
+Group feed:
+
+```
+GroupPosts
+-----------
+Id
+GroupId
+UserId
+Content
+CreatedDate
+```
+
+---
+
+# 9. Dark / Light Theme
+
+Thực hiện bằng:
+
+```
+CSS variables
+```
+
+Ví dụ:
+
+```
+body.dark
+body.light
+```
+
+Toggle lưu trong:
+
+```
+localStorage
+```
+
+---
+
+# 10. Multi Language (Vi / En)
+
+Sử dụng:
+
+```
+ASP.NET Localization
+```
+
+Files:
+
+```
+Resources
+  Home.en.resx
+  Home.vi.resx
+```
+
+---
+
+# 11. Dashboard (Có nên làm?)
+
+Nên có **1 dashboard nhỏ**.
+
+Không cần admin complex.
+
+### Dashboard hiển thị
+
+```
+Total users
+Total posts
+Total comments
+Total groups
+```
+
+Biểu đồ:
+
+```
+Posts per day
+Users growth
+```
+
+---
+
+# 12. Full CRUD List
+
+## Users
+
+```
+Create
+Read
+Update
+Delete
+```
+
+Admin only.
+
+---
+
+## Posts
+
+```
+Create
+Read
+Update
+Delete
+```
+
+---
+
+## Comments
+
+```
+Create
+Update
+Delete
+```
+
+---
+
+## Groups
+
+```
+Create
+Edit
+Delete
+Join
+Leave
+```
+
+---
+
+# 13. Feature Priority (quan trọng với 2 tuần)
+
+## Priority 1 (bắt buộc)
+
+```
+Authentication
+Posts CRUD
+Comments
+Reaction
+Realtime chat
+Basic UI
+```
+
+---
+
+## Priority 2 (nên có)
+
+```
+Group chat
+Group posts
+Dark theme
+```
+
+---
+
+## Priority 3 (nếu còn thời gian)
+
+```
+Forgot password email
+Dashboard
+Multi-language
+Video upload
+```
+
+---
+
+
+# 15. Stack
+
+```
+ASP.NET Core 8
+Blazor Server
+SignalR
+Entity Framework Core
+SQL Server
+Bootstrap
+```
+
+---
+
+# 16. Demo Flow khi báo cáo
+
+1. Register user
+2. Login
+3. Create post
+4. Comment post
+5. React post
+6. Realtime chat
+7. Group chat
+8. Toggle dark mode
+9. Change language
+
+---
+
+# 17. Các feature nên bỏ để tránh quá tải
+
+Không nên làm:
+
+```
+Story
+Follow system
+Notification system
+File storage cloud
+AI moderation
+Video streaming
+```
+
+---
+
+# Kết luận
+
+Dự án này nếu giới hạn đúng:
+
+```
+Auth
+Posts
+Comments
+Reactions
+Realtime Chat
+Groups
+Theme
+```
+
+→ **2 tuần hoàn toàn làm được**
+
+---
+
+Nếu cần, tôi có thể viết tiếp **3 phần quan trọng nhất của project**:
+
+1. **ERD database hoàn chỉnh**
+2. **Cấu trúc solution chuẩn Visual Studio**
+3. **Flow realtime SignalR (chat + reaction + notification)**
+
+Những phần này sẽ quyết định **project chạy được hay không**.

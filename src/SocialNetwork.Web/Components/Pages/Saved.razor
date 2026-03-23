@@ -1,0 +1,75 @@
+@page "/saved"
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IPostService PostService
+
+<PageTitle>Bài viết đã lưu</PageTitle>
+
+<section class="page-section">
+    <div class="content-stack">
+        <header class="page-header">
+            <div>
+                <p class="section-kicker">Đã lưu</p>
+                <h1>Bài viết đã lưu</h1>
+            </div>
+        </header>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+        else if (isLoading)
+        {
+            <div class="panel">Đang tải bài viết đã lưu...</div>
+        }
+        else if (savedPosts.Count == 0)
+        {
+            <EmptyState Title="Chưa có bài viết đã lưu" Description="Lưu bài viết từ bảng tin để xem lại tại đây." />
+        }
+        else
+        {
+            <div class="section-grid">
+                @foreach (var post in savedPosts)
+                {
+                    <PostCard Post="post" ShowDetailLink="false" OnChanged="LoadSavedPostsAsync" />
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private readonly List<PostFeedItemDto> savedPosts = new();
+    private string currentUserId = string.Empty;
+    private string? errorMessage;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+        await LoadSavedPostsAsync();
+    }
+
+    private async Task LoadSavedPostsAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            savedPosts.Clear();
+            savedPosts.AddRange(await PostService.GetSavedPostsAsync(currentUserId));
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

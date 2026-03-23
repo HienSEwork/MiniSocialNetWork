@@ -1,0 +1,306 @@
+@page "/profile"
+@page "/profile/{UserId}"
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IProfileService ProfileService
+@inject IPostService PostService
+
+<PageTitle>Trang cá nhân</PageTitle>
+
+<section class="page-section">
+    <div class="content-stack">
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        @if (profile is null && string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="panel">Đang tải trang cá nhân...</div>
+        }
+        else if (profile is not null)
+        {
+            <article class="panel profile-card">
+                <div class="profile-banner" style="background-image:url('@GetProfileCover(profile.DisplayName)')"></div>
+
+                <div class="profile-content">
+                    <div class="avatar avatar-lg profile-avatar">
+                        @if (!string.IsNullOrWhiteSpace(profile.AvatarUrl))
+                        {
+                            <img src="@profile.AvatarUrl" alt="@profile.DisplayName" />
+                        }
+                        else
+                        {
+                            @GetInitials(profile.DisplayName)
+                        }
+                    </div>
+
+                    <div class="profile-copy">
+                        <div class="profile-title-row">
+                            <div>
+                                <h2>@profile.DisplayName</h2>
+                                <p class="profile-email">@profile.Email</p>
+                            </div>
+
+                            @if (isOwner)
+                            {
+                                <button class="btn btn-outline-dark" type="button" @onclick="ToggleEdit">
+                                    @(isEditing ? "Đóng" : "Chỉnh sửa")
+                                </button>
+                            }
+                        </div>
+
+                        <p class="profile-bio">@(!string.IsNullOrWhiteSpace(profile.Bio) ? profile.Bio : "Chưa có mô tả cá nhân.")</p>
+                    </div>
+
+                    <div class="meta-grid two-up profile-stats">
+                        <div class="meta-card">
+                            <span>Bài đăng</span>
+                            <strong>@profile.PostCount</strong>
+                        </div>
+                        <div class="meta-card">
+                            <span>Nhóm</span>
+                            <strong>@profile.GroupCount</strong>
+                        </div>
+                        <div class="meta-card">
+                            <span>Tham gia</span>
+                            <strong>@profile.CreatedDate.ToLocalTime().ToString("MM/yyyy")</strong>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            @if (isOwner && isEditing)
+            {
+                <EditForm Model="editForm" OnValidSubmit="SaveProfileAsync" class="panel section-grid">
+                    <DataAnnotationsValidator />
+                    <h3>Cập nhật hồ sơ</h3>
+
+                    <div class="form-floating">
+                        <InputText @bind-Value="editForm.DisplayName" class="form-control" placeholder="Tên hiển thị" />
+                        <label>Tên hiển thị</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <InputText @bind-Value="editForm.AvatarUrl" class="form-control" placeholder="/media/demo/avatars/admin.jpg" />
+                        <label>Ảnh đại diện</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <InputTextArea @bind-Value="editForm.Bio" class="form-control profile-textarea" placeholder="Giới thiệu ngắn" />
+                        <label>Giới thiệu</label>
+                    </div>
+
+                    <div class="profile-edit-actions">
+                        <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+                    </div>
+                </EditForm>
+            }
+
+            @if (userPosts.Count == 0)
+            {
+                <EmptyState Title="Chưa có bài đăng" Description="Không có bài đăng nào để hiển thị." />
+            }
+            else
+            {
+                <div class="section-grid">
+                    @foreach (var post in userPosts)
+                    {
+                        <PostCard Post="post" ShowDetailLink="false" OnChanged="LoadAsync" />
+                    }
+                </div>
+            }
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public string? UserId { get; set; }
+
+    private string currentUserId = string.Empty;
+    private string viewedUserId = string.Empty;
+    private string? errorMessage;
+    private ProfileDto? profile;
+    private readonly List<PostFeedItemDto> userPosts = new();
+    private bool isEditing;
+    private ProfileEditModel editForm = new();
+
+    private bool isOwner => viewedUserId == currentUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+        viewedUserId = UserId ?? currentUserId;
+        await LoadAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (string.IsNullOrWhiteSpace(currentUserId))
+        {
+            return;
+        }
+
+        viewedUserId = UserId ?? currentUserId;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            profile = await ProfileService.GetProfileAsync(viewedUserId);
+            var feed = await PostService.GetFeedAsync(currentUserId);
+
+            userPosts.Clear();
+            userPosts.AddRange(feed.Where(post => post.UserId == viewedUserId));
+
+            if (profile is not null)
+            {
+                editForm = new ProfileEditModel
+                {
+                    DisplayName = profile.DisplayName,
+                    AvatarUrl = profile.AvatarUrl,
+                    Bio = profile.Bio
+                };
+            }
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private void ToggleEdit() => isEditing = !isEditing;
+
+    private async Task SaveProfileAsync()
+    {
+        try
+        {
+            await ProfileService.UpdateProfileAsync(
+                currentUserId,
+                new UpdateProfileRequest(
+                    editForm.DisplayName ?? string.Empty,
+                    editForm.AvatarUrl,
+                    editForm.Bio));
+
+            isEditing = false;
+            await LoadAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private static string GetProfileCover(string displayName) =>
+        displayName.Contains("Alice", StringComparison.OrdinalIgnoreCase)
+            ? "/media/demo/groups/design.jpg"
+            : "/media/demo/groups/engineering.jpg";
+
+    private static string GetInitials(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "MS";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+
+    private sealed class ProfileEditModel
+    {
+        public string? DisplayName { get; set; }
+
+        public string? AvatarUrl { get; set; }
+
+        public string? Bio { get; set; }
+    }
+}
+
+<style>
+    .profile-card {
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .profile-banner {
+        min-height: 220px;
+        background-position: center;
+        background-size: cover;
+        position: relative;
+    }
+
+    .profile-banner::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.08), rgba(15, 23, 42, 0.42));
+    }
+
+    .profile-content {
+        display: grid;
+        gap: 16px;
+        padding: 0 20px 20px;
+        margin-top: -34px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-avatar {
+        width: 88px;
+        height: 88px;
+        font-size: 28px;
+        border: 4px solid var(--bg-shell);
+    }
+
+    .profile-copy,
+    .profile-title-row {
+        display: grid;
+        gap: 8px;
+    }
+
+    .profile-title-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+    }
+
+    .profile-email,
+    .profile-bio {
+        margin: 0;
+    }
+
+    .profile-email {
+        color: var(--text-muted);
+    }
+
+    .profile-bio {
+        color: var(--text-secondary);
+        line-height: 1.55;
+    }
+
+    .profile-stats {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .profile-textarea {
+        min-height: 120px;
+    }
+
+    .profile-edit-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>

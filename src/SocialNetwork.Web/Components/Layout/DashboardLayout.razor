@@ -1,0 +1,24 @@
+@inherits LayoutComponentBase
+
+<div class="dashboard-shell">
+    <header class="dashboard-topbar">
+        <a class="dashboard-brand" href="/dashboard">
+            <span class="dashboard-brand-badge">DB</span>
+            <span class="dashboard-brand-copy">
+                <strong>Mini Social Dashboard</strong>
+                <small>Tổng quan hệ thống</small>
+            </span>
+        </a>
+
+        <div class="dashboard-topbar-actions">
+            <a class="dashboard-link" href="/">Về trang chủ</a>
+            <a class="dashboard-link secondary" href="/">Mở trang chủ</a>
+        </div>
+    </header>
+
+    <main class="dashboard-stage">
+        <article class="dashboard-content page-enter">
+            @Body
+        </article>
+    </main>
+</div>

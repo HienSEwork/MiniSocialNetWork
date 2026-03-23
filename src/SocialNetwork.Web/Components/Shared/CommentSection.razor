@@ -1,0 +1,286 @@
+<section class="comment-shell">
+    <div class="comment-input-row">
+        <InputText @bind-Value="newComment" class="form-control" placeholder="Viết bình luận..." />
+        <button class="btn btn-outline-dark" @onclick="AddCommentAsync">
+            <AppIcon Name="comment" />
+            <span>Gửi</span>
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="text-danger small">@errorMessage</div>
+    }
+
+    @if (Comments.Count == 0)
+    {
+        <p class="comment-empty">Chưa có bình luận.</p>
+    }
+    else
+    {
+        <div class="comment-list">
+            @foreach (var comment in Comments)
+            {
+                <article class="comment-item">
+                    <div class="comment-head">
+                        <div class="comment-author">
+                            <div class="avatar comment-avatar">
+                                @if (!string.IsNullOrWhiteSpace(comment.AuthorAvatarUrl))
+                                {
+                                    <img src="@comment.AuthorAvatarUrl" alt="@comment.AuthorName" />
+                                }
+                                else
+                                {
+                                    @GetInitials(comment.AuthorName)
+                                }
+                            </div>
+
+                            <div class="comment-meta">
+                                <strong>@comment.AuthorName</strong>
+                                <span>@comment.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                        </div>
+
+                        @if (comment.CanEdit)
+                        {
+                            <div class="comment-actions">
+                                <button class="btn btn-link btn-sm" @onclick="() => BeginEdit(comment)">
+                                    <AppIcon Name="edit" />
+                                    <span>Sửa</span>
+                                </button>
+                                <button class="btn btn-link btn-sm text-danger" @onclick="() => DeleteCommentAsync(comment.Id)">
+                                    <AppIcon Name="delete" />
+                                    <span>Xóa</span>
+                                </button>
+                            </div>
+                        }
+                    </div>
+
+                    @if (editingCommentId == comment.Id)
+                    {
+                        <div class="comment-input-row">
+                            <InputText @bind-Value="editingContent" class="form-control" />
+                            <button class="btn btn-primary btn-sm" @onclick="() => SaveCommentAsync(comment.Id)">
+                                <AppIcon Name="check" />
+                                <span>Lưu</span>
+                            </button>
+                            <button class="btn btn-link btn-sm" @onclick="CancelEdit">Hủy</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="comment-content">@comment.Content</p>
+                    }
+                </article>
+            }
+        </div>
+    }
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public Guid PostId { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CommentDto> Comments { get; set; } = Array.Empty<CommentDto>();
+
+    [Parameter]
+    public EventCallback OnChanged { get; set; }
+
+    [Inject]
+    private IPostService PostService { get; set; } = default!;
+
+    [Inject]
+    private CurrentUserService CurrentUserService { get; set; } = default!;
+
+    [Inject]
+    private NotificationBroadcastService NotificationBroadcastService { get; set; } = default!;
+
+    [Inject]
+    private INotificationService NotificationService { get; set; } = default!;
+
+    [Inject]
+    private IPostService PostQueryService { get; set; } = default!;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
+
+    private string? newComment;
+    private Guid? editingCommentId;
+    private string? editingContent;
+    private string? errorMessage;
+
+    private async Task AddCommentAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            var authState = await AuthenticationStateTask;
+            var currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            await PostService.AddCommentAsync(currentUserId, new CreateCommentRequest(PostId, newComment ?? string.Empty));
+
+            var post = await PostQueryService.GetPostAsync(PostId, currentUserId);
+            if (post is not null)
+            {
+                var notifications = await NotificationService.CreateInteractionNotificationAsync(
+                    currentUserId,
+                    post.UserId,
+                    NotificationType.NewComment,
+                    "Bình luận mới",
+                    $"Đã bình luận: {Truncate(newComment ?? string.Empty)}",
+                    $"/posts/{PostId}");
+
+                await NotificationBroadcastService.BroadcastNotificationsAsync(notifications);
+            }
+
+            newComment = string.Empty;
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await OnChanged.InvokeAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private void BeginEdit(CommentDto comment)
+    {
+        editingCommentId = comment.Id;
+        editingContent = comment.Content;
+    }
+
+    private void CancelEdit()
+    {
+        editingCommentId = null;
+        editingContent = null;
+    }
+
+    private async Task SaveCommentAsync(Guid commentId)
+    {
+        errorMessage = null;
+
+        try
+        {
+            var authState = await AuthenticationStateTask;
+            var currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            await PostService.UpdateCommentAsync(currentUserId, commentId, editingContent ?? string.Empty);
+            CancelEdit();
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await OnChanged.InvokeAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task DeleteCommentAsync(Guid commentId)
+    {
+        errorMessage = null;
+
+        try
+        {
+            var authState = await AuthenticationStateTask;
+            var currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            await PostService.DeleteCommentAsync(currentUserId, commentId);
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await OnChanged.InvokeAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private static string Truncate(string value) =>
+        value.Length <= 80 ? value : $"{value[..77]}...";
+
+    private static string GetInitials(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "U";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+}
+
+<style>
+    .comment-shell {
+        display: grid;
+        gap: 10px;
+    }
+
+    .comment-input-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .comment-input-row .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .comment-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .comment-item {
+        padding: 12px 14px;
+        background: var(--bg-muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+    }
+
+    .comment-head,
+    .comment-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-between;
+        align-items: start;
+    }
+
+    .comment-author {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 10px;
+        align-items: center;
+    }
+
+    .comment-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+    }
+
+    .comment-meta {
+        display: grid;
+        gap: 2px;
+    }
+
+    .comment-meta span,
+    .comment-empty {
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+
+    .comment-content {
+        margin: 10px 0 0;
+        white-space: pre-wrap;
+        line-height: 1.55;
+        color: var(--text-primary);
+    }
+</style>

@@ -1,0 +1,165 @@
+<section class="panel conversation-shell">
+    <div class="conversation-header">
+        <div>
+            <h3>@Title</h3>
+            @if (!string.IsNullOrWhiteSpace(Subtitle))
+            {
+                <p>@Subtitle</p>
+            }
+        </div>
+        <span class="conversation-status">Trực tuyến</span>
+    </div>
+
+    <div class="message-list">
+        @if (Messages.Count == 0)
+        {
+            <p class="text-muted">@EmptyText</p>
+        }
+        else
+        {
+            @foreach (var message in Messages)
+            {
+                <article class="message-bubble @(message.IsMine ? "mine" : "theirs")">
+                    <p>@message.Content</p>
+                    <small>@message.CreatedDate.ToLocalTime().ToString("dd/MM HH:mm")</small>
+                </article>
+            }
+        }
+    </div>
+
+    <div class="send-row">
+        <InputText @bind-Value="draftMessage" class="form-control" placeholder="@Placeholder" />
+        <button class="btn btn-primary" @onclick="SendAsync">Gửi</button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <div class="text-danger small">@ErrorMessage</div>
+    }
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Subtitle { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<MessageDto> Messages { get; set; } = Array.Empty<MessageDto>();
+
+    [Parameter]
+    public string EmptyText { get; set; } = "Chưa có tin nhắn.";
+
+    [Parameter]
+    public string Placeholder { get; set; } = "Nhập tin nhắn";
+
+    [Parameter]
+    public string? ErrorMessage { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnSend { get; set; }
+
+    private string? draftMessage;
+
+    private async Task SendAsync()
+    {
+        if (string.IsNullOrWhiteSpace(draftMessage))
+        {
+            return;
+        }
+
+        var message = draftMessage;
+        draftMessage = string.Empty;
+        await OnSend.InvokeAsync(message);
+    }
+}
+
+<style>
+    .conversation-shell {
+        display: grid;
+        gap: 12px;
+    }
+
+    .conversation-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .conversation-header p {
+        margin: 4px 0 0;
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+
+    .conversation-status {
+        display: inline-flex;
+        align-items: center;
+        min-height: 22px;
+        padding: 0 8px;
+        border-radius: 999px;
+        background: rgba(49, 162, 76, 0.1);
+        color: var(--success);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .message-list {
+        display: grid;
+        gap: 8px;
+        max-height: 32rem;
+        overflow-y: auto;
+    }
+
+    .message-bubble {
+        max-width: 72%;
+        padding: 10px 12px;
+        border-radius: 18px;
+    }
+
+    .message-bubble.mine {
+        justify-self: end;
+        background: #0866ff;
+        color: #fff;
+        border-top-right-radius: 8px;
+    }
+
+    .message-bubble.theirs {
+        justify-self: start;
+        background: #e4e6eb;
+        color: var(--text-primary);
+        border-top-left-radius: 8px;
+    }
+
+    body[data-theme="dark"] .message-bubble.theirs {
+        background: #3a4351;
+        color: var(--text-primary);
+    }
+
+    .message-bubble p,
+    .message-bubble small {
+        margin: 0;
+    }
+
+    .message-bubble p {
+        white-space: pre-wrap;
+        line-height: 1.45;
+        font-size: 15px;
+    }
+
+    .message-bubble small {
+        display: block;
+        margin-top: 4px;
+        opacity: 0.8;
+        font-size: 12px;
+    }
+
+    .send-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+</style>

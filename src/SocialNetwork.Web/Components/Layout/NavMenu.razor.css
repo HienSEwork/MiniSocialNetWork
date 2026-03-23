@@ -1,0 +1,213 @@
+﻿.nav-shell {
+    display: grid;
+    gap: 18px;
+    padding: 2px 0 18px;
+}
+
+.shortcut-section,
+.guest-list,
+.shortcut-footer {
+    display: grid;
+    gap: 8px;
+}
+
+.shortcut-section {
+    padding-top: 2px;
+}
+
+.shortcut-section-head {
+    padding: 0 12px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.shortcut-section-head strong {
+    font-size: 0.96rem;
+    color: var(--sidebar-text);
+    font-weight: 800;
+}
+
+.shortcut-section-head small {
+    color: var(--sidebar-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.shortcut-list {
+    display: grid;
+    gap: 4px;
+}
+
+.shortcut-item {
+    min-height: 64px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 18px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.shortcut-item:hover,
+.shortcut-item.active {
+    background: color-mix(in srgb, var(--sidebar-hover) 74%, transparent);
+    color: var(--text-primary);
+    box-shadow: inset 0 0 0 1px rgba(8, 102, 255, 0.08);
+    transform: translateX(2px);
+}
+
+.shortcut-copy {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+}
+
+.shortcut-copy small {
+    color: var(--sidebar-muted);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.shortcut-avatar,
+.shortcut-icon-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: #ffffff;
+    overflow: hidden;
+    color: var(--accent);
+    font-weight: 800;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+}
+
+.shortcut-avatar.small {
+    width: 38px;
+    height: 38px;
+    font-size: 12px;
+}
+
+.shortcut-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.shortcut-icon-circle.accent {
+    color: #fff;
+}
+
+.shortcut-icon-circle.home,
+.shortcut-icon-circle.notify {
+    background: linear-gradient(180deg, #2d88ff 0%, #0866ff 100%);
+}
+
+.shortcut-icon-circle.friends {
+    background: linear-gradient(180deg, #43b581 0%, #1f9d57 100%);
+}
+
+.shortcut-icon-circle.groups {
+    background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+.shortcut-icon-circle.chat {
+    background: linear-gradient(180deg, #06b6d4 0%, #0f7abf 100%);
+}
+
+.shortcut-icon-circle.saved {
+    background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
+}
+
+.shortcut-icon-circle.group {
+    background: color-mix(in srgb, var(--app-accent-soft) 62%, #ffffff 38%);
+}
+
+.shortcut-icon-circle.logout {
+    background: color-mix(in srgb, rgba(220, 38, 38, 0.1) 72%, #ffffff 28%);
+    color: var(--danger);
+}
+
+::deep(.shortcut-icon-circle .app-icon) {
+    width: 18px;
+    height: 18px;
+}
+
+.shortcut-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.96rem;
+    font-weight: 800;
+    color: inherit;
+}
+
+.profile-shortcut {
+    margin-bottom: 2px;
+    padding: 14px;
+    border-radius: 22px;
+    background:
+        linear-gradient(135deg, rgba(8, 102, 255, 0.1), rgba(0, 161, 92, 0.08)),
+        var(--bg-shell);
+    border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent);
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-shortcut .shortcut-avatar {
+    width: 52px;
+    height: 52px;
+}
+
+.shortcut-primary {
+    padding-top: 0;
+}
+
+.shortcut-button {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+.shortcut-fallback {
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 0.84rem;
+    color: var(--sidebar-muted);
+}
+
+@media (max-width: 1023.98px) {
+    .nav-shell {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .profile-shortcut,
+    .shortcut-footer {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .nav-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .shortcut-copy small {
+        white-space: normal;
+    }
+}

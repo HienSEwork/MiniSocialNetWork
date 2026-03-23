@@ -1,0 +1,272 @@
+﻿<EditForm Model="composer" OnValidSubmit="HandleSubmitAsync" class="panel composer-shell">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="composer-header">
+        <span class="composer-avatar avatar">
+            @if (!string.IsNullOrWhiteSpace(CurrentUserAvatarUrl))
+            {
+                <img src="@CurrentUserAvatarUrl" alt="@CurrentUserDisplayName" />
+            }
+            else
+            {
+                @GetInitials(CurrentUserDisplayName)
+            }
+        </span>
+
+        <div class="composer-prompt-shell">
+            <div class="form-floating composer-floating">
+                <InputTextArea @bind-Value="composer.Content" class="form-control composer-input" placeholder="Bạn đang nghĩ gì?" />
+                <label>@(string.IsNullOrWhiteSpace(CurrentUserDisplayName) ? "Chia sẻ gì đó" : $"{CurrentUserDisplayName} đang nghĩ gì?")</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="composer-toolbar">
+        <span class="composer-action-pill photo">
+            <AppIcon Name="album" />
+            <span>Ảnh</span>
+        </span>
+        <span class="composer-action-pill mood">
+            <AppIcon Name="activity" />
+            <span>Cảm xúc</span>
+        </span>
+        <span class="composer-action-pill place">
+            <AppIcon Name="location" />
+            <span>Check-in</span>
+        </span>
+        <span class="composer-action-pill tag">
+            <AppIcon Name="tag" />
+            <span>Gắn thẻ</span>
+        </span>
+    </div>
+
+    <div class="media-grid">
+        <div class="form-floating">
+            <InputSelect @bind-Value="composer.MediaType" class="form-select">
+                @foreach (var mediaType in Enum.GetValues<MediaType>())
+                {
+                    <option value="@mediaType">@GetMediaTypeLabel(mediaType)</option>
+                }
+            </InputSelect>
+            <label>Loại media</label>
+        </div>
+
+        <div class="form-floating">
+            <InputText @bind-Value="composer.MediaUrl" class="form-control" placeholder="https://..." />
+            <label>Liên kết media</label>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    <div class="composer-actions">
+        <p class="composer-helper">Giữ nguyên nội dung, thêm ảnh hoặc video nếu muốn làm bài đăng nổi bật hơn.</p>
+        <button type="submit" class="btn btn-primary">Đăng bài</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter, EditorRequired]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? CurrentUserDisplayName { get; set; }
+
+    [Parameter]
+    public string? CurrentUserAvatarUrl { get; set; }
+
+    [Parameter]
+    public Guid? GroupId { get; set; }
+
+    [Parameter]
+    public EventCallback OnCreated { get; set; }
+
+    [Inject]
+    private IPostService PostService { get; set; } = default!;
+
+    [Inject]
+    private NotificationBroadcastService NotificationBroadcastService { get; set; } = default!;
+
+    [Inject]
+    private INotificationService NotificationService { get; set; } = default!;
+
+    private ComposerModel composer = new();
+    private string? errorMessage;
+
+    private async Task HandleSubmitAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            var post = await PostService.CreatePostAsync(
+                CurrentUserId,
+                new CreatePostRequest(composer.Content ?? string.Empty, composer.MediaUrl, composer.MediaType, GroupId));
+
+            var notifications = await NotificationService.CreateFriendNotificationsForPostAsync(
+                CurrentUserId,
+                post.Id,
+                $"{post.AuthorName} vừa đăng: {Truncate(post.Content)}");
+
+            composer = new ComposerModel();
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await NotificationBroadcastService.BroadcastNotificationsAsync(notifications);
+            await OnCreated.InvokeAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private static string GetMediaTypeLabel(MediaType mediaType) => mediaType switch
+    {
+        MediaType.Image => "Ảnh",
+        MediaType.Video => "Video",
+        _ => "Văn bản"
+    };
+
+    private static string GetInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "MS";
+        }
+
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "MS";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+
+    private sealed class ComposerModel
+    {
+        public string? Content { get; set; }
+
+        public string? MediaUrl { get; set; }
+
+        public MediaType MediaType { get; set; }
+    }
+
+    private static string Truncate(string value) =>
+        value.Length <= 80 ? value : $"{value[..77]}...";
+}
+
+<style>
+    .composer-shell {
+        display: grid;
+        gap: 14px;
+        padding: 14px 16px 16px;
+    }
+
+    .composer-header {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+    }
+
+    .composer-avatar {
+        width: 46px;
+        height: 46px;
+        overflow: hidden;
+    }
+
+    .composer-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .composer-prompt-shell,
+    .media-grid {
+        display: grid;
+        gap: 12px;
+    }
+
+    .composer-floating :deep(textarea.form-control) {
+        padding-top: 1.55rem;
+    }
+
+    .composer-input {
+        min-height: 92px;
+        resize: vertical;
+        border-radius: 20px;
+        background: color-mix(in srgb, var(--bg-muted) 88%, #fff 12%);
+    }
+
+    .composer-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-top: 2px;
+        border-top: 1px solid var(--border-soft);
+    }
+
+    .composer-action-pill {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: var(--bg-muted);
+        border: 1px solid transparent;
+        color: var(--text-secondary);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .composer-action-pill.photo {
+        color: #16a34a;
+    }
+
+    .composer-action-pill.mood {
+        color: #d97706;
+    }
+
+    .composer-action-pill.place {
+        color: #0f7abf;
+    }
+
+    .composer-action-pill.tag {
+        color: #7c3aed;
+    }
+
+    .composer-action-pill:hover {
+        background: var(--bg-hover);
+        border-color: var(--border-soft);
+    }
+
+    .composer-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .composer-helper {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.86rem;
+    }
+
+    @@media (min-width: 768px) {
+        .media-grid {
+            grid-template-columns: 180px minmax(0, 1fr);
+        }
+    }
+</style>

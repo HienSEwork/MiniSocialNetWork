@@ -1,0 +1,237 @@
+@page "/friends"
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IFriendshipService FriendshipService
+@inject INotificationService NotificationService
+@inject NotificationBroadcastService NotificationBroadcastService
+
+<PageTitle>Bạn bè</PageTitle>
+
+<section class="page-section">
+    <div class="content-stack">
+        <div class="page-header">
+            <div>
+                <span class="section-kicker">Bạn bè</span>
+                <h2>Bạn bè</h2>
+            </div>
+            <span class="badge-soft success">@FriendCount đang kết nối</span>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        <article class="panel friends-toolbar">
+            <div class="friends-search-box">
+                <AppIcon Name="search" />
+                <span>Danh sách người dùng</span>
+            </div>
+        </article>
+
+        <div class="card-grid two-up">
+            @foreach (var person in people)
+            {
+                <article class="panel friend-card">
+                    <div class="friend-head">
+                        <div class="avatar avatar-lg">
+                            @if (!string.IsNullOrWhiteSpace(person.AvatarUrl))
+                            {
+                                <img src="@person.AvatarUrl" alt="@person.DisplayName" />
+                            }
+                            else
+                            {
+                                @GetInitials(person.DisplayName)
+                            }
+                        </div>
+
+                        <div>
+                            <div class="friend-title-row">
+                                <h3>@person.DisplayName</h3>
+                                <span class="friend-state @(person.IsFriend ? "connected" : "discover")">
+                                    @(person.IsFriend ? "Đã kết bạn" : "Gợi ý")
+                                </span>
+                            </div>
+                            <p class="text-muted">@person.Email</p>
+                        </div>
+                    </div>
+
+                    <p class="friend-bio">@(!string.IsNullOrWhiteSpace(person.Bio) ? person.Bio : "Chưa có mô tả.")</p>
+
+                    @if (person.IsFriend)
+                    {
+                        <button class="btn btn-outline-danger" @onclick="() => RemoveFriendAsync(person.UserId)">
+                            <AppIcon Name="delete" />
+                            <span>Hủy kết bạn</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="() => AddFriendAsync(person.UserId)">
+                            <AppIcon Name="friends" />
+                            <span>Kết bạn</span>
+                        </button>
+                    }
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+@code {
+    private readonly List<FriendSummaryDto> people = new();
+    private string currentUserId = string.Empty;
+    private string? errorMessage;
+
+    private int FriendCount => people.Count(person => person.IsFriend);
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            people.Clear();
+            people.AddRange(await FriendshipService.GetPeopleAsync(currentUserId));
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task AddFriendAsync(string otherUserId)
+    {
+        try
+        {
+            await FriendshipService.AddFriendAsync(currentUserId, otherUserId);
+            var notifications = await NotificationService.CreateInteractionNotificationAsync(
+                currentUserId,
+                otherUserId,
+                NotificationType.FriendAdded,
+                "Bạn mới",
+                "đã thêm bạn vào danh sách bạn bè.",
+                "/friends");
+
+            await NotificationBroadcastService.BroadcastNotificationsAsync(notifications);
+            await LoadAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task RemoveFriendAsync(string otherUserId)
+    {
+        try
+        {
+            await FriendshipService.RemoveFriendAsync(currentUserId, otherUserId);
+            await LoadAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private static string GetInitials(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "U";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+}
+
+<style>
+    .friends-toolbar {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .friends-search-box {
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 14px;
+        border-radius: 12px;
+        background: var(--bg-muted);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-soft);
+    }
+
+    .friend-card {
+        display: grid;
+        gap: 16px;
+    }
+
+    .friend-card .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .friend-head {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 16px;
+        align-items: center;
+    }
+
+    .friend-title-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .friend-title-row h3,
+    .friend-bio {
+        margin: 0;
+    }
+
+    .friend-state {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .friend-state.connected {
+        background: var(--app-highlight-soft);
+        color: var(--success);
+    }
+
+    .friend-state.discover {
+        background: var(--app-accent-soft);
+        color: var(--accent);
+    }
+
+    .friend-bio {
+        color: var(--text-secondary);
+        line-height: 1.65;
+    }
+</style>

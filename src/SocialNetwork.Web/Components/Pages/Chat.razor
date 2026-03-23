@@ -1,0 +1,305 @@
+@page "/chat"
+@page "/chat/{OtherUserId}"
+@attribute [Authorize]
+@implements IAsyncDisposable
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IChatService ChatService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Tin nhắn</PageTitle>
+
+<section class="page-section">
+    <div class="content-stack">
+        <div class="page-header">
+            <div>
+                <span class="section-kicker">Chat</span>
+                <h2>Tin nhắn</h2>
+            </div>
+            <span class="badge-soft">@chatUsers.Count cuộc trò chuyện</span>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        <div class="chat-layout">
+            <aside class="panel user-list">
+                <div class="user-list-header">
+                    <h3>Đoạn chat gần đây</h3>
+                </div>
+
+                @if (chatUsers.Count == 0)
+                {
+                    <EmptyState Title="Chưa có đoạn chat" Description="Không tải được dữ liệu hội thoại." />
+                }
+                else
+                {
+                    @foreach (var user in chatUsers)
+                    {
+                        <button class="user-item @(selectedUser?.Id == user.Id ? "active" : null)" @onclick="() => SelectUserAsync(user)">
+                            <div class="avatar">
+                                @if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
+                                {
+                                    <img src="@user.AvatarUrl" alt="@user.DisplayName" />
+                                }
+                                else
+                                {
+                                    @GetInitials(user.DisplayName)
+                                }
+                            </div>
+                            <div>
+                                <strong>@user.DisplayName</strong>
+                                <span>@user.Email</span>
+                            </div>
+                        </button>
+                    }
+                }
+            </aside>
+
+            <div class="chat-conversation-column">
+                @if (selectedUser is null)
+                {
+                    <EmptyState Title="Chưa chọn cuộc trò chuyện" Description="Chọn một người dùng để mở tin nhắn." />
+                }
+                else
+                {
+                    <ConversationPanel Title="@selectedUser.DisplayName"
+                                       Subtitle="@selectedUser.Email"
+                                       Messages="messages"
+                                       EmptyText="Chưa có tin nhắn."
+                                       Placeholder="Nhập tin nhắn"
+                                       ErrorMessage="@conversationError"
+                                       OnSend="SendPrivateMessageAsync" />
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public string? OtherUserId { get; set; }
+
+    private readonly List<UserSummaryDto> chatUsers = new();
+    private readonly List<MessageDto> messages = new();
+    private string currentUserId = string.Empty;
+    private string? errorMessage;
+    private string? conversationError;
+    private UserSummaryDto? selectedUser;
+    private HubConnection? chatHub;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+
+        await LoadUsersAsync();
+        await InitializeChatHubAsync();
+        await EnsureSelectedUserAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(currentUserId))
+        {
+            await EnsureSelectedUserAsync();
+        }
+    }
+
+    private async Task LoadUsersAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            chatUsers.Clear();
+            chatUsers.AddRange(await ChatService.GetChatUsersAsync(currentUserId));
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task EnsureSelectedUserAsync()
+    {
+        if (chatUsers.Count == 0)
+        {
+            selectedUser = null;
+            messages.Clear();
+            return;
+        }
+
+        var candidate = !string.IsNullOrWhiteSpace(OtherUserId)
+            ? chatUsers.FirstOrDefault(item => item.Id == OtherUserId)
+            : null;
+
+        candidate ??= selectedUser is not null
+            ? chatUsers.FirstOrDefault(item => item.Id == selectedUser.Id)
+            : null;
+
+        candidate ??= chatUsers[0];
+
+        await SelectUserAsync(candidate, false);
+    }
+
+    private async Task SelectUserAsync(UserSummaryDto user, bool updateRoute = true)
+    {
+        selectedUser = user;
+        conversationError = null;
+
+        if (updateRoute)
+        {
+            NavigationManager.NavigateTo($"/chat/{user.Id}");
+        }
+
+        try
+        {
+            messages.Clear();
+            messages.AddRange(await ChatService.GetPrivateConversationAsync(currentUserId, user.Id));
+        }
+        catch (Exception exception)
+        {
+            conversationError = exception.Message;
+        }
+    }
+
+    private async Task InitializeChatHubAsync()
+    {
+        chatHub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"/hubs/chat?userId={currentUserId}"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        chatHub.On<MessageDto>("PrivateMessageReceived", async message =>
+        {
+            await InvokeAsync(async () =>
+            {
+                if (selectedUser is not null && (message.SenderId == selectedUser.Id || message.ReceiverId == selectedUser.Id))
+                {
+                    await SelectUserAsync(selectedUser, false);
+                }
+                else
+                {
+                    await LoadUsersAsync();
+                }
+
+                StateHasChanged();
+            });
+        });
+
+        await chatHub.StartAsync();
+    }
+
+    private async Task SendPrivateMessageAsync(string content)
+    {
+        conversationError = null;
+        if (selectedUser is null || chatHub is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await chatHub.SendAsync("SendPrivateMessage", selectedUser.Id, content);
+        }
+        catch (Exception exception)
+        {
+            conversationError = exception.Message;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (chatHub is not null)
+        {
+            await chatHub.DisposeAsync();
+        }
+    }
+
+    private static string GetInitials(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "U";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+}
+
+<style>
+    .chat-layout {
+        display: grid;
+        gap: 16px;
+        align-items: start;
+    }
+
+    .user-list {
+        display: grid;
+        gap: 8px;
+        align-content: start;
+    }
+
+    .user-list-header h3 {
+        margin: 0;
+    }
+
+    .user-item {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+        text-align: left;
+        min-height: 64px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text-primary);
+    }
+
+    .user-item.active {
+        background: var(--app-accent-soft);
+        border-color: rgba(37, 99, 235, 0.18);
+    }
+
+    .user-item:hover {
+        background: var(--bg-hover);
+    }
+
+    .user-item span {
+        display: block;
+        color: var(--text-muted);
+        font-size: 13px;
+        line-height: 1.35;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .user-item .avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 13px;
+    }
+
+    .chat-conversation-column {
+        min-width: 0;
+    }
+
+    @@media (min-width: 1024px) {
+        .chat-layout {
+            grid-template-columns: 320px minmax(0, 1fr);
+        }
+    }
+</style>

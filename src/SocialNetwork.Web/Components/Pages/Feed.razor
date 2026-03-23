@@ -1,0 +1,11 @@
+@page "/feed"
+@attribute [Authorize]
+
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        NavigationManager.NavigateTo("/", replace: true);
+    }
+}

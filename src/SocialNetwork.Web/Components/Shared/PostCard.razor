@@ -1,0 +1,542 @@
+﻿<article class="panel post-card">
+    <div class="post-main">
+        <div class="post-header">
+            <div class="post-author">
+                <div class="avatar post-avatar">
+                    @if (!string.IsNullOrWhiteSpace(Post.AuthorAvatarUrl))
+                    {
+                        <img src="@Post.AuthorAvatarUrl" alt="@Post.AuthorName" />
+                    }
+                    else
+                    {
+                        @GetInitials(Post.AuthorName)
+                    }
+                </div>
+
+                <div class="post-meta">
+                    <div class="author-row">
+                        <strong>@Post.AuthorName</strong>
+                        @if (Post.GroupId.HasValue && !string.IsNullOrWhiteSpace(Post.GroupName))
+                        {
+                            <a class="group-badge" href="/groups/@Post.GroupId">@Post.GroupName</a>
+                        }
+                    </div>
+
+                    <div class="post-timestamp">
+                        <small>@GetRelativeTime(Post.CreatedDate)</small>
+                        <span class="post-dot"></span>
+                        <small>@Post.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+                        @if (Post.UpdatedDate.HasValue)
+                        {
+                            <small class="edited-badge">Đã sửa</small>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (Post.CanEdit)
+            {
+                <div class="post-owner-actions">
+                    <button class="btn btn-link btn-sm" @onclick="ToggleEdit">Sửa</button>
+                    <button class="btn btn-link btn-sm text-danger" @onclick="DeletePostAsync">Xóa</button>
+                </div>
+            }
+        </div>
+
+        @if (isEditing)
+        {
+            <div class="editor-grid">
+                <InputTextArea @bind-Value="editContent" class="form-control composer-input" />
+                <div class="editor-actions">
+                    <InputSelect @bind-Value="editMediaType" class="form-select">
+                        @foreach (var mediaType in Enum.GetValues<MediaType>())
+                        {
+                            <option value="@mediaType">@GetMediaTypeLabel(mediaType)</option>
+                        }
+                    </InputSelect>
+                    <InputText @bind-Value="editMediaUrl" class="form-control" placeholder="Liên kết media" />
+                    <button class="btn btn-primary" @onclick="SavePostAsync">Lưu</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="post-body">
+                <p class="post-content">@Post.Content</p>
+
+                @if (!string.IsNullOrWhiteSpace(Post.MediaUrl))
+                {
+                    <div class="post-media-shell">
+                        @if (Post.MediaType == MediaType.Image)
+                        {
+                            <img class="post-image" src="@Post.MediaUrl" alt="Ảnh bài đăng" />
+                        }
+                        else if (Post.MediaType == MediaType.Video)
+                        {
+                            <div class="ratio ratio-16x9">
+                                <iframe src="@Post.MediaUrl" title="Video bài đăng" allowfullscreen></iframe>
+                            </div>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-dark btn-sm" href="@Post.MediaUrl" target="_blank">Mở tệp đính kèm</a>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="text-danger small">@errorMessage</div>
+        }
+    </div>
+
+    <div class="post-engagement">
+        <div class="post-summary-row">
+            <div class="post-summary">
+                <span class="reaction-bubble">@TotalReactionCount lượt tương tác</span>
+                <span>@Post.CommentCount bình luận</span>
+            </div>
+
+            <div class="post-summary-actions">
+                <button type="button" class="post-save-button @(Post.IsSaved ? "saved" : null)" @onclick="ToggleSavedPostAsync">
+                    <AppIcon Name="heart" />
+                    <span>@(Post.IsSaved ? "Bỏ lưu" : "Lưu")</span>
+                </button>
+
+                @if (ShowDetailLink)
+                {
+                    <a class="post-detail-link" href="/posts/@Post.Id">Mở bài viết</a>
+                }
+            </div>
+        </div>
+
+        <div class="reaction-row">
+            @foreach (var reactionType in Enum.GetValues<ReactionType>())
+            {
+                <button class="reaction-button @(Post.CurrentUserReaction == reactionType ? "selected" : null)"
+                        @onclick="() => ToggleReactionAsync(reactionType)">
+                    <AppIcon Name="@GetReactionIcon(reactionType)" />
+                    <span>@GetReactionLabel(reactionType)</span>
+                    <strong>@GetReactionCount(reactionType)</strong>
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="post-comments">
+        <CommentSection PostId="Post.Id" Comments="Post.Comments" OnChanged="OnChanged" />
+    </div>
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public PostFeedItemDto Post { get; set; } = default!;
+
+    [Parameter]
+    public bool ShowDetailLink { get; set; } = true;
+
+    [Parameter]
+    public EventCallback OnChanged { get; set; }
+
+    [Inject]
+    private IPostService PostService { get; set; } = default!;
+
+    [Inject]
+    private CurrentUserService CurrentUserService { get; set; } = default!;
+
+    [Inject]
+    private NotificationBroadcastService NotificationBroadcastService { get; set; } = default!;
+
+    [Inject]
+    private INotificationService NotificationService { get; set; } = default!;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
+
+    private bool isEditing;
+    private string editContent = string.Empty;
+    private string? editMediaUrl;
+    private MediaType editMediaType;
+    private string? errorMessage;
+
+    private int TotalReactionCount => Post.Reactions.Sum(item => item.Count);
+
+    protected override void OnParametersSet()
+    {
+        editContent = Post.Content;
+        editMediaUrl = Post.MediaUrl;
+        editMediaType = Post.MediaType;
+    }
+
+    private void ToggleEdit()
+    {
+        errorMessage = null;
+        isEditing = !isEditing;
+    }
+
+    private async Task SavePostAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            var authState = await AuthenticationStateTask;
+            var currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            await PostService.UpdatePostAsync(currentUserId, Post.Id, new UpdatePostRequest(editContent, editMediaUrl, editMediaType));
+            isEditing = false;
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await OnChanged.InvokeAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task DeletePostAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            var authState = await AuthenticationStateTask;
+            var currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            await PostService.DeletePostAsync(currentUserId, Post.Id);
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await OnChanged.InvokeAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task ToggleReactionAsync(ReactionType reactionType)
+    {
+        errorMessage = null;
+
+        try
+        {
+            var authState = await AuthenticationStateTask;
+            var currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            ReactionType? nextReaction = Post.CurrentUserReaction == reactionType ? null : reactionType;
+            await PostService.SetReactionAsync(currentUserId, Post.Id, nextReaction);
+
+            if (nextReaction.HasValue)
+            {
+                var notifications = await NotificationService.CreateInteractionNotificationAsync(
+                    currentUserId,
+                    Post.UserId,
+                    NotificationType.NewReaction,
+                    "Tương tác mới",
+                    $"Đã bày tỏ cảm xúc {GetReactionLabel(nextReaction.Value).ToLowerInvariant()} với bài viết của bạn.",
+                    $"/posts/{Post.Id}");
+
+                await NotificationBroadcastService.BroadcastNotificationsAsync(notifications);
+            }
+
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await OnChanged.InvokeAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task ToggleSavedPostAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            var authState = await AuthenticationStateTask;
+            var currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            await PostService.ToggleSavedPostAsync(currentUserId, Post.Id);
+            await OnChanged.InvokeAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private int GetReactionCount(ReactionType reactionType) =>
+        Post.Reactions.FirstOrDefault(item => item.Type == reactionType)?.Count ?? 0;
+
+    private static string GetReactionIcon(ReactionType reactionType) => reactionType switch
+    {
+        ReactionType.Love => "heart",
+        ReactionType.Haha => "activity",
+        _ => "check"
+    };
+
+    private static string GetReactionLabel(ReactionType reactionType) => reactionType switch
+    {
+        ReactionType.Love => "Yêu thích",
+        ReactionType.Haha => "Haha",
+        _ => "Thích"
+    };
+
+    private static string GetMediaTypeLabel(MediaType mediaType) => mediaType switch
+    {
+        MediaType.Image => "Ảnh",
+        MediaType.Video => "Video",
+        _ => "Văn bản"
+    };
+
+    private static string GetInitials(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "U";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+
+    private static string GetRelativeTime(DateTime createdDate)
+    {
+        var delta = DateTime.UtcNow - createdDate.ToUniversalTime();
+
+        if (delta.TotalMinutes < 1)
+        {
+            return "Vừa xong";
+        }
+
+        if (delta.TotalHours < 1)
+        {
+            return $"{Math.Max(1, (int)delta.TotalMinutes)} phút trước";
+        }
+
+        if (delta.TotalDays < 1)
+        {
+            return $"{Math.Max(1, (int)delta.TotalHours)} giờ trước";
+        }
+
+        return $"{Math.Max(1, (int)delta.TotalDays)} ngày trước";
+    }
+}
+
+<style>
+    .post-card {
+        display: grid;
+        gap: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .post-main,
+    .post-engagement,
+    .post-comments {
+        padding: 16px;
+    }
+
+    .post-main {
+        display: grid;
+        gap: 14px;
+    }
+
+    .post-engagement,
+    .post-comments {
+        border-top: 1px solid var(--border-soft);
+    }
+
+    .post-comments {
+        background: color-mix(in srgb, var(--bg-shell) 88%, var(--bg-muted) 12%);
+    }
+
+    .post-header,
+    .post-owner-actions,
+    .editor-actions,
+    .post-summary-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .post-author {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+    }
+
+    .post-avatar {
+        width: 48px;
+        height: 48px;
+    }
+
+    .post-meta {
+        display: grid;
+        gap: 2px;
+    }
+
+    .author-row,
+    .post-timestamp {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .post-dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--text-muted);
+        opacity: 0.65;
+    }
+
+    .group-badge,
+    .edited-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: var(--app-accent-soft);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .post-timestamp small {
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    .post-body,
+    .editor-grid {
+        display: grid;
+        gap: 12px;
+    }
+
+    .post-content {
+        margin: 0;
+        white-space: pre-wrap;
+        line-height: 1.7;
+        font-size: 15px;
+        color: var(--text-primary);
+    }
+
+    .post-media-shell {
+        overflow: hidden;
+        border-radius: 16px;
+        border: 1px solid var(--border-soft);
+        background: var(--bg-muted);
+    }
+
+    .post-image {
+        width: 100%;
+        max-height: 32rem;
+        object-fit: cover;
+        display: block;
+    }
+
+    .editor-actions {
+        align-items: stretch;
+    }
+
+    .editor-actions .form-select {
+        min-width: 150px;
+    }
+
+    .composer-input {
+        min-height: 88px;
+    }
+
+    .post-summary-row {
+        padding-bottom: 12px;
+    }
+
+    .post-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        color: var(--text-muted);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .reaction-bubble {
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    .post-summary-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .post-detail-link {
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    .post-save-button {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border-soft);
+        background: var(--bg-muted);
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .post-save-button:hover {
+        background: var(--bg-hover);
+        border-color: var(--border);
+    }
+
+    .post-save-button.saved {
+        background: var(--app-accent-soft);
+        color: var(--accent);
+        border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+    }
+
+    .reaction-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .reaction-button {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border-soft);
+        background: var(--bg-shell);
+        color: var(--text-secondary);
+        font-weight: 700;
+    }
+
+    .reaction-button:hover {
+        background: var(--bg-muted);
+        border-color: var(--border);
+    }
+
+    .reaction-button.selected {
+        color: var(--accent);
+        background: var(--app-accent-soft);
+        border-color: rgba(8, 102, 255, 0.16);
+    }
+</style>

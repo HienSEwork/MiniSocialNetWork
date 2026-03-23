@@ -1,0 +1,176 @@
+@page "/Account/Register"
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using SocialNetwork.DAL.Entities
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Đăng ký</PageTitle>
+
+<div class="register-page">
+    <section class="register-card">
+        <div class="register-card-head">
+            <p class="register-kicker">Tạo tài khoản</p>
+            <h1>Đăng ký</h1>
+        </div>
+
+        <StatusMessage Message="@Message" />
+
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register" class="register-form">
+            <DataAnnotationsValidator />
+
+            <div class="register-fields">
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <div class="form-floating">
+                    <InputText @bind-Value="Input.DisplayName" class="form-control" aria-required="true" placeholder="Tên hiển thị" />
+                    <label>Tên hiển thị</label>
+                    <ValidationMessage For="() => Input.DisplayName" class="text-danger" />
+                </div>
+
+                <div class="form-floating">
+                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label>Email</label>
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
+
+                <div class="form-floating">
+                    <InputTextArea @bind-Value="Input.Bio" class="form-control register-bio" placeholder="Giới thiệu ngắn" />
+                    <label>Giới thiệu</label>
+                    <ValidationMessage For="() => Input.Bio" class="text-danger" />
+                </div>
+
+                <div class="form-floating">
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                    <label>Mật khẩu</label>
+                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                </div>
+
+                <div class="form-floating">
+                    <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="confirm password" />
+                    <label>Xác nhận mật khẩu</label>
+                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn register-submit">Tạo tài khoản</button>
+
+            <div class="register-links">
+                <a href="/Account/Login">Đã có tài khoản? Đăng nhập</a>
+            </div>
+        </EditForm>
+    </section>
+</div>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    private string? Message => identityErrors is null ? null : $"Không thể tạo tài khoản: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        var user = CreateUser();
+        user.DisplayName = Input.DisplayName.Trim();
+        user.Bio = string.IsNullOrWhiteSpace(Input.Bio) ? null : Input.Bio.Trim();
+        user.EmailConfirmed = true;
+
+        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        var emailStore = GetEmailStore();
+        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        var result = await UserManager.CreateAsync(user, Input.Password);
+
+        if (!result.Succeeded)
+        {
+            identityErrors = result.Errors;
+            return;
+        }
+
+        Logger.LogInformation("Người dùng đã tạo tài khoản mới.");
+
+        var userId = await UserManager.GetUserIdAsync(user);
+        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+            NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+
+        await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
+
+        if (UserManager.Options.SignIn.RequireConfirmedAccount)
+        {
+            RedirectManager.RedirectTo(
+                "Account/RegisterConfirmation",
+                new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
+        }
+
+        await SignInManager.SignInAsync(user, isPersistent: false);
+        RedirectManager.RedirectTo(ReturnUrl);
+    }
+
+    private ApplicationUser CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUser>();
+        }
+        catch
+        {
+            throw new InvalidOperationException(
+                $"Không thể tạo instance của '{nameof(ApplicationUser)}'. Hãy bảo đảm '{nameof(ApplicationUser)}' có constructor rỗng.");
+        }
+    }
+
+    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    {
+        if (!UserManager.SupportsUserEmail)
+        {
+            throw new NotSupportedException("Hệ thống yêu cầu user store có hỗ trợ email.");
+        }
+
+        return (IUserEmailStore<ApplicationUser>)UserStore;
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Tên hiển thị")]
+        public string DisplayName { get; set; } = "";
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [StringLength(500)]
+        [Display(Name = "Giới thiệu")]
+        public string? Bio { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "{0} phải có từ {2} đến {1} ký tự.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Mật khẩu")]
+        public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Xác nhận mật khẩu")]
+        [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp.")]
+        public string ConfirmPassword { get; set; } = "";
+    }
+}

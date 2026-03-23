@@ -1,0 +1,72 @@
+@using System.Diagnostics.CodeAnalysis
+@using System.Globalization
+
+<svg class="@SvgClass"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="@StrokeWidthValue"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     style="@Style"
+     aria-hidden="true">
+    @((MarkupString)GetIconMarkup(Name))
+</svg>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Name { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public double StrokeWidth { get; set; } = 1.9;
+
+    [Parameter]
+    public string? Style { get; set; }
+
+    private string SvgClass => string.IsNullOrWhiteSpace(Class) ? "app-icon" : $"app-icon {Class}";
+
+    private string StrokeWidthValue => StrokeWidth.ToString(CultureInfo.InvariantCulture);
+
+    private static string GetIconMarkup(string name) => name.ToLowerInvariant() switch
+    {
+        "feed" or "home" => "<path d='M3 10.5 12 3l9 7.5'/><path d='M5 9.5V21h14V9.5'/>",
+        "feed-solid" or "home-solid" => "<path fill='currentColor' d='M12 2.8 2.8 10.4c-.3.3-.4.8-.1 1.2.3.4.8.6 1.2.3l1.1-.9V20c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-8.9l1.1.9c.4.3.9.2 1.2-.3.3-.4.2-.9-.1-1.2L12 2.8Zm-3 9.7h6c.6 0 1 .4 1 1v6.5H8v-6.5c0-.6.4-1 1-1Z'/>",
+        "friends" => "<path d='M16 20v-1.2a4.8 4.8 0 0 0-4.8-4.8H7.8A4.8 4.8 0 0 0 3 18.8V20'/><circle cx='9.5' cy='7.2' r='3.2'/><path d='M18 8h3'/><path d='M19.5 6.5v3'/>",
+        "friends-solid" => "<path fill='currentColor' d='M9 4.2a3.5 3.5 0 1 1 0 7.1 3.5 3.5 0 0 1 0-7.1Zm7.1 1.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6ZM8.9 13c-3.1 0-5.7 2.5-5.7 5.7 0 .7.6 1.3 1.3 1.3h9.1c.7 0 1.3-.6 1.3-1.3 0-3.2-2.6-5.7-5.7-5.7Zm7.2.7c-1 0-1.9.2-2.7.6 1 1 1.7 2.4 1.9 3.9h4.2c.8 0 1.4-.6 1.4-1.4 0-1.7-2-3.1-4.8-3.1Z'/>",
+        "chat" => "<path d='M4 5h16v10H8l-4 4V5Z'/><path d='M8 9h8'/><path d='M8 12h5'/>",
+        "chat-solid" => "<path fill='currentColor' d='M5.5 4A2.5 2.5 0 0 0 3 6.5v9A2.5 2.5 0 0 0 5.5 18H8v3c0 .4.4.7.8.5l4.8-3.5h4.9a2.5 2.5 0 0 0 2.5-2.5v-9A2.5 2.5 0 0 0 18.5 4h-13Zm2.2 4.3h8.6a.9.9 0 1 1 0 1.8H7.7a.9.9 0 0 1 0-1.8Zm0 3.7h5.2a.9.9 0 1 1 0 1.8H7.7a.9.9 0 0 1 0-1.8Z'/>",
+        "groups" => "<rect x='3' y='5' width='8' height='6' rx='1.5'/><rect x='13' y='5' width='8' height='6' rx='1.5'/><rect x='8' y='13' width='8' height='6' rx='1.5'/>",
+        "groups-solid" => "<path fill='currentColor' d='M5 4.5h5a2 2 0 0 1 2 2v3.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6.5a2 2 0 0 1 2-2Zm9 0h5a2 2 0 0 1 2 2v3.5a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2V6.5a2 2 0 0 1 2-2Zm-4.5 9h5a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-3.5a2 2 0 0 1 2-2Z'/>",
+        "notifications" => "<path d='M6 16h12l-1.2-1.3V10a4.8 4.8 0 1 0-9.6 0v4.7L6 16Z'/><path d='M10 19a2 2 0 0 0 4 0'/>",
+        "notifications-solid" => "<path fill='currentColor' d='M12 3.2a5.4 5.4 0 0 0-5.4 5.4v3.7l-1.4 2.3c-.6 1 0 2.2 1.2 2.2h11.2c1.2 0 1.9-1.3 1.2-2.2l-1.4-2.3V8.6A5.4 5.4 0 0 0 12 3.2Zm-2 15.4a2 2 0 0 0 4 0h-4Z'/>",
+        "profile" => "<circle cx='12' cy='8' r='4'/><path d='M5 20a7 7 0 0 1 14 0'/>",
+        "profile-solid" => "<path fill='currentColor' d='M12 3.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6ZM6.4 15.2A4.4 4.4 0 0 0 2 19.6c0 .7.6 1.2 1.2 1.2h17.6c.6 0 1.2-.5 1.2-1.2a4.4 4.4 0 0 0-4.4-4.4H6.4Z'/>",
+        "dashboard" => "<path d='M4 13h4v7H4z'/><path d='M10 4h4v16h-4z'/><path d='M16 9h4v11h-4z'/>",
+        "search" => "<circle cx='11' cy='11' r='6'/><path d='m20 20-4.2-4.2'/>",
+        "logout" => "<path d='M10 4H5v16h5'/><path d='M14 8l4 4-4 4'/><path d='M9 12h9'/>",
+        "theme" => "<path d='M21 12.8A8.8 8.8 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z'/>",
+        "album" => "<rect x='3.5' y='5' width='17' height='14' rx='2'/><path d='m7 14 3-3 3.5 3.5 2-2L19 16'/><circle cx='9' cy='9' r='1.2'/>",
+        "activity" => "<path d='M4 12h3l2-5 4 10 2-5h5'/>",
+        "location" => "<path d='M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11Z'/><circle cx='12' cy='10' r='2.2'/>",
+        "tag" => "<path d='m20 12-8 8-8-8V4h8l8 8Z'/><circle cx='8.5' cy='8.5' r='1.2'/>",
+        "markread" => "<path d='M4 12.5 9 17l11-11'/><path d='m4 17 2.5 2.5'/>",
+        "dots" => "<circle cx='6' cy='12' r='1.2'/><circle cx='12' cy='12' r='1.2'/><circle cx='18' cy='12' r='1.2'/>",
+        "send" => "<path d='M21 3 10 14'/><path d='M21 3 14 21l-4-7-7-4 18-7Z'/>",
+        "edit" => "<path d='M4 20h4l10.5-10.5a2.1 2.1 0 0 0-4-2L4 18v2Z'/><path d='m13.5 6.5 4 4'/>",
+        "delete" => "<path d='M4 7h16'/><path d='M10 11v6'/><path d='M14 11v6'/><path d='M6 7l1 13h10l1-13'/><path d='M9 7V4h6v3'/>",
+        "comment" => "<path d='M5 5h14v10H9l-4 4V5Z'/><path d='M8 9h8'/><path d='M8 12h5'/>",
+        "heart" => "<path d='M12 20.5s-7-4.6-7-10.2A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 7 3.3c0 5.6-7 10.2-7 10.2Z'/>",
+        "bolt" => "<path d='M13 2 5 13h5l-1 9 8-11h-5l1-9Z'/>",
+        "users" => "<circle cx='8' cy='9' r='3'/><circle cx='17' cy='8' r='2.5'/><path d='M3 20a5.5 5.5 0 0 1 10.5 0'/><path d='M14 20a4.5 4.5 0 0 1 7 0'/>",
+        "calendar" => "<rect x='3' y='5' width='18' height='16' rx='2'/><path d='M16 3v4'/><path d='M8 3v4'/><path d='M3 10h18'/>",
+        "image" => "<rect x='3' y='5' width='18' height='14' rx='2'/><path d='m7 15 3-3 3 3 2-2 2 2'/><circle cx='8.5' cy='9' r='1.2'/>",
+        "video" => "<rect x='3' y='5' width='14' height='14' rx='2'/><path d='m17 10 4-2v8l-4-2Z'/>",
+        "attachment" => "<path d='M8 12.5 14.5 6a3 3 0 0 1 4.2 4.2l-8.4 8.4a4.5 4.5 0 1 1-6.4-6.4l8.1-8.1'/>",
+        "check" => "<path d='M5 12.5 9.5 17 19 7.5'/>",
+        "globe" => "<circle cx='12' cy='12' r='9'/><path d='M3 12h18'/><path d='M12 3a15 15 0 0 1 0 18'/><path d='M12 3a15 15 0 0 0 0 18'/>",
+        _ => "<circle cx='12' cy='12' r='8'/>"
+    };
+}

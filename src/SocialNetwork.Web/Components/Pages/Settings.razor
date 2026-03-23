@@ -1,0 +1,170 @@
+@page "/settings"
+@attribute [Authorize]
+
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Cài đặt</PageTitle>
+
+<section class="page-section">
+    <div class="content-stack narrow">
+        <header class="page-header">
+            <div>
+                <p class="section-kicker">Cài đặt</p>
+                <h1>Cài đặt</h1>
+            </div>
+        </header>
+
+        <article class="panel settings-card">
+            <div class="settings-card-head">
+                <div class="settings-icon">
+                    <AppIcon Name="theme" />
+                </div>
+                <div>
+                    <h3>Giao diện</h3>
+                    <p class="settings-copy">Chọn sáng hoặc tối cho toàn bộ website.</p>
+                </div>
+            </div>
+
+            <div class="settings-options">
+                <button type="button"
+                        class="@GetOptionClass(currentTheme, LightTheme)"
+                        @onclick='() => SetThemeAsync("light")'>
+                    Sáng
+                </button>
+                <button type="button"
+                        class="@GetOptionClass(currentTheme, DarkTheme)"
+                        @onclick='() => SetThemeAsync("dark")'>
+                    Tối
+                </button>
+            </div>
+        </article>
+
+        <article class="panel settings-card">
+            <div class="settings-card-head">
+                <div class="settings-icon">
+                    <AppIcon Name="globe" />
+                </div>
+                <div>
+                    <h3>Ngôn ngữ</h3>
+                    <p class="settings-copy">Chuyển nhanh giữa tiếng Việt và tiếng Anh.</p>
+                </div>
+            </div>
+
+            <div class="settings-options">
+                <button type="button"
+                        class="@GetOptionClass(currentLanguage, Vietnamese)"
+                        @onclick='() => SetLanguageAsync("vi")'>
+                    Tiếng Việt
+                </button>
+                <button type="button"
+                        class="@GetOptionClass(currentLanguage, English)"
+                        @onclick='() => SetLanguageAsync("en")'>
+                    English
+                </button>
+            </div>
+        </article>
+    </div>
+</section>
+
+@code {
+    private const string LightTheme = "light";
+    private const string DarkTheme = "dark";
+    private const string Vietnamese = "vi";
+    private const string English = "en";
+
+    private string currentTheme = "light";
+    private string currentLanguage = "vi";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var preferences = await JSRuntime.InvokeAsync<UiPreferenceState>("themeInterop.getPreferences");
+        currentTheme = preferences.Theme;
+        currentLanguage = preferences.Language;
+        StateHasChanged();
+    }
+
+    private async Task SetThemeAsync(string theme)
+    {
+        currentTheme = theme;
+        await JSRuntime.InvokeVoidAsync("themeInterop.setTheme", theme);
+    }
+
+    private async Task SetLanguageAsync(string language)
+    {
+        currentLanguage = language;
+        await JSRuntime.InvokeVoidAsync("themeInterop.setLanguage", language);
+    }
+
+    private static string GetOptionClass(string currentValue, string expectedValue) =>
+        currentValue == expectedValue ? "settings-option active" : "settings-option";
+
+    private sealed class UiPreferenceState
+    {
+        public string Theme { get; set; } = "light";
+
+        public string Language { get; set; } = "vi";
+    }
+}
+
+<style>
+    .settings-card {
+        display: grid;
+        gap: 16px;
+    }
+
+    .settings-card-head {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+    }
+
+    .settings-icon {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: var(--app-accent-soft);
+        color: var(--accent);
+    }
+
+    .settings-copy {
+        margin: 4px 0 0;
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+    .settings-options {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .settings-option {
+        min-height: 44px;
+        border-radius: 10px;
+        border: 1px solid var(--border-soft);
+        background: var(--bg-muted);
+        color: var(--text-primary);
+        font-weight: 700;
+        text-align: left;
+        padding: 0 14px;
+    }
+
+    .settings-option:hover {
+        background: var(--bg-hover);
+        border-color: var(--border);
+    }
+
+    .settings-option.active {
+        background: var(--app-accent-soft);
+        border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+        color: var(--accent);
+    }
+</style>

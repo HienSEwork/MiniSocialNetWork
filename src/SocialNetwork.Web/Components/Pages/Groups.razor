@@ -1,0 +1,627 @@
+@page "/groups"
+@page "/groups/{GroupId:guid}"
+@attribute [Authorize]
+@implements IAsyncDisposable
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IGroupService GroupService
+@inject IChatService ChatService
+@inject NavigationManager NavigationManager
+@inject NotificationBroadcastService NotificationBroadcastService
+
+<PageTitle>Nhóm</PageTitle>
+
+<section class="page-section">
+    <div class="content-stack">
+        <div class="page-header">
+            <div>
+                <span class="section-kicker">Cộng đồng</span>
+                <h2>Nhóm</h2>
+            </div>
+            <span class="badge-soft">@groups.Count nhóm</span>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        <div class="groups-layout">
+            <aside class="section-grid">
+                <EditForm Model="groupForm" OnValidSubmit="CreateGroupAsync" class="panel">
+                    <DataAnnotationsValidator />
+                    <span class="section-kicker">Tạo mới</span>
+                    <h3>Tạo nhóm</h3>
+
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="groupForm.Name" class="form-control" placeholder="Tên nhóm" />
+                        <label>Tên nhóm</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <InputTextArea @bind-Value="groupForm.Description" class="form-control group-description" placeholder="Mô tả nhóm" />
+                        <label>Mô tả</label>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">
+                        <AppIcon Name="groups" />
+                        <span>Tạo nhóm</span>
+                    </button>
+                </EditForm>
+
+                <div class="panel section-grid">
+                    <span class="section-kicker">Danh sách</span>
+                    <h3>Tất cả nhóm</h3>
+
+                    @if (groups.Count == 0)
+                    {
+                        <EmptyState Title="Chưa có nhóm" Description="Không tải được dữ liệu nhóm." />
+                    }
+                    else
+                    {
+                        @foreach (var group in groups)
+                        {
+                            <button class="group-item @(selectedGroupSummary?.Id == group.Id ? "active" : null)"
+                                    @onclick="() => SelectGroupAsync(group)">
+                                <img class="group-thumb" src="@GetGroupCover(group.Name)" alt="@group.Name" />
+                                <div class="group-item-body">
+                                    <div class="group-item-head">
+                                        <strong>@group.Name</strong>
+                                        <span class="group-status @(group.IsJoined ? "joined" : "open")">
+                                            @(group.IsJoined ? "Đã tham gia" : "Mở")
+                                        </span>
+                                    </div>
+                                    <p>@group.Description</p>
+                                    <span>@group.MemberCount thành viên</span>
+                                </div>
+                            </button>
+                        }
+                    }
+                </div>
+            </aside>
+
+            <div class="section-grid">
+                @if (selectedGroupSummary is null)
+                {
+                    <EmptyState Title="Chưa chọn nhóm" Description="Chọn một nhóm để xem nội dung." />
+                }
+                else
+                {
+                    <div class="panel group-hero">
+                        <img class="group-hero-cover" src="@GetGroupCover(selectedGroupSummary.Name)" alt="@selectedGroupSummary.Name" />
+                        <div class="group-hero-body">
+                            <div class="group-header">
+                                <div>
+                                    <span class="section-kicker">Nhóm đang chọn</span>
+                                    <h3>@selectedGroupSummary.Name</h3>
+                                    <p>@selectedGroupSummary.Description</p>
+                                    <small>Chủ nhóm: @selectedGroupSummary.OwnerName</small>
+                                </div>
+                                <div class="group-actions">
+                                    @if (!selectedGroupSummary.IsJoined)
+                                    {
+                                        <button class="btn btn-primary" @onclick="JoinGroupAsync">
+                                            <AppIcon Name="groups" />
+                                            <span>Tham gia</span>
+                                        </button>
+                                    }
+                                    else if (!selectedGroupSummary.CanManage)
+                                    {
+                                        <button class="btn btn-outline-dark" @onclick="LeaveGroupAsync">Rời nhóm</button>
+                                    }
+
+                                    @if (selectedGroupSummary.CanManage)
+                                    {
+                                        <button class="btn btn-outline-dark" @onclick="ToggleEditGroup">
+                                            @(editingGroup ? "Đóng chỉnh sửa" : "Chỉnh sửa nhóm")
+                                        </button>
+                                        <button class="btn btn-outline-danger" @onclick="DeleteGroupAsync">Xóa nhóm</button>
+                                    }
+                                </div>
+                            </div>
+
+                            @if (editingGroup)
+                            {
+                                <EditForm Model="editGroupForm" OnValidSubmit="SaveGroupAsync" class="section-grid">
+                                    <div class="form-floating">
+                                        <InputText @bind-Value="editGroupForm.Name" class="form-control" placeholder="Tên nhóm" />
+                                        <label>Tên nhóm</label>
+                                    </div>
+                                    <div class="form-floating">
+                                        <InputTextArea @bind-Value="editGroupForm.Description" class="form-control group-description" placeholder="Mô tả" />
+                                        <label>Mô tả</label>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">Lưu nhóm</button>
+                                </EditForm>
+                            }
+                        </div>
+                    </div>
+
+                    @if (selectedGroupSummary.IsJoined && selectedGroupDetail is not null)
+                    {
+                        <div class="card-grid two-up">
+                            <div class="panel">
+                                <span class="section-kicker">Thành viên</span>
+                                <h3>Danh sách thành viên</h3>
+                                <div class="member-list">
+                                    @foreach (var member in selectedGroupDetail.Members)
+                                    {
+                                        <div class="member-item">
+                                            <strong>@member.DisplayName</strong>
+                                            <span>@member.Role</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <ConversationPanel Title="Chat nhóm"
+                                               Subtitle="Tin nhắn realtime trong nhóm"
+                                               Messages="groupMessages"
+                                               ErrorMessage="@groupChatError"
+                                               OnSend="SendGroupMessageAsync" />
+                        </div>
+
+                        <PostComposer CurrentUserId="@currentUserId" GroupId="@selectedGroupSummary.Id" OnCreated="LoadSelectedGroupAsync" />
+
+                        @if (selectedGroupDetail.Posts.Count == 0)
+                        {
+                            <EmptyState Title="Chưa có bài đăng" Description="Không có bài đăng trong nhóm." />
+                        }
+                        else
+                        {
+                            <div class="section-grid">
+                                @foreach (var post in selectedGroupDetail.Posts)
+                                {
+                                    <PostCard Post="post" OnChanged="LoadSelectedGroupAsync" />
+                                }
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public Guid? GroupId { get; set; }
+
+    private readonly List<GroupSummaryDto> groups = new();
+    private readonly List<MessageDto> groupMessages = new();
+    private string currentUserId = string.Empty;
+    private string? errorMessage;
+    private string? groupChatError;
+    private GroupSummaryDto? selectedGroupSummary;
+    private GroupDetailDto? selectedGroupDetail;
+    private HubConnection? chatHub;
+    private HubConnection? notificationHub;
+    private bool editingGroup;
+    private GroupFormModel groupForm = new();
+    private GroupFormModel editGroupForm = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+
+        await LoadGroupsAsync();
+        await InitializeHubsAsync();
+        await EnsureSelectedGroupAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(currentUserId))
+        {
+            await EnsureSelectedGroupAsync();
+        }
+    }
+
+    private async Task LoadGroupsAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            groups.Clear();
+            groups.AddRange(await GroupService.GetGroupsAsync(currentUserId));
+
+            if (selectedGroupSummary is not null)
+            {
+                selectedGroupSummary = groups.FirstOrDefault(group => group.Id == selectedGroupSummary.Id);
+            }
+
+            if (selectedGroupSummary is null && groups.Count > 0)
+            {
+                selectedGroupSummary = groups
+                    .OrderByDescending(group => group.IsJoined)
+                    .ThenBy(group => group.Name)
+                    .First();
+            }
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task EnsureSelectedGroupAsync()
+    {
+        if (groups.Count == 0)
+        {
+            selectedGroupSummary = null;
+            selectedGroupDetail = null;
+            groupMessages.Clear();
+            return;
+        }
+
+        var candidate = GroupId.HasValue
+            ? groups.FirstOrDefault(group => group.Id == GroupId.Value)
+            : null;
+
+        candidate ??= selectedGroupSummary is not null
+            ? groups.FirstOrDefault(group => group.Id == selectedGroupSummary.Id)
+            : null;
+
+        candidate ??= groups
+            .OrderByDescending(group => group.IsJoined)
+            .ThenBy(group => group.Name)
+            .First();
+
+        if (selectedGroupSummary?.Id == candidate.Id && selectedGroupDetail is not null)
+        {
+            return;
+        }
+
+        await SelectGroupAsync(candidate);
+    }
+
+    private async Task SelectGroupAsync(GroupSummaryDto group)
+    {
+        selectedGroupSummary = group;
+        editingGroup = false;
+        editGroupForm = new GroupFormModel
+        {
+            Name = group.Name,
+            Description = group.Description
+        };
+
+        await LoadSelectedGroupAsync();
+    }
+
+    private async Task LoadSelectedGroupAsync()
+    {
+        if (selectedGroupSummary is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await LoadGroupsAsync();
+            if (selectedGroupSummary is null)
+            {
+                return;
+            }
+
+            if (selectedGroupSummary.IsJoined)
+            {
+                selectedGroupDetail = await GroupService.GetGroupDetailAsync(selectedGroupSummary.Id, currentUserId);
+                groupMessages.Clear();
+                groupMessages.AddRange(await ChatService.GetGroupConversationAsync(currentUserId, selectedGroupSummary.Id));
+
+                if (chatHub is not null)
+                {
+                    await chatHub.SendAsync("JoinGroupChat", selectedGroupSummary.Id);
+                }
+            }
+            else
+            {
+                selectedGroupDetail = null;
+                groupMessages.Clear();
+            }
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task CreateGroupAsync()
+    {
+        try
+        {
+            await GroupService.CreateGroupAsync(currentUserId, new CreateGroupRequest(groupForm.Name ?? string.Empty, groupForm.Description ?? string.Empty));
+            groupForm = new GroupFormModel();
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await LoadGroupsAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task JoinGroupAsync()
+    {
+        if (selectedGroupSummary is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await GroupService.JoinGroupAsync(currentUserId, selectedGroupSummary.Id);
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await LoadSelectedGroupAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task LeaveGroupAsync()
+    {
+        if (selectedGroupSummary is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await GroupService.LeaveGroupAsync(currentUserId, selectedGroupSummary.Id);
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await LoadSelectedGroupAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private void ToggleEditGroup() => editingGroup = !editingGroup;
+
+    private async Task SaveGroupAsync()
+    {
+        if (selectedGroupSummary is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await GroupService.UpdateGroupAsync(
+                currentUserId,
+                selectedGroupSummary.Id,
+                new UpdateGroupRequest(editGroupForm.Name ?? string.Empty, editGroupForm.Description ?? string.Empty));
+
+            editingGroup = false;
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            await LoadSelectedGroupAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task DeleteGroupAsync()
+    {
+        if (selectedGroupSummary is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await GroupService.DeleteGroupAsync(currentUserId, selectedGroupSummary.Id);
+            await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
+            selectedGroupSummary = null;
+            selectedGroupDetail = null;
+            groupMessages.Clear();
+            await LoadGroupsAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task InitializeHubsAsync()
+    {
+        chatHub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"/hubs/chat?userId={currentUserId}"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        chatHub.On<MessageDto>("GroupMessageReceived", async message =>
+        {
+            if (selectedGroupSummary?.Id == message.GroupId)
+            {
+                await InvokeAsync(async () =>
+                {
+                    await LoadSelectedGroupAsync();
+                    StateHasChanged();
+                });
+            }
+        });
+
+        notificationHub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/hubs/notifications"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        notificationHub.On("SocialUpdated", async () =>
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadSelectedGroupAsync();
+                StateHasChanged();
+            });
+        });
+
+        await chatHub.StartAsync();
+        await notificationHub.StartAsync();
+    }
+
+    private async Task SendGroupMessageAsync(string content)
+    {
+        groupChatError = null;
+        if (selectedGroupSummary is null || chatHub is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await chatHub.SendAsync("SendGroupMessage", selectedGroupSummary.Id, content);
+        }
+        catch (Exception exception)
+        {
+            groupChatError = exception.Message;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (chatHub is not null)
+        {
+            await chatHub.DisposeAsync();
+        }
+
+        if (notificationHub is not null)
+        {
+            await notificationHub.DisposeAsync();
+        }
+    }
+
+    private static string GetGroupCover(string groupName) =>
+        groupName.Contains("Design", StringComparison.OrdinalIgnoreCase)
+            ? "/media/demo/groups/design.jpg"
+            : "/media/demo/groups/engineering.jpg";
+
+    private sealed class GroupFormModel
+    {
+        public string? Name { get; set; }
+
+        public string? Description { get; set; }
+    }
+}
+
+<style>
+    .groups-layout {
+        display: grid;
+        gap: 16px;
+    }
+
+    .group-description {
+        min-height: 120px;
+    }
+
+    .group-item {
+        display: grid;
+        grid-template-columns: 96px minmax(0, 1fr);
+        gap: 14px;
+        text-align: left;
+        padding: 14px;
+        border-radius: 14px;
+        border: 1px solid var(--border-soft);
+        background: var(--bg-muted);
+        color: var(--text-primary);
+    }
+
+    .group-thumb {
+        width: 100%;
+        height: 96px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .group-item.active {
+        background: var(--app-accent-soft);
+        border-color: rgba(37, 99, 235, 0.24);
+    }
+
+    .group-item-head,
+    .group-header,
+    .group-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .group-item p,
+    .group-header p,
+    .member-item span,
+    .group-item span {
+        margin: 0;
+        color: var(--text-secondary);
+        line-height: 1.55;
+    }
+
+    .group-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .group-status.joined {
+        background: var(--app-highlight-soft);
+        color: var(--success);
+    }
+
+    .group-status.open {
+        background: var(--app-accent-soft);
+        color: var(--accent);
+    }
+
+    .group-hero {
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .group-hero-cover {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .group-hero-body {
+        padding: 20px;
+        display: grid;
+        gap: 16px;
+    }
+
+    .group-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .member-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .member-item {
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: var(--bg-muted);
+        border: 1px solid var(--border-soft);
+    }
+
+    @@media (min-width: 1200px) {
+        .groups-layout {
+            grid-template-columns: 380px minmax(0, 1fr);
+        }
+    }
+</style>

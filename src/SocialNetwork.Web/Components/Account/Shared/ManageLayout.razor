@@ -1,0 +1,21 @@
+@inherits LayoutComponentBase
+@layout AccountLayout
+
+<section class="manage-shell">
+    <div class="page-header">
+        <div>
+            <span class="section-kicker">Account settings</span>
+            <h1>Manage your profile and security</h1>
+            <p>Identity settings now sit inside a clearer module boundary instead of generic scaffold markup.</p>
+        </div>
+    </div>
+
+    <div class="manage-grid">
+        <aside class="manage-nav-shell">
+            <ManageNavMenu />
+        </aside>
+        <div class="manage-content panel">
+            @Body
+        </div>
+    </div>
+</section>

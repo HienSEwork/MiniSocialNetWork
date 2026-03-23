@@ -1,0 +1,95 @@
+@page "/posts/{PostId:guid}"
+@attribute [Authorize]
+@implements IAsyncDisposable
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IPostService PostService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Chi tiết bài viết</PageTitle>
+
+<section class="page-section">
+    <div class="content-stack narrow">
+        <div class="page-header">
+            <div>
+                <h2>Chi tiết bài viết</h2>
+                <p>Xem riêng bài viết, bình luận và tương tác.</p>
+            </div>
+            <a class="btn btn-outline-dark" href="/">Quay lại trang chủ</a>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        @if (post is null && string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <EmptyState Title="Không tìm thấy bài viết" Description="Bài viết đã bị xóa hoặc bạn không có quyền xem." />
+        }
+        else if (post is not null)
+        {
+            <PostCard Post="post" ShowDetailLink="false" OnChanged="LoadPostAsync" />
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public Guid PostId { get; set; }
+
+    private string currentUserId = string.Empty;
+    private string? errorMessage;
+    private PostFeedItemDto? post;
+    private HubConnection? notificationHub;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+        await LoadPostAsync();
+        await InitializeNotificationHubAsync();
+    }
+
+    private async Task LoadPostAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            post = await PostService.GetPostAsync(PostId, currentUserId);
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task InitializeNotificationHubAsync()
+    {
+        notificationHub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/hubs/notifications"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        notificationHub.On("SocialUpdated", async () =>
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadPostAsync();
+                StateHasChanged();
+            });
+        });
+
+        await notificationHub.StartAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (notificationHub is not null)
+        {
+            await notificationHub.DisposeAsync();
+        }
+    }
+}

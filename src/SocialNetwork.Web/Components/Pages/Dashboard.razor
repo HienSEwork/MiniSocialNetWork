@@ -1,0 +1,188 @@
+@page "/dashboard"
+@attribute [Authorize]
+@layout SocialNetwork.Web.Components.Layout.DashboardLayout
+
+@inject IDashboardService DashboardService
+
+<PageTitle>Dashboard</PageTitle>
+
+<section class="page-section">
+    <div class="page-header">
+        <div>
+            <span class="section-kicker">Overview</span>
+            <h2>Dashboard</h2>
+            <p>Tổng hợp nhanh người dùng, bài đăng và hoạt động gần đây.</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    @if (stats is null && string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="panel">Đang tải dashboard...</div>
+    }
+    else if (stats is not null)
+    {
+        <article class="panel dashboard-lead">
+            <div>
+                <span class="section-kicker">System snapshot</span>
+                <h3>Hệ thống đã kết nối đủ luồng social chính.</h3>
+                <p class="page-lead">Dashboard này giúp xem nhanh số liệu, hoạt động gần đây và trạng thái dữ liệu của ứng dụng.</p>
+            </div>
+            <div class="meta-card">
+                <span>Trung bình bài đăng/ngày</span>
+                <strong>@AveragePostsPerDay</strong>
+            </div>
+        </article>
+
+        <div class="card-grid four-up">
+            <StatCard Label="Người dùng" Value="@stats.TotalUsers.ToString()" Icon="friends" />
+            <StatCard Label="Bài đăng" Value="@stats.TotalPosts.ToString()" Icon="feed" />
+            <StatCard Label="Bình luận" Value="@stats.TotalComments.ToString()" Icon="comment" />
+            <StatCard Label="Nhóm" Value="@stats.TotalGroups.ToString()" Icon="groups" />
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="panel chart-shell">
+                <div class="chart-header">
+                    <div>
+                        <span class="section-kicker">7 ngày gần nhất</span>
+                        <h3>Bài đăng theo ngày</h3>
+                    </div>
+                    <span class="badge-soft">Đỉnh cao nhất: @PeakPosts bài</span>
+                </div>
+
+                <div class="chart-grid">
+                    @foreach (var point in stats.PostsPerDay)
+                    {
+                        var height = Math.Max(14, point.TotalPosts * 24);
+                        <div class="chart-column">
+                            <strong>@point.TotalPosts</strong>
+                            <div class="bar" style="height:@($"{height}px")"></div>
+                            <span>@point.Day.ToString("MM-dd")</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <aside class="section-grid">
+                <article class="panel">
+                    <span class="section-kicker">Runtime</span>
+                    <div class="surface-list">
+                        <div class="surface-item">
+                            <strong>Identity + LocalDB</strong>
+                            <p>Ứng dụng tự migrate và seed dữ liệu khi khởi động.</p>
+                        </div>
+                        <div class="surface-item">
+                            <strong>Seed ổn định</strong>
+                            <p>Dữ liệu mẫu dùng ID cố định để test lặp lại ổn định.</p>
+                        </div>
+                    </div>
+                </article>
+            </aside>
+        </div>
+    }
+</section>
+
+@code {
+    private DashboardStatsDto? stats;
+    private string? errorMessage;
+
+    private string AveragePostsPerDay =>
+        stats is null || stats.PostsPerDay.Count == 0
+            ? "0"
+            : Math.Round(stats.PostsPerDay.Average(point => point.TotalPosts), 1).ToString("0.0");
+
+    private int PeakPosts =>
+        stats?.PostsPerDay.Count > 0
+            ? stats.PostsPerDay.Max(point => point.TotalPosts)
+            : 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            stats = await DashboardService.GetStatsAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+}
+
+<style>
+    .dashboard-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .dashboard-lead,
+    .chart-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: space-between;
+        align-items: end;
+    }
+
+    .dashboard-lead h3,
+    .chart-header h3 {
+        margin: 0.35rem 0 0;
+    }
+
+    .dashboard-lead .page-lead {
+        max-width: 64ch;
+        margin: 0.55rem 0 0;
+    }
+
+    .dashboard-lead .meta-card {
+        min-width: 220px;
+    }
+
+    .chart-shell {
+        display: grid;
+        gap: 1.25rem;
+    }
+
+    .chart-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.85rem;
+        align-items: end;
+        min-height: 16rem;
+    }
+
+    .chart-column {
+        display: grid;
+        justify-items: center;
+        gap: 0.55rem;
+    }
+
+    .bar {
+        width: 100%;
+        border-radius: 999px 999px 0 0;
+        background: linear-gradient(180deg, var(--accent), var(--accent-hover));
+        min-height: 14px;
+        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.14);
+    }
+
+    .chart-column strong {
+        font-size: 0.95rem;
+    }
+
+    .chart-column span {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+
+    @@media (min-width: 1200px) {
+        .dashboard-grid {
+            grid-template-columns: minmax(0, 1fr) 300px;
+            align-items: start;
+        }
+    }
+</style>

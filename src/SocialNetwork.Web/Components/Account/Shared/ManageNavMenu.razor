@@ -1,0 +1,55 @@
+@using Microsoft.AspNetCore.Identity
+@using SocialNetwork.DAL.Entities
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+<ul class="manage-nav-list">
+    <li>
+        <NavLink class="manage-nav-link" href="Account/Manage" Match="NavLinkMatch.All">
+            <AppIcon Name="profile" />
+            <span>Profile</span>
+        </NavLink>
+    </li>
+    <li>
+        <NavLink class="manage-nav-link" href="Account/Manage/Email">
+            <AppIcon Name="notifications" />
+            <span>Email</span>
+        </NavLink>
+    </li>
+    <li>
+        <NavLink class="manage-nav-link" href="Account/Manage/ChangePassword">
+            <AppIcon Name="logout" />
+            <span>Password</span>
+        </NavLink>
+    </li>
+    @if (hasExternalLogins)
+    {
+        <li>
+            <NavLink class="manage-nav-link" href="Account/Manage/ExternalLogins">
+                <AppIcon Name="globe" />
+                <span>External logins</span>
+            </NavLink>
+        </li>
+    }
+    <li>
+        <NavLink class="manage-nav-link" href="Account/Manage/TwoFactorAuthentication">
+            <AppIcon Name="bolt" />
+            <span>Two-factor auth</span>
+        </NavLink>
+    </li>
+    <li>
+        <NavLink class="manage-nav-link" href="Account/Manage/PersonalData">
+            <AppIcon Name="dashboard" />
+            <span>Personal data</span>
+        </NavLink>
+    </li>
+</ul>
+
+@code {
+    private bool hasExternalLogins;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    }
+}

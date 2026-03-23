@@ -1,0 +1,899 @@
+@page "/"
+@page "/home"
+@page "/ui"
+@implements IAsyncDisposable
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IPostService PostService
+@inject IProfileService ProfileService
+@inject IGroupService GroupService
+@inject IFriendshipService FriendshipService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Trang ch?</PageTitle>
+
+<section class="page-section">
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    @if (isLoading)
+    {
+        <div class="panel">?ang t?i trang ch?...</div>
+    }
+    else
+    {
+        <div class="home-facebook-shell">
+            <div class="feed-center-column">
+                <section class="panel stories-panel">
+                    <div class="stories-header">
+                        <div>
+                            <p class="section-kicker">Stories</p>
+                            <h3>Kho?nh kh?c n?i b?t</h3>
+                        </div>
+                        <span class="stories-meta">@GetStorySummary()</span>
+                    </div>
+
+                    <div class="stories-row">
+                        @foreach (var story in GetVisibleStories())
+                        {
+                            <article class="story-card @(story.IsCreateStory ? "create-story" : null)" style="@story.BackgroundStyle">
+                                <div class="story-overlay"></div>
+                                <div class="story-top">
+                                    @if (story.IsCreateStory)
+                                    {
+                                        <span class="story-create-icon">+</span>
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(story.AvatarUrl))
+                                    {
+                                        <img class="story-avatar" src="@story.AvatarUrl" alt="@story.Title" />
+                                    }
+                                    else
+                                    {
+                                        <span class="story-avatar story-avatar-fallback">@story.Initials</span>
+                                    }
+                                </div>
+                                <div class="story-copy">
+                                    <strong>@story.Title</strong>
+                                    <small>@story.Subtitle</small>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </section>
+
+                @if (isAuthenticated)
+                {
+                    <PostComposer CurrentUserId="@currentUserId"
+                                  CurrentUserDisplayName="@currentProfile?.DisplayName"
+                                  CurrentUserAvatarUrl="@currentProfile?.AvatarUrl"
+                                  OnCreated="LoadFeedAsync" />
+                }
+                else
+                {
+                    <section class="panel guest-entry-panel">
+                        <div>
+                            <p class="section-kicker">Welcome</p>
+                            <h3>??ng nh?p ?? vi?t b¨¤i, b¨¬nh lu?n v¨¤ nh?n th?ng b¨¢o realtime.</h3>
+                            <p class="page-lead">Trang ch? v?n gi? nguy¨ºn b? c?c feed, ch? kh¨®a c¨¢c thao t¨¢c c?n t¨¤i kho?n.</p>
+                        </div>
+                        <div class="guest-entry-actions">
+                            <a class="btn btn-primary" href="/Account/Login">??ng nh?p</a>
+                            <a class="btn btn-outline-dark" href="/Account/Register">??ng ky</a>
+                        </div>
+                    </section>
+                }
+
+                <section class="panel feed-summary-panel">
+                    <div>
+                        <p class="section-kicker">Feed</p>
+                        <h3>@(isAuthenticated ? "D¨¤nh cho b?n" : "Kh¨¢m ph¨¢ Mini Social")</h3>
+                    </div>
+                    <div class="feed-summary-metrics">
+                        <span class="feed-metric">@(isAuthenticated ? $"{posts.Count} b¨¤i vi?t" : "1 giao di?n duy nh?t")</span>
+                        <span class="feed-metric accent">@(isAuthenticated ? $"{joinedGroups.Count} nh¨®m ?ang theo d?i" : "Sidebar lu?n c? ??nh")</span>
+                        <span class="feed-metric success">@(isAuthenticated ? $"{suggestedPeople.Count} g?i y k?t n?i" : "Realtime sau khi ??ng nh?p")</span>
+                    </div>
+                </section>
+
+                @if (isAuthenticated)
+                {
+                    if (posts.Count == 0)
+                    {
+                        <EmptyState Title="Ch?a c¨® b¨¤i ??ng" Description="Hi?n ch?a l?y ???c d? li?u b?ng tin." />
+                    }
+                    else
+                    {
+                        <div class="section-grid feed-post-list">
+                            @foreach (var post in posts)
+                            {
+                                <PostCard Post="post" ShowDetailLink="false" OnChanged="LoadFeedAsync" />
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="section-grid guest-feed-list">
+                        @foreach (var preview in guestFeedPreviews)
+                        {
+                            <article class="panel guest-feed-card">
+                                <div class="guest-feed-head">
+                                    <span class="avatar">@preview.Initials</span>
+                                    <div>
+                                        <strong>@preview.Title</strong>
+                                        <small>@preview.Meta</small>
+                                    </div>
+                                </div>
+                                <p>@preview.Content</p>
+                            </article>
+                        }
+                    </div>
+                }
+            </div>
+
+            <aside class="home-right-rail">
+                @if (isAuthenticated)
+                {
+                    <article class="panel home-profile-card">
+                        <div class="profile-card-header">
+                            <div>
+                                <p class="section-kicker">Your space</p>
+                                <h3>@(currentProfile?.DisplayName ?? "Mini Social")</h3>
+                            </div>
+                            <a class="profile-link" href="/profile">M? h? s?</a>
+                        </div>
+
+                        <p class="profile-bio">@(!string.IsNullOrWhiteSpace(currentProfile?.Bio) ? currentProfile!.Bio : "C?p nh?t bio ?? ph?n gi?i thi?u c?a b?n n?i b?t h?n tr¨ºn b?ng tin.")</p>
+
+                        <div class="profile-stats-grid">
+                            <div>
+                                <span>B¨¤i vi?t</span>
+                                <strong>@(currentProfile?.PostCount ?? posts.Count)</strong>
+                            </div>
+                            <div>
+                                <span>Nh¨®m</span>
+                                <strong>@(currentProfile?.GroupCount ?? joinedGroups.Count)</strong>
+                            </div>
+                            <div>
+                                <span>Feed h?m nay</span>
+                                <strong>@posts.Count</strong>
+                            </div>
+                        </div>
+                    </article>
+                }
+                else
+                {
+                    <article class="panel rail-card home-profile-card">
+                        <div class="profile-card-header">
+                            <div>
+                                <p class="section-kicker">Quick start</p>
+                                <h3>Mini Social</h3>
+                            </div>
+                            <a class="profile-link" href="/Account/Login">V¨¤o ngay</a>
+                        </div>
+
+                        <p class="profile-bio">M?t trang ch? duy nh?t cho guest v¨¤ user ??ng nh?p. Khi v¨¤o t¨¤i kho?n, feed th?t s? ?? v¨¤o ?¨²ng khung n¨¤y.</p>
+
+                        <div class="profile-stats-grid">
+                            <div>
+                                <span>Feed</span>
+                                <strong>1</strong>
+                            </div>
+                            <div>
+                                <span>Layout</span>
+                                <strong>3 c?t</strong>
+                            </div>
+                            <div>
+                                <span>Auth</span>
+                                <strong>S?n s¨¤ng</strong>
+                            </div>
+                        </div>
+                    </article>
+                }
+
+                <article class="panel rail-card">
+                    <div class="rail-heading">
+                        <div>
+                            <p class="section-kicker">People</p>
+                            <h3>@(isAuthenticated ? "G?i y k?t n?i" : "B?n s? th?y g¨¬")</h3>
+                        </div>
+                        <a href="@(isAuthenticated ? "/friends" : "/Account/Register")">@(isAuthenticated ? "Xem t?t c?" : "T?o t¨¤i kho?n")</a>
+                    </div>
+
+                    @if (isAuthenticated)
+                    {
+                        if (suggestedPeople.Count == 0)
+                        {
+                            <p class="rail-empty">Hi?n ch?a c¨® g?i y m?i.</p>
+                        }
+                        else
+                        {
+                            <div class="rail-list">
+                                @foreach (var person in suggestedPeople)
+                                {
+                                    <article class="rail-person-item">
+                                        <span class="avatar rail-avatar">
+                                            @if (!string.IsNullOrWhiteSpace(person.AvatarUrl))
+                                            {
+                                                <img src="@person.AvatarUrl" alt="@person.DisplayName" />
+                                            }
+                                            else
+                                            {
+                                                @GetInitials(person.DisplayName)
+                                            }
+                                        </span>
+                                        <div>
+                                            <strong>@person.DisplayName</strong>
+                                            <small>@(!string.IsNullOrWhiteSpace(person.Bio) ? person.Bio : person.Email)</small>
+                                        </div>
+                                    </article>
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="rail-list">
+                            @foreach (var item in guestPeoplePreviews)
+                            {
+                                <article class="rail-person-item">
+                                    <span class="avatar rail-avatar">@item.Initials</span>
+                                    <div>
+                                        <strong>@item.Title</strong>
+                                        <small>@item.Meta</small>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    }
+                </article>
+
+                <article class="panel rail-card">
+                    <div class="rail-heading">
+                        <div>
+                            <p class="section-kicker">Groups</p>
+                            <h3>@(isAuthenticated ? "Nh¨®m ?ang theo d?i" : "Nh¨®m v¨¤ c?ng ??ng")</h3>
+                        </div>
+                        <a href="@(isAuthenticated ? "/groups" : "/Account/Login")">@(isAuthenticated ? "Qu?n ly" : "??ng nh?p")</a>
+                    </div>
+
+                    @if (isAuthenticated)
+                    {
+                        if (joinedGroups.Count == 0)
+                        {
+                            <p class="rail-empty">B?n ch?a tham gia nh¨®m n¨¤o.</p>
+                        }
+                        else
+                        {
+                            <div class="rail-list">
+                                @foreach (var group in joinedGroups)
+                                {
+                                    <a class="rail-group-item" href="@($"/groups/{group.Id}")">
+                                        <span class="rail-group-icon">
+                                            <AppIcon Name="groups" />
+                                        </span>
+                                        <div>
+                                            <strong>@group.Name</strong>
+                                            <small>@group.MemberCount th¨¤nh vi¨ºn</small>
+                                        </div>
+                                    </a>
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="rail-list">
+                            @foreach (var item in guestGroupPreviews)
+                            {
+                                <article class="rail-group-item">
+                                    <span class="rail-group-icon">
+                                        <AppIcon Name="groups" />
+                                    </span>
+                                    <div>
+                                        <strong>@item.Title</strong>
+                                        <small>@item.Meta</small>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    }
+                </article>
+
+                <article class="panel rail-card activity-card">
+                    <div class="rail-heading">
+                        <div>
+                            <p class="section-kicker">Pulse</p>
+                            <h3>Nh?p ho?t ??ng</h3>
+                        </div>
+                    </div>
+
+                    <div class="activity-list">
+                        @foreach (var item in GetVisibleActivityTiles())
+                        {
+                            <article class="activity-item">
+                                <span class="activity-dot"></span>
+                                <div>
+                                    <strong>@item.Title</strong>
+                                    <small>@item.TimeLabel</small>
+                                    <p>@item.Description</p>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </article>
+            </aside>
+        </div>
+    }
+</section>
+
+@code {
+    private readonly List<PostFeedItemDto> posts = new();
+    private readonly List<GroupSummaryDto> joinedGroups = new();
+    private readonly List<FriendSummaryDto> suggestedPeople = new();
+    private readonly List<StoryTileViewModel> storyTiles = new();
+    private readonly List<ActivityTileViewModel> activityTiles = new();
+    private readonly List<StoryTileViewModel> guestStoryTiles =
+    [
+        new(true, "??ng nh?p", "M? feed th?t c?a b?n", null, "MS", "background: linear-gradient(180deg, #35589a 0%, #223554 100%);"),
+        new(false, "B?ng tin", "Composer, b¨¤i vi?t, b¨¬nh lu?n", null, "BT", "background: linear-gradient(180deg, #4b5563 0%, #1f2937 100%);"),
+        new(false, "Nh¨®m", "Theo d?i c?ng ??ng", null, "NH", "background: linear-gradient(180deg, #14532d 0%, #0f3d24 100%);"),
+        new(false, "Chat", "Tin nh?n realtime", null, "CH", "background: linear-gradient(180deg, #0f766e 0%, #134e4a 100%);"),
+        new(false, "Th?ng b¨¢o", "C?p nh?t t?p trung", null, "TB", "background: linear-gradient(180deg, #6b21a8 0%, #3b0764 100%);")
+    ];
+    private readonly List<ActivityTileViewModel> guestActivityTiles =
+    [
+        new("Tin nh?n realtime", "S?n s¨¤ng", "??ng nh?p ?? nh?n c?p nh?t chat ngay tr¨ºn topbar."),
+        new("B?ng tin c¨¢ nhan", "S?n s¨¤ng", "Feed th?t s? hi?n th? ?¨²ng trong khung trung tam n¨¤y."),
+        new("Nh¨®m v¨¤ g?i y", "S?n s¨¤ng", "Sidebar, nh¨®m v¨¤ b?n b¨¨ gi? nguy¨ºn b? c?c khi chuy?n tr?ng th¨¢i ??ng nh?p.")
+    ];
+    private readonly List<PreviewCardViewModel> guestFeedPreviews =
+    [
+        new("MS", "B¨¤i ??ng m?u", "B? c?c feed gi? nguy¨ºn, ch? thay d? li?u th?t sau khi x¨¢c th?c.", "Trang ch? d¨´ng m?t layout duy nh?t, kh?ng t¨¢ch guest page ri¨ºng n?a."),
+        new("RT", "Realtime v¨¤ t??ng t¨¢c", "Th?ng b¨¢o, nh?n tin v¨¤ nh¨®m s? b?t ngay khi user ??ng nh?p.", "Kh?ng c¨°n giao di?n ph? t?m th?i gay l?ch tr?i nghi?m.")
+    ];
+    private readonly List<PreviewCardViewModel> guestPeoplePreviews =
+    [
+        new("KB", "K?t b?n", "G?i y b?n b¨¨ v¨¤ l?i m?i s? hi?n ? ?ay"),
+        new("HS", "H? s?", "Trang c¨¢ nhan v¨¤ tr?ng th¨¢i k?t n?i ??ng b?")
+    ];
+    private readonly List<PreviewCardViewModel> guestGroupPreviews =
+    [
+        new("NH", "Nh¨®m h?c t?p", "B¨¤i vi?t, th¨¤nh vi¨ºn v¨¤ ho?t ??ng"),
+        new("CL", "C?ng ??ng", "Theo d?i nh¨®m ?ang tham gia ngay tr¨ºn rail ph?i")
+    ];
+
+    private string currentUserId = string.Empty;
+    private string? errorMessage;
+    private bool isAuthenticated;
+    private bool isLoading = true;
+    private ProfileDto? currentProfile;
+    private HubConnection? notificationHub;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = authState.User.Identity?.IsAuthenticated == true;
+
+        if (isAuthenticated)
+        {
+            currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+            await LoadFeedAsync();
+            await LoadSidebarDataAsync();
+            await InitializeNotificationHubAsync();
+        }
+
+        isLoading = false;
+    }
+
+    private async Task LoadFeedAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            posts.Clear();
+            posts.AddRange(await PostService.GetFeedAsync(currentUserId));
+            RebuildDecorations();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task LoadSidebarDataAsync()
+    {
+        try
+        {
+            var profileTask = ProfileService.GetProfileAsync(currentUserId);
+            var groupTask = GroupService.GetGroupsAsync(currentUserId);
+            var peopleTask = FriendshipService.GetPeopleAsync(currentUserId);
+
+            await Task.WhenAll(profileTask, groupTask, peopleTask);
+
+            currentProfile = profileTask.Result;
+
+            joinedGroups.Clear();
+            joinedGroups.AddRange(groupTask.Result.Where(group => group.IsJoined).Take(4));
+
+            suggestedPeople.Clear();
+            suggestedPeople.AddRange(peopleTask.Result.Where(person => !person.IsFriend).Take(4));
+            if (suggestedPeople.Count == 0)
+            {
+                suggestedPeople.AddRange(peopleTask.Result.Take(4));
+            }
+
+            RebuildDecorations();
+        }
+        catch
+        {
+            if (string.IsNullOrWhiteSpace(errorMessage))
+            {
+                errorMessage = "M?t s? d? li?u ph? ch?a t?i ???c, nh?ng feed v?n ho?t ??ng.";
+            }
+        }
+    }
+
+    private void RebuildDecorations()
+    {
+        storyTiles.Clear();
+        activityTiles.Clear();
+
+        storyTiles.Add(new StoryTileViewModel(
+            true,
+            "T?o story",
+            "Chia s? m?t kho?nh kh?c m?i",
+            currentProfile?.AvatarUrl,
+            GetInitials(currentProfile?.DisplayName),
+            "background: linear-gradient(180deg, #1f2937 0%, #111827 100%);"));
+
+        var storyCandidates = posts
+            .Where(post => post.UserId != currentUserId)
+            .GroupBy(post => post.UserId)
+            .Select(group => group.OrderByDescending(post => post.CreatedDate).First())
+            .Take(4)
+            .ToList();
+
+        for (var index = 0; index < storyCandidates.Count; index++)
+        {
+            var storyPost = storyCandidates[index];
+            storyTiles.Add(new StoryTileViewModel(
+                false,
+                storyPost.AuthorName,
+                string.IsNullOrWhiteSpace(storyPost.GroupName) ? "C?p nh?t m?i" : storyPost.GroupName!,
+                storyPost.AuthorAvatarUrl,
+                GetInitials(storyPost.AuthorName),
+                BuildStoryBackground(storyPost, index)));
+        }
+
+        foreach (var post in posts.Take(4))
+        {
+            activityTiles.Add(new ActivityTileViewModel(
+                post.AuthorName,
+                GetRelativeTime(post.CreatedDate),
+                string.IsNullOrWhiteSpace(post.GroupName)
+                    ? Truncate(post.Content, 88)
+                    : $"{post.GroupName}: {Truncate(post.Content, 72)}"));
+        }
+    }
+
+    private async Task InitializeNotificationHubAsync()
+    {
+        notificationHub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/hubs/notifications"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        notificationHub.On("SocialUpdated", async () =>
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadFeedAsync();
+                StateHasChanged();
+            });
+        });
+
+        await notificationHub.StartAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (notificationHub is not null)
+        {
+            await notificationHub.DisposeAsync();
+        }
+    }
+
+    private IReadOnlyList<StoryTileViewModel> GetVisibleStories() => isAuthenticated ? storyTiles : guestStoryTiles;
+
+    private IReadOnlyList<ActivityTileViewModel> GetVisibleActivityTiles() => isAuthenticated ? activityTiles : guestActivityTiles;
+
+    private string GetStorySummary() => isAuthenticated
+        ? $"{posts.Count} b¨¤i vi?t trong feed"
+        : "C¨´ng m?t khung giao di?n tr??c v¨¤ sau ??ng nh?p";
+
+    private static string BuildStoryBackground(PostFeedItemDto post, int index)
+    {
+        if (post.MediaType == MediaType.Image && !string.IsNullOrWhiteSpace(post.MediaUrl))
+        {
+            return $"background-image: linear-gradient(180deg, rgba(15,23,42,.08), rgba(15,23,42,.72)), url('{post.MediaUrl}'); background-size: cover; background-position: center;";
+        }
+
+        string[] gradients =
+        [
+            "linear-gradient(180deg, #374151 0%, #111827 100%)",
+            "linear-gradient(180deg, #334155 0%, #0f172a 100%)",
+            "linear-gradient(180deg, #3f3f46 0%, #18181b 100%)",
+            "linear-gradient(180deg, #3b4252 0%, #1f2937 100%)"
+        ];
+
+        return $"background: {gradients[index % gradients.Length]};";
+    }
+
+    private static string Truncate(string value, int maxLength) =>
+        value.Length <= maxLength ? value : $"{value[..(maxLength - 3)]}...";
+
+    private static string GetInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "MS";
+        }
+
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "MS";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+
+    private static string GetRelativeTime(DateTime createdDate)
+    {
+        var delta = DateTime.UtcNow - createdDate.ToUniversalTime();
+
+        if (delta.TotalMinutes < 1)
+        {
+            return "V?a xong";
+        }
+
+        if (delta.TotalHours < 1)
+        {
+            return $"{Math.Max(1, (int)delta.TotalMinutes)} ph¨²t tr??c";
+        }
+
+        if (delta.TotalDays < 1)
+        {
+            return $"{Math.Max(1, (int)delta.TotalHours)} gi? tr??c";
+        }
+
+        return $"{Math.Max(1, (int)delta.TotalDays)} ng¨¤y tr??c";
+    }
+
+    private sealed record StoryTileViewModel(
+        bool IsCreateStory,
+        string Title,
+        string Subtitle,
+        string? AvatarUrl,
+        string Initials,
+        string BackgroundStyle);
+
+    private sealed record ActivityTileViewModel(
+        string Title,
+        string TimeLabel,
+        string Description);
+
+    private sealed record PreviewCardViewModel(
+        string Initials,
+        string Title,
+        string Meta,
+        string Content = "");
+}
+
+<style>
+    .home-facebook-shell {
+        display: grid;
+        gap: 18px;
+        align-items: start;
+    }
+
+    .feed-center-column,
+    .home-right-rail {
+        display: grid;
+        gap: 16px;
+        min-width: 0;
+    }
+
+    .stories-panel,
+    .feed-summary-panel,
+    .home-profile-card,
+    .rail-card,
+    .guest-entry-panel,
+    .guest-feed-card {
+        overflow: hidden;
+    }
+
+    .stories-header,
+    .rail-heading,
+    .profile-card-header,
+    .feed-summary-panel,
+    .guest-entry-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 12px;
+    }
+
+    .stories-meta,
+    .profile-link,
+    .rail-heading a {
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: #8ab4ff;
+    }
+
+    .stories-row {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+    }
+
+    .story-card {
+        position: relative;
+        min-height: 210px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 12px;
+        border-radius: 20px;
+        overflow: hidden;
+        color: #fff;
+        background-size: cover;
+        background-position: center;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .story-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.08), rgba(15, 23, 42, 0.72));
+    }
+
+    .story-card.create-story .story-overlay {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.28));
+    }
+
+    .story-top,
+    .story-copy {
+        position: relative;
+        z-index: 1;
+    }
+
+    .story-avatar,
+    .story-create-icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 3px solid rgba(255, 255, 255, 0.72);
+        background: rgba(255, 255, 255, 0.18);
+        object-fit: cover;
+        font-weight: 800;
+    }
+
+    .story-create-icon {
+        font-size: 1.4rem;
+        background: var(--accent);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .story-copy {
+        display: grid;
+        gap: 4px;
+    }
+
+    .story-copy strong {
+        font-size: 0.96rem;
+    }
+
+    .story-copy small {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 0.78rem;
+    }
+
+    .guest-entry-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .feed-summary-panel {
+        flex-wrap: wrap;
+    }
+
+    .feed-summary-metrics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .feed-metric {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: var(--bg-muted);
+        color: var(--text-primary);
+        font-size: 0.84rem;
+        font-weight: 700;
+    }
+
+    .feed-metric.accent {
+        background: var(--app-accent-soft);
+        color: var(--accent);
+    }
+
+    .feed-metric.success {
+        background: var(--app-highlight-soft);
+        color: var(--success);
+    }
+
+    .feed-post-list,
+    .guest-feed-list {
+        gap: 16px;
+    }
+
+    .guest-feed-card {
+        display: grid;
+        gap: 14px;
+    }
+
+    .guest-feed-head {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+    }
+
+    .guest-feed-head small,
+    .profile-bio,
+    .rail-empty {
+        margin: 4px 0 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .guest-feed-card p,
+    .activity-item p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.86rem;
+        line-height: 1.6;
+    }
+
+    .home-profile-card {
+        background: linear-gradient(180deg, rgba(48, 49, 50, 0.94), rgba(36, 37, 38, 1));
+    }
+
+    .profile-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .profile-stats-grid div {
+        padding: 12px;
+        border-radius: 12px;
+        background: var(--bg-muted);
+        border: 1px solid var(--border);
+    }
+
+    .profile-stats-grid span,
+    .rail-person-item small,
+    .rail-group-item small,
+    .activity-item small {
+        display: block;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+    }
+
+    .profile-stats-grid strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 1.08rem;
+    }
+
+    .rail-list,
+    .activity-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+    }
+
+    .rail-person-item,
+    .rail-group-item,
+    .activity-item {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+    }
+
+    .rail-group-item {
+        color: inherit;
+    }
+
+    .rail-avatar,
+    .rail-group-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .rail-group-icon {
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: var(--bg-muted);
+        color: #8ab4ff;
+    }
+
+    .activity-item {
+        grid-template-columns: 10px minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .activity-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        margin-top: 8px;
+        background: #2374e1;
+        box-shadow: 0 0 0 6px rgba(35, 116, 225, 0.16);
+    }
+
+    @@media (min-width: 1200px) {
+        .home-facebook-shell {
+            grid-template-columns: minmax(0, 1fr) 340px;
+        }
+
+        .home-right-rail {
+            position: sticky;
+            top: 88px;
+            align-self: start;
+        }
+    }
+
+    @@media (max-width: 1199.98px) {
+        .stories-row {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .stories-row,
+        .profile-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .guest-entry-panel {
+            flex-direction: column;
+        }
+    }
+</style>

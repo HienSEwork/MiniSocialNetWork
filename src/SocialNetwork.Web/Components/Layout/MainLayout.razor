@@ -1,0 +1,439 @@
+﻿@inherits LayoutComponentBase
+@implements IAsyncDisposable
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject IProfileService ProfileService
+@inject IChatService ChatService
+@inject INotificationService NotificationService
+@inject NavigationManager NavigationManager
+
+<div class="app-shell">
+    <header class="top-row">
+        <div class="topbar-shell">
+            <div class="topbar-left">
+                <a class="topbar-brand" href="/" aria-label="Mini Social">
+                    <span class="topbar-brand-badge">MS</span>
+                    <span class="topbar-brand-copy">
+                        <strong>Mini Social</strong>
+                        <small>Feed, chat và nhóm trong một nhịp nhìn</small>
+                    </span>
+                </a>
+            </div>
+
+            <div class="topbar-center">
+                <button type="button" class="topbar-search" aria-label="Tìm kiếm">
+                    <AppIcon Name="search" Class="topbar-search-icon" />
+                    <span>Tìm trên Mini Social</span>
+                </button>
+
+                <nav class="topbar-modules" aria-label="Điều hướng chính">
+                    <a class="@GetTopbarModuleClass("home")" href="/" title="Trang chủ" aria-label="Trang chủ">
+                        <AppIcon Name="feed-solid" Class="topbar-nav-icon" />
+                    </a>
+                    <a class="@GetTopbarModuleClass("friends")" href="/friends" title="Bạn bè" aria-label="Bạn bè">
+                        <AppIcon Name="friends-solid" Class="topbar-nav-icon" />
+                    </a>
+                    <a class="@GetTopbarModuleClass("chat")" href="/chat" title="Tin nhắn" aria-label="Tin nhắn">
+                        <AppIcon Name="chat-solid" Class="topbar-nav-icon" />
+                    </a>
+                    <a class="@GetTopbarModuleClass("groups")" href="/groups" title="Nhóm" aria-label="Nhóm">
+                        <AppIcon Name="groups-solid" Class="topbar-nav-icon" />
+                    </a>
+                    <a class="@GetTopbarModuleClass("notifications")" href="/notifications" title="Thông báo" aria-label="Thông báo">
+                        <AppIcon Name="notifications-solid" Class="topbar-nav-icon" />
+                    </a>
+                    <a class="@GetTopbarModuleClass("profile")" href="/profile" title="Trang cá nhân" aria-label="Trang cá nhân">
+                        <AppIcon Name="profile-solid" Class="topbar-nav-icon" />
+                    </a>
+                </nav>
+            </div>
+
+            <div class="topbar-right">
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="topbar-tools">
+                            <details class="topbar-tool-menu">
+                                <summary class="topbar-tool-menu-toggle topbar-tool" aria-label="Thông báo">
+                                    <AppIcon Name="notifications" />
+                                    @if (UnreadNotificationCount > 0)
+                                    {
+                                        <span class="tool-count">@Math.Min(UnreadNotificationCount, 9)</span>
+                                    }
+                                </summary>
+
+                                <div class="topbar-dropdown dropdown-panel topbar-tool-dropdown">
+                                    <div class="topbar-dropdown-head">
+                                        <strong>Thông báo</strong>
+                                        @if (UnreadNotificationCount > 0)
+                                        {
+                                            <button type="button" class="topbar-dropdown-link" @onclick="MarkAllNotificationsAsReadAsync">Đánh dấu đã đọc</button>
+                                        }
+                                    </div>
+
+                                    <div class="topbar-dropdown-stack">
+                                        @if (notifications.Count == 0)
+                                        {
+                                            <p class="topbar-dropdown-empty">Chưa có thông báo mới.</p>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var notification in notifications.Take(5))
+                                            {
+                                                <a class="topbar-dropdown-card @(notification.IsRead ? null : "is-unread")"
+                                                   href="@GetNotificationLink(notification)">
+                                                    <span class="topbar-dropdown-card-icon">
+                                                        <AppIcon Name="@GetNotificationIcon(notification.Type)" />
+                                                    </span>
+                                                    <span class="topbar-dropdown-card-copy">
+                                                        <strong>@notification.ActorName</strong>
+                                                        <small>@notification.Message</small>
+                                                        <em>@GetRelativeTime(notification.CreatedDate)</em>
+                                                    </span>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+
+                                    <a class="topbar-dropdown-footer" href="/notifications">Xem tất cả</a>
+                                </div>
+                            </details>
+
+                            <details class="topbar-tool-menu">
+                                <summary class="topbar-tool-menu-toggle topbar-tool" aria-label="Tin nhắn">
+                                    <AppIcon Name="chat" />
+                                    @if (recentChats.Count > 0)
+                                    {
+                                        <span class="tool-count alt">@Math.Min(recentChats.Count, 9)</span>
+                                    }
+                                </summary>
+
+                                <div class="topbar-dropdown dropdown-panel topbar-tool-dropdown">
+                                    <div class="topbar-dropdown-head">
+                                        <strong>Tin nhắn</strong>
+                                    </div>
+
+                                    <div class="topbar-dropdown-stack">
+                                        @if (recentChats.Count == 0)
+                                        {
+                                            <p class="topbar-dropdown-empty">Chưa có cuộc trò chuyện gần đây.</p>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var chatUser in recentChats.Take(5))
+                                            {
+                                                <a class="topbar-dropdown-card chat-card" href="@($"/chat/{chatUser.Id}")">
+                                                    <span class="topbar-dropdown-avatar small">
+                                                        @if (!string.IsNullOrWhiteSpace(chatUser.AvatarUrl))
+                                                        {
+                                                            <img src="@chatUser.AvatarUrl" alt="@chatUser.DisplayName" />
+                                                        }
+                                                        else
+                                                        {
+                                                            @GetInitials(chatUser.DisplayName)
+                                                        }
+                                                    </span>
+                                                    <span class="topbar-dropdown-card-copy">
+                                                        <strong>@chatUser.DisplayName</strong>
+                                                        <small>@(!string.IsNullOrWhiteSpace(chatUser.Bio) ? chatUser.Bio : chatUser.Email)</small>
+                                                    </span>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+
+                                    <a class="topbar-dropdown-footer" href="/chat">Mở hộp thư</a>
+                                </div>
+                            </details>
+                        </div>
+
+                        <details class="topbar-user-menu">
+                            <summary class="topbar-user-menu-toggle" aria-label="Tài khoản">
+                                <span class="topbar-avatar">
+                                    @if (!string.IsNullOrWhiteSpace(currentUserAvatarUrl))
+                                    {
+                                        <img src="@currentUserAvatarUrl" alt="@currentUserDisplayName" />
+                                    }
+                                    else
+                                    {
+                                        @GetInitials(currentUserDisplayName)
+                                    }
+                                </span>
+                            </summary>
+
+                            <div class="topbar-dropdown dropdown-panel">
+                                <a class="topbar-dropdown-profile" href="/profile">
+                                    <span class="topbar-dropdown-avatar">
+                                        @if (!string.IsNullOrWhiteSpace(currentUserAvatarUrl))
+                                        {
+                                            <img src="@currentUserAvatarUrl" alt="@currentUserDisplayName" />
+                                        }
+                                        else
+                                        {
+                                            @GetInitials(currentUserDisplayName)
+                                        }
+                                    </span>
+                                    <span class="topbar-dropdown-profile-text">
+                                        <strong>@currentUserDisplayName</strong>
+                                        <small>Mở trang cá nhân</small>
+                                    </span>
+                                </a>
+
+                                <nav class="topbar-dropdown-list" aria-label="Tài khoản">
+                                    <a class="topbar-dropdown-item" href="/profile">
+                                        <span class="topbar-dropdown-icon">
+                                            <AppIcon Name="profile" />
+                                        </span>
+                                        <span>Trang cá nhân</span>
+                                    </a>
+
+                                    <a class="topbar-dropdown-item" href="/settings">
+                                        <span class="topbar-dropdown-icon">
+                                            <AppIcon Name="dashboard" />
+                                        </span>
+                                        <span>Cài đặt</span>
+                                    </a>
+
+                                    <a class="topbar-dropdown-item" href="/saved">
+                                        <span class="topbar-dropdown-icon">
+                                            <AppIcon Name="heart" />
+                                        </span>
+                                        <span>Bài viết đã lưu</span>
+                                    </a>
+
+                                    <form action="Account/Logout" method="post" class="topbar-dropdown-logout">
+                                        <AntiforgeryToken />
+                                        <input type="hidden" name="ReturnUrl" value="/Account/Login" />
+                                        <button type="submit" class="topbar-dropdown-item topbar-dropdown-button">
+                                            <span class="topbar-dropdown-icon">
+                                                <AppIcon Name="logout" />
+                                            </span>
+                                            <span>Đăng xuất</span>
+                                        </button>
+                                    </form>
+                                </nav>
+                            </div>
+                        </details>
+                    </Authorized>
+                    <NotAuthorized>
+                        <div class="topbar-auth">
+                            <a class="btn btn-primary btn-sm" href="/Account/Register">Đăng ký</a>
+                            <a class="btn btn-outline-dark btn-sm" href="/Account/Login">Đăng nhập</a>
+                        </div>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </header>
+
+    <div class="page">
+        <aside class="sidebar">
+            <NavMenu />
+        </aside>
+
+        <main class="main-stage">
+            <article class="content-shell page-enter">
+                @Body
+            </article>
+        </main>
+    </div>
+</div>
+
+<div id="blazor-error-ui">
+    Đã xảy ra lỗi ngoài dự kiến.
+    <a href="" class="reload">Tải lại</a>
+    <a class="dismiss">x</a>
+</div>
+
+@code {
+    private readonly List<NotificationDto> notifications = new();
+    private readonly List<UserSummaryDto> recentChats = new();
+
+    private string currentUserId = string.Empty;
+    private string currentUserDisplayName = "Tài khoản";
+    private string? currentUserAvatarUrl;
+    private string currentPath = "/";
+    private HubConnection? notificationHub;
+    private HubConnection? chatHub;
+
+    private int UnreadNotificationCount => notifications.Count(item => !item.IsRead);
+
+    protected override void OnInitialized()
+    {
+        currentPath = GetCurrentPath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += HandleLocationChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var isAuthenticated = authState.User.Identity?.IsAuthenticated == true;
+
+        if (!isAuthenticated)
+        {
+            return;
+        }
+
+        currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+        await LoadHeaderDataAsync();
+        await InitializeRealtimeAsync();
+    }
+
+    private async Task LoadHeaderDataAsync()
+    {
+        var profile = await ProfileService.GetProfileAsync(currentUserId);
+        currentUserDisplayName = profile?.DisplayName ?? "Tài khoản";
+        currentUserAvatarUrl = profile?.AvatarUrl;
+
+        notifications.Clear();
+        notifications.AddRange(await NotificationService.GetNotificationsAsync(currentUserId));
+
+        recentChats.Clear();
+        recentChats.AddRange(await ChatService.GetChatUsersAsync(currentUserId));
+    }
+
+    private async Task InitializeRealtimeAsync()
+    {
+        notificationHub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"/hubs/notifications?userId={currentUserId}"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        notificationHub.On<NotificationDto>("NotificationReceived", async _ =>
+        {
+            await InvokeAsync(async () =>
+            {
+                notifications.Clear();
+                notifications.AddRange(await NotificationService.GetNotificationsAsync(currentUserId));
+                StateHasChanged();
+            });
+        });
+
+        await notificationHub.StartAsync();
+
+        chatHub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"/hubs/chat?userId={currentUserId}"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        chatHub.On<MessageDto>("PrivateMessageReceived", async _ =>
+        {
+            await InvokeAsync(async () =>
+            {
+                recentChats.Clear();
+                recentChats.AddRange(await ChatService.GetChatUsersAsync(currentUserId));
+                StateHasChanged();
+            });
+        });
+
+        await chatHub.StartAsync();
+    }
+
+    private async Task MarkAllNotificationsAsReadAsync()
+    {
+        await NotificationService.MarkAllAsReadAsync(currentUserId);
+        notifications.Clear();
+        notifications.AddRange(await NotificationService.GetNotificationsAsync(currentUserId));
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        NavigationManager.LocationChanged -= HandleLocationChanged;
+
+        if (notificationHub is not null)
+        {
+            await notificationHub.DisposeAsync();
+        }
+
+        if (chatHub is not null)
+        {
+            await chatHub.DisposeAsync();
+        }
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentPath = GetCurrentPath(e.Location);
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private string GetTopbarModuleClass(string section) =>
+        IsActiveSection(section) ? "topbar-module active" : "topbar-module";
+
+    private bool IsActiveSection(string section) => section switch
+    {
+        "home" => currentPath is "/" or "/home" or "/ui" or "/feed",
+        _ => currentPath.Equals($"/{section}", StringComparison.OrdinalIgnoreCase) ||
+             currentPath.StartsWith($"/{section}/", StringComparison.OrdinalIgnoreCase)
+    };
+
+    private static string GetCurrentPath(string absoluteOrRelativeUri)
+    {
+        if (Uri.TryCreate(absoluteOrRelativeUri, UriKind.Absolute, out var absoluteUri))
+        {
+            return string.IsNullOrWhiteSpace(absoluteUri.AbsolutePath) ? "/" : absoluteUri.AbsolutePath;
+        }
+
+        if (string.IsNullOrWhiteSpace(absoluteOrRelativeUri))
+        {
+            return "/";
+        }
+
+        return absoluteOrRelativeUri.StartsWith('/') ? absoluteOrRelativeUri : $"/{absoluteOrRelativeUri}";
+    }
+
+    private static string GetNotificationLink(NotificationDto notification) =>
+        string.IsNullOrWhiteSpace(notification.Link) ? "/notifications" : notification.Link;
+
+    private static string GetNotificationIcon(NotificationType notificationType) => notificationType switch
+    {
+        NotificationType.NewMessage => "chat",
+        NotificationType.NewComment => "comment",
+        NotificationType.NewReaction => "heart",
+        NotificationType.FriendAdded => "friends",
+        _ => "notifications"
+    };
+
+    private static string GetInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "MS";
+        }
+
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "MS";
+        }
+
+        if (parts.Length == 1)
+        {
+            return parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
+    }
+
+    private static string GetRelativeTime(DateTime createdDate)
+    {
+        var delta = DateTime.UtcNow - createdDate.ToUniversalTime();
+
+        if (delta.TotalMinutes < 1)
+        {
+            return "Vừa xong";
+        }
+
+        if (delta.TotalHours < 1)
+        {
+            return $"{Math.Max(1, (int)delta.TotalMinutes)} phút trước";
+        }
+
+        if (delta.TotalDays < 1)
+        {
+            return $"{Math.Max(1, (int)delta.TotalHours)} giờ trước";
+        }
+
+        return $"{Math.Max(1, (int)delta.TotalDays)} ngày trước";
+    }
+}

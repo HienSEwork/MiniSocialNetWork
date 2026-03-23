@@ -1,0 +1,15 @@
+.vs/
+.vscode/
+.tmp/
+artifacts/
+node_modules/
+
+**/bin/
+**/obj/
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+cookies.txt

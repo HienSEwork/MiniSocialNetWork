@@ -1,0 +1,248 @@
+@page "/notifications"
+@attribute [Authorize]
+@implements IAsyncDisposable
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUserService CurrentUserService
+@inject INotificationService NotificationService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Thông báo</PageTitle>
+
+<section class="page-section">
+    <div class="content-stack">
+        <div class="page-header">
+            <div>
+                <span class="section-kicker">Notifications</span>
+                <h2>Thông báo</h2>
+            </div>
+            <div class="notification-header-actions">
+                <span class="badge-soft success">@UnreadCount chưa đọc</span>
+                <button class="btn btn-outline-dark" @onclick="MarkAllAsReadAsync">
+                    <AppIcon Name="markread" />
+                    <span>Đánh dấu đã đọc</span>
+                </button>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        @if (notifications.Count == 0)
+        {
+            <EmptyState Title="Chưa có thông báo" Description="Không tải được dữ liệu thông báo." />
+        }
+        else
+        {
+            <div class="section-grid">
+                @foreach (var notification in notifications)
+                {
+                    <article class="panel notification-card @(notification.IsRead ? "read" : "unread")">
+                        <div class="notification-body">
+                            <div class="notification-icon-badge @(notification.IsRead ? "is-read" : "is-new")">
+                                <AppIcon Name="@GetNotificationIcon(notification.Type)" />
+                            </div>
+                            <div class="notification-copy">
+                                <div class="notification-copy-head">
+                                    <strong>@notification.Title</strong>
+                                    @if (!notification.IsRead)
+                                    {
+                                        <span class="notification-dot" aria-hidden="true"></span>
+                                    }
+                                </div>
+                                <p><span>@notification.ActorName</span> @notification.Message</p>
+                                <small>@notification.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(notification.Link))
+                        {
+                            <a class="btn btn-outline-dark btn-sm" href="@notification.Link">Mở</a>
+                        }
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private readonly List<NotificationDto> notifications = new();
+    private string currentUserId = string.Empty;
+    private string? errorMessage;
+    private HubConnection? notificationHub;
+
+    private int UnreadCount => notifications.Count(notification => !notification.IsRead);
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
+        await LoadAsync();
+        await InitializeHubAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        errorMessage = null;
+
+        try
+        {
+            notifications.Clear();
+            notifications.AddRange(await NotificationService.GetNotificationsAsync(currentUserId));
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task MarkAllAsReadAsync()
+    {
+        await NotificationService.MarkAllAsReadAsync(currentUserId);
+        await LoadAsync();
+    }
+
+    private async Task InitializeHubAsync()
+    {
+        notificationHub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri($"/hubs/notifications?userId={currentUserId}"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        notificationHub.On<NotificationDto>("NotificationReceived", async _ =>
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadAsync();
+                StateHasChanged();
+            });
+        });
+
+        await notificationHub.StartAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (notificationHub is not null)
+        {
+            await notificationHub.DisposeAsync();
+        }
+    }
+
+    private static string GetNotificationIcon(NotificationType notificationType) => notificationType switch
+    {
+        NotificationType.NewMessage => "chat",
+        NotificationType.NewComment => "comment",
+        NotificationType.NewReaction => "heart",
+        NotificationType.FriendAdded => "friends",
+        _ => "notifications"
+    };
+}
+
+<style>
+    .notification-header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .notification-header-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .notification-card {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+        padding-left: 13px;
+    }
+
+    .notification-body {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 14px;
+        align-items: start;
+    }
+
+    .notification-icon-badge {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        margin-top: 2px;
+    }
+
+    .notification-icon-badge.is-new {
+        background: var(--app-accent-soft);
+        color: var(--accent);
+    }
+
+    .notification-icon-badge.is-read {
+        background: var(--bg-muted);
+        color: var(--text-muted);
+    }
+
+    .notification-card.unread {
+        background: #f0f6ff;
+        border-left: 3px solid var(--accent);
+    }
+
+    body[data-theme="dark"] .notification-card.unread {
+        background: rgba(109, 168, 255, 0.1);
+    }
+
+    .notification-copy {
+        min-width: 0;
+    }
+
+    .notification-copy-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .notification-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #2d88ff 0%, #0866ff 100%);
+        flex: 0 0 auto;
+    }
+
+    .notification-card p,
+    .notification-card small {
+        margin: 4px 0 0;
+    }
+
+    .notification-card p {
+        color: var(--text-secondary);
+    }
+
+    .notification-card p span {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .notification-card small {
+        color: var(--text-muted);
+    }
+
+    @@media (max-width: 767.98px) {
+        .notification-card {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .notification-card .btn {
+            width: 100%;
+        }
+    }
+</style>

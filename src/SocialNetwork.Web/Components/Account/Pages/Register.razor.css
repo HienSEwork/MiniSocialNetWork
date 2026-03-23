@@ -1,0 +1,124 @@
+.register-page {
+    display: grid;
+    height: 100%;
+}
+
+.register-card {
+    max-width: 540px;
+    min-height: 100%;
+    padding: 24px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(140deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 28%, rgba(255, 255, 255, 0.08) 52%, rgba(255, 255, 255, 0.02) 100%),
+        linear-gradient(160deg, #0a56d8 0%, #0866ff 48%, #3f8cff 100%);
+    box-shadow: 0 14px 30px rgba(8, 51, 128, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #fff;
+    display: grid;
+    gap: 16px;
+}
+
+.register-card-head {
+    display: grid;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+}
+
+.register-kicker {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.76);
+}
+
+.register-card-head h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 34px;
+}
+
+.register-form {
+    display: grid;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.register-fields {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+}
+
+.register-form ::deep .validation-message,
+.register-form ::deep .text-danger,
+.register-form ::deep .validation-errors {
+    color: #fff1f1 !important;
+}
+
+.register-form ::deep .form-control {
+    min-height: 50px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: var(--text-primary);
+}
+
+.register-form ::deep .form-floating > label {
+    color: #556074;
+}
+
+.register-bio {
+    min-height: 92px;
+}
+
+.register-submit {
+    min-height: 50px;
+    width: 220px;
+    border: 0;
+    border-radius: 10px;
+    background: #fff;
+    color: #0a56d8;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.register-submit:hover,
+.register-submit:focus {
+    background: #eef4ff;
+    color: #0847b7;
+    box-shadow: 0 10px 18px rgba(4, 36, 112, 0.16);
+}
+
+.register-links {
+    display: grid;
+    gap: 8px;
+}
+
+.register-links a {
+    color: #fff;
+    font-weight: 500;
+    width: fit-content;
+}
+
+.register-links a:hover {
+    color: #eef4ff;
+}
+
+@media (max-width: 767.98px) {
+    .register-card {
+        padding: 20px;
+    }
+
+    .register-submit {
+        width: 100%;
+    }
+}
