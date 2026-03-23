@@ -7,13 +7,13 @@
                 <p>@Subtitle</p>
             }
         </div>
-        <span class="conversation-status">Trực tuyến</span>
+        <span class="conversation-status">Đang mở</span>
     </div>
 
     <div class="message-list">
         @if (Messages.Count == 0)
         {
-            <p class="text-muted">@EmptyText</p>
+            <p class="conversation-empty">@EmptyText</p>
         }
         else
         {
@@ -29,7 +29,10 @@
 
     <div class="send-row">
         <InputText @bind-Value="draftMessage" class="form-control" placeholder="@Placeholder" />
-        <button class="btn btn-primary" @onclick="SendAsync">Gửi</button>
+        <button class="btn btn-primary conversation-send" @onclick="SendAsync">
+            <AppIcon Name="send" />
+            <span>Gửi</span>
+        </button>
     </div>
 
     @if (!string.IsNullOrWhiteSpace(ErrorMessage))
@@ -78,7 +81,7 @@
 <style>
     .conversation-shell {
         display: grid;
-        gap: 12px;
+        gap: 14px;
     }
 
     .conversation-header {
@@ -99,43 +102,51 @@
         display: inline-flex;
         align-items: center;
         min-height: 22px;
-        padding: 0 8px;
+        padding: 0 10px;
         border-radius: 999px;
-        background: rgba(49, 162, 76, 0.1);
+        background: var(--app-highlight-soft);
         color: var(--success);
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 800;
+    }
+
+    .conversation-empty {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 13px;
     }
 
     .message-list {
         display: grid;
-        gap: 8px;
+        gap: 10px;
         max-height: 32rem;
         overflow-y: auto;
+        padding-right: 4px;
     }
 
     .message-bubble {
         max-width: 72%;
-        padding: 10px 12px;
+        padding: 12px 14px;
         border-radius: 18px;
     }
 
     .message-bubble.mine {
         justify-self: end;
-        background: #0866ff;
+        background: linear-gradient(135deg, var(--accent) 0%, #f08ba1 100%);
         color: #fff;
         border-top-right-radius: 8px;
+        box-shadow: 0 12px 20px rgba(228, 91, 120, 0.18);
     }
 
     .message-bubble.theirs {
         justify-self: start;
-        background: #e4e6eb;
+        background: var(--bg-muted);
         color: var(--text-primary);
         border-top-left-radius: 8px;
     }
 
     body[data-theme="dark"] .message-bubble.theirs {
-        background: #3a4351;
+        background: var(--bg-hover);
         color: var(--text-primary);
     }
 
@@ -161,5 +172,14 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         gap: 8px;
+        align-items: stretch;
+    }
+
+    .conversation-send {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 108px;
+        justify-content: center;
     }
 </style>

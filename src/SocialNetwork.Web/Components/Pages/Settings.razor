@@ -9,8 +9,9 @@
     <div class="content-stack narrow">
         <header class="page-header">
             <div>
-                <p class="section-kicker">Cài đặt</p>
+                <p class="section-kicker">Tùy chọn cá nhân</p>
                 <h1>Cài đặt</h1>
+                <p>Điều chỉnh giao diện và ngôn ngữ hiển thị cho tài khoản đang dùng.</p>
             </div>
         </header>
 
@@ -21,7 +22,7 @@
                 </div>
                 <div>
                     <h3>Giao diện</h3>
-                    <p class="settings-copy">Chọn sáng hoặc tối cho toàn bộ website.</p>
+                    <p class="settings-copy">Chọn sáng hoặc tối cho toàn bộ hệ thống.</p>
                 </div>
             </div>
 
@@ -46,7 +47,7 @@
                 </div>
                 <div>
                     <h3>Ngôn ngữ</h3>
-                    <p class="settings-copy">Chuyển nhanh giữa tiếng Việt và tiếng Anh.</p>
+                    <p class="settings-copy">Ưu tiên tiếng Việt, vẫn có thể chuyển nhanh sang tiếng Anh khi cần.</p>
                 </div>
             </div>
 
@@ -59,7 +60,7 @@
                 <button type="button"
                         class="@GetOptionClass(currentLanguage, English)"
                         @onclick='() => SetLanguageAsync("en")'>
-                    English
+                    Tiếng Anh
                 </button>
             </div>
         </article>
@@ -72,8 +73,8 @@
     private const string Vietnamese = "vi";
     private const string English = "en";
 
-    private string currentTheme = "light";
-    private string currentLanguage = "vi";
+    private string currentTheme = LightTheme;
+    private string currentLanguage = Vietnamese;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -138,6 +139,7 @@
         margin: 4px 0 0;
         color: var(--text-secondary);
         font-size: 14px;
+        line-height: 1.55;
     }
 
     .settings-options {
@@ -147,8 +149,8 @@
     }
 
     .settings-option {
-        min-height: 44px;
-        border-radius: 10px;
+        min-height: 46px;
+        border-radius: 12px;
         border: 1px solid var(--border-soft);
         background: var(--bg-muted);
         color: var(--text-primary);
@@ -166,5 +168,11 @@
         background: var(--app-accent-soft);
         border-color: color-mix(in srgb, var(--accent) 26%, transparent);
         color: var(--accent);
+    }
+
+    @@media (min-width: 768px) {
+        .settings-options {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
     }
 </style>

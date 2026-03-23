@@ -51,7 +51,7 @@
     private ExternalLoginInfo externalLoginInfo = default!;
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    private HttpContext? HttpContext { get; set; }
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -69,6 +69,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (HttpContext is null)
+        {
+            message = "Không thể hoàn tất đăng nhập ngoài trong ngữ cảnh hiện tại. Hãy tải lại trang.";
+            return;
+        }
+
         if (RemoteError is not null)
         {
             RedirectManager.RedirectToWithStatus("Account/Login", $"Error from external provider: {RemoteError}", HttpContext);
@@ -127,6 +133,12 @@
 
     private async Task OnValidSubmitAsync()
     {
+        if (HttpContext is null)
+        {
+            message = "Không thể xử lý đăng nhập ngoài trong ngữ cảnh hiện tại. Hãy tải lại trang.";
+            return;
+        }
+
         var emailStore = GetEmailStore();
         var user = CreateUser();
 
@@ -161,7 +173,7 @@
             }
         }
 
-        message = $"Error: {string.Join(",", result.Errors.Select(error => error.Description))}";
+        message = $"Lỗi: {string.Join(",", result.Errors.Select(error => error.Description))}";
     }
 
     private ApplicationUser CreateUser()

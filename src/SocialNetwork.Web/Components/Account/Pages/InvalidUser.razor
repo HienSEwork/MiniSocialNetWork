@@ -1,7 +1,20 @@
-﻿@page "/Account/InvalidUser"
+@page "/Account/InvalidUser"
 
-<PageTitle>Invalid user</PageTitle>
+<PageTitle>Tài khoản không hợp lệ</PageTitle>
 
-<h3>Invalid user</h3>
+<section class="auth-panel-page">
+    <div class="auth-panel-card">
+        <div class="auth-panel-head">
+            <p class="auth-panel-kicker">Tài khoản</p>
+            <h1>Không tìm thấy tài khoản phù hợp</h1>
+            <p class="auth-panel-copy">Liên kết bạn vừa mở không còn hợp lệ hoặc người dùng liên quan không tồn tại trong hệ thống.</p>
+        </div>
 
-<StatusMessage />
+        <StatusMessage />
+
+        <div class="auth-panel-links">
+            <a href="/Account/Login">Đăng nhập</a>
+            <a href="/Account/Register">Tạo tài khoản mới</a>
+        </div>
+    </div>
+</section>

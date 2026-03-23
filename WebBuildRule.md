@@ -33,6 +33,6 @@
 
 ## Checklist trước khi kết thúc
 - [x] Build lại project web.
-- [ ] Test logout.
-- [ ] Test guest home.
-- [ ] Test logged-in home.
+- [x] Test logout.
+- [x] Test guest home.
+- [x] Test logged-in home.

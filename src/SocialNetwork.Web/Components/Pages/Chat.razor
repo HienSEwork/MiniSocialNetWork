@@ -11,11 +11,12 @@
 <PageTitle>Tin nhắn</PageTitle>
 
 <section class="page-section">
-    <div class="content-stack">
+    <div class="content-stack page-wide">
         <div class="page-header">
             <div>
-                <span class="section-kicker">Chat</span>
+                <span class="section-kicker">Hộp thư</span>
                 <h2>Tin nhắn</h2>
+                <p>Mở nhanh các cuộc trò chuyện riêng và giữ khung hội thoại gọn, tập trung vào nội dung đang trao đổi.</p>
             </div>
             <span class="badge-soft">@chatUsers.Count cuộc trò chuyện</span>
         </div>
@@ -29,11 +30,12 @@
             <aside class="panel user-list">
                 <div class="user-list-header">
                     <h3>Đoạn chat gần đây</h3>
+                    <p>Chọn một người để mở hội thoại realtime.</p>
                 </div>
 
                 @if (chatUsers.Count == 0)
                 {
-                    <EmptyState Title="Chưa có đoạn chat" Description="Không tải được dữ liệu hội thoại." />
+                    <EmptyState Title="Chưa có đoạn chat" Description="Hãy kết bạn trước để bắt đầu trao đổi riêng." />
                 }
                 else
                 {
@@ -50,9 +52,10 @@
                                     @GetInitials(user.DisplayName)
                                 }
                             </div>
-                            <div>
+
+                            <div class="user-copy">
                                 <strong>@user.DisplayName</strong>
-                                <span>@user.Email</span>
+                                <span>@(!string.IsNullOrWhiteSpace(user.Bio) ? user.Bio : user.Email)</span>
                             </div>
                         </button>
                     }
@@ -62,14 +65,18 @@
             <div class="chat-conversation-column">
                 @if (selectedUser is null)
                 {
-                    <EmptyState Title="Chưa chọn cuộc trò chuyện" Description="Chọn một người dùng để mở tin nhắn." />
+                    <div class="panel chat-placeholder">
+                        <p class="section-kicker">Hội thoại</p>
+                        <h3>Chưa chọn cuộc trò chuyện</h3>
+                        <p class="page-lead">Chọn một người dùng ở cột bên trái để mở tin nhắn riêng và gửi nội dung realtime.</p>
+                    </div>
                 }
                 else
                 {
                     <ConversationPanel Title="@selectedUser.DisplayName"
                                        Subtitle="@selectedUser.Email"
                                        Messages="messages"
-                                       EmptyText="Chưa có tin nhắn."
+                                       EmptyText="Chưa có tin nhắn trong hội thoại này."
                                        Placeholder="Nhập tin nhắn"
                                        ErrorMessage="@conversationError"
                                        OnSend="SendPrivateMessageAsync" />
@@ -225,7 +232,7 @@
         var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         if (parts.Length == 0)
         {
-            return "U";
+            return "MS";
         }
 
         if (parts.Length == 1)
@@ -240,18 +247,29 @@
 <style>
     .chat-layout {
         display: grid;
-        gap: 16px;
+        gap: 18px;
         align-items: start;
     }
 
     .user-list {
         display: grid;
-        gap: 8px;
+        gap: 10px;
         align-content: start;
     }
 
-    .user-list-header h3 {
+    .user-list-header {
+        display: grid;
+        gap: 4px;
+    }
+
+    .user-list-header h3,
+    .user-list-header p {
         margin: 0;
+    }
+
+    .user-list-header p {
+        color: var(--text-muted);
+        font-size: 13px;
     }
 
     .user-item {
@@ -260,9 +278,9 @@
         gap: 12px;
         align-items: center;
         text-align: left;
-        min-height: 64px;
+        min-height: 68px;
         padding: 10px 12px;
-        border-radius: 10px;
+        border-radius: 12px;
         border: 1px solid transparent;
         background: transparent;
         color: var(--text-primary);
@@ -275,6 +293,12 @@
 
     .user-item:hover {
         background: var(--bg-hover);
+    }
+
+    .user-copy {
+        min-width: 0;
+        display: grid;
+        gap: 2px;
     }
 
     .user-item span {
@@ -297,9 +321,17 @@
         min-width: 0;
     }
 
+    .chat-placeholder {
+        display: grid;
+        gap: 10px;
+        min-height: 320px;
+        align-content: center;
+        text-align: center;
+    }
+
     @@media (min-width: 1024px) {
         .chat-layout {
-            grid-template-columns: 320px minmax(0, 1fr);
+            grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
         }
     }
 </style>

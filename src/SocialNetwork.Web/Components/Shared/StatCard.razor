@@ -24,11 +24,14 @@
     .stat-card {
         position: relative;
         overflow: hidden;
-        padding: 1.25rem;
-        border-radius: 1.7rem;
-        background: var(--app-surface);
-        border: 1px solid var(--app-border);
-        box-shadow: var(--app-shadow);
+        display: grid;
+        gap: 0.55rem;
+        min-height: 144px;
+        padding: 1.2rem;
+        border-radius: 1.1rem;
+        background: linear-gradient(180deg, color-mix(in srgb, var(--bg-shell) 84%, #fff 16%), var(--bg-shell));
+        border: 1px solid var(--border-soft);
+        box-shadow: var(--shadow-sm);
     }
 
     .stat-card::before {
@@ -36,32 +39,33 @@
         position: absolute;
         inset: 0 auto auto 0;
         width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--app-accent), var(--app-highlight));
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), #6eb6ff);
     }
 
     .stat-icon {
-        width: 2.8rem;
-        height: 2.8rem;
+        width: 2.75rem;
+        height: 2.75rem;
         display: inline-grid;
         place-items: center;
-        margin-bottom: 0.85rem;
-        border-radius: 1rem;
+        border-radius: 0.95rem;
         background: var(--app-accent-soft);
-        color: var(--app-accent);
+        color: var(--accent);
     }
 
     .label {
         display: block;
-        color: var(--app-muted);
-        margin-bottom: 0.55rem;
-        font-size: 0.9rem;
-        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
     }
 
     .stat-card strong {
-        font-size: clamp(1.8rem, 3vw, 2.4rem);
-        color: var(--app-heading);
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        color: var(--text-primary);
+        line-height: 1;
         letter-spacing: -0.04em;
     }
 </style>

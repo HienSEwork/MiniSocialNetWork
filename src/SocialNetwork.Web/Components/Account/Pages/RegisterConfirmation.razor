@@ -10,23 +10,35 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Register confirmation</PageTitle>
+<PageTitle>Xác nhận đăng ký</PageTitle>
 
-<h1>Register confirmation</h1>
+<section class="auth-panel-page">
+    <div class="auth-panel-card">
+        <div class="auth-panel-head">
+            <p class="auth-panel-kicker">Tạo tài khoản</p>
+            <h1>Xác nhận đăng ký</h1>
+            <p class="auth-panel-copy">Tài khoản đã được tạo. Hãy xác nhận email để hoàn tất kích hoạt và bắt đầu dùng bảng tin, nhóm và chat.</p>
+        </div>
 
-<StatusMessage Message="@statusMessage" />
+        <StatusMessage Message="@statusMessage" />
 
-@if (emailConfirmationLink is not null)
-{
-    <p>
-        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-        Normally this would be emailed: <a href="@emailConfirmationLink">Click here to confirm your account</a>
-    </p>
-}
-else
-{
-    <p>Please check your email to confirm your account.</p>
-}
+        @if (emailConfirmationLink is not null)
+        {
+            <p class="auth-panel-note">
+                Môi trường hiện tại chưa cấu hình email sender thực. Bạn có thể dùng ngay
+                <a class="auth-inline-link" href="@emailConfirmationLink">liên kết xác nhận cục bộ này</a>.
+            </p>
+        }
+        else
+        {
+            <p class="auth-panel-note">Hãy kiểm tra hộp thư để mở liên kết xác nhận tài khoản.</p>
+        }
+
+        <div class="auth-panel-links">
+            <a href="/Account/Login">Về đăng nhập</a>
+        </div>
+    </div>
+</section>
 
 @code {
     private string? emailConfirmationLink;
@@ -52,11 +64,10 @@ else
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = "Error finding user for unspecified email";
+            statusMessage = "Không tìm thấy tài khoản cần xác nhận.";
         }
         else if (EmailSender is IdentityNoOpEmailSender)
         {
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
             var userId = await UserManager.GetUserIdAsync(user);
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -66,4 +77,3 @@ else
         }
     }
 }
-

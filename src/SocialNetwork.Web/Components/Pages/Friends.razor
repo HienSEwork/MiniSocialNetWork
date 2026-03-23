@@ -10,13 +10,18 @@
 <PageTitle>Bạn bè</PageTitle>
 
 <section class="page-section">
-    <div class="content-stack">
+    <div class="content-stack page-wide">
         <div class="page-header">
             <div>
-                <span class="section-kicker">Bạn bè</span>
+                <span class="section-kicker">Kết nối</span>
                 <h2>Bạn bè</h2>
+                <p>Gom danh sách bạn bè, gợi ý kết nối và thao tác thêm hoặc hủy kết bạn vào cùng một màn rõ ràng hơn.</p>
             </div>
-            <span class="badge-soft success">@FriendCount đang kết nối</span>
+
+            <div class="friend-summary">
+                <span class="badge-soft success">@FriendCount đang kết nối</span>
+                <span class="badge-soft">@SuggestionCount gợi ý</span>
+            </div>
         </div>
 
         @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -24,59 +29,61 @@
             <div class="alert alert-danger">@errorMessage</div>
         }
 
-        <article class="panel friends-toolbar">
-            <div class="friends-search-box">
-                <AppIcon Name="search" />
-                <span>Danh sách người dùng</span>
-            </div>
-        </article>
+        @if (people.Count == 0)
+        {
+            <EmptyState Title="Chưa có người dùng để hiển thị" Description="Khi hệ thống có thêm thành viên, danh sách kết nối sẽ xuất hiện ở đây." />
+        }
+        else
+        {
+            <div class="card-grid two-up">
+                @foreach (var person in people.OrderBy(person => person.IsFriend ? 0 : 1).ThenBy(person => person.DisplayName))
+                {
+                    <article class="panel friend-card">
+                        <div class="friend-head">
+                            <div class="avatar avatar-lg">
+                                @if (!string.IsNullOrWhiteSpace(person.AvatarUrl))
+                                {
+                                    <img src="@person.AvatarUrl" alt="@person.DisplayName" />
+                                }
+                                else
+                                {
+                                    @GetInitials(person.DisplayName)
+                                }
+                            </div>
 
-        <div class="card-grid two-up">
-            @foreach (var person in people)
-            {
-                <article class="panel friend-card">
-                    <div class="friend-head">
-                        <div class="avatar avatar-lg">
-                            @if (!string.IsNullOrWhiteSpace(person.AvatarUrl))
+                            <div class="friend-copy">
+                                <div class="friend-title-row">
+                                    <h3>@person.DisplayName</h3>
+                                    <span class="friend-state @(person.IsFriend ? "connected" : "discover")">
+                                        @(person.IsFriend ? "Đã kết bạn" : "Gợi ý")
+                                    </span>
+                                </div>
+                                <p class="friend-meta">@person.Email</p>
+                            </div>
+                        </div>
+
+                        <p class="friend-bio">@(!string.IsNullOrWhiteSpace(person.Bio) ? person.Bio : "Chưa có mô tả cá nhân.")</p>
+
+                        <div class="friend-actions">
+                            @if (person.IsFriend)
                             {
-                                <img src="@person.AvatarUrl" alt="@person.DisplayName" />
+                                <button class="btn btn-outline-danger" @onclick="() => RemoveFriendAsync(person.UserId)">
+                                    <AppIcon Name="delete" />
+                                    <span>Hủy kết bạn</span>
+                                </button>
                             }
                             else
                             {
-                                @GetInitials(person.DisplayName)
+                                <button class="btn btn-primary" @onclick="() => AddFriendAsync(person.UserId)">
+                                    <AppIcon Name="friends" />
+                                    <span>Kết bạn</span>
+                                </button>
                             }
                         </div>
-
-                        <div>
-                            <div class="friend-title-row">
-                                <h3>@person.DisplayName</h3>
-                                <span class="friend-state @(person.IsFriend ? "connected" : "discover")">
-                                    @(person.IsFriend ? "Đã kết bạn" : "Gợi ý")
-                                </span>
-                            </div>
-                            <p class="text-muted">@person.Email</p>
-                        </div>
-                    </div>
-
-                    <p class="friend-bio">@(!string.IsNullOrWhiteSpace(person.Bio) ? person.Bio : "Chưa có mô tả.")</p>
-
-                    @if (person.IsFriend)
-                    {
-                        <button class="btn btn-outline-danger" @onclick="() => RemoveFriendAsync(person.UserId)">
-                            <AppIcon Name="delete" />
-                            <span>Hủy kết bạn</span>
-                        </button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-primary" @onclick="() => AddFriendAsync(person.UserId)">
-                            <AppIcon Name="friends" />
-                            <span>Kết bạn</span>
-                        </button>
-                    }
-                </article>
-            }
-        </div>
+                    </article>
+                }
+            </div>
+        }
     </div>
 </section>
 
@@ -86,6 +93,8 @@
     private string? errorMessage;
 
     private int FriendCount => people.Count(person => person.IsFriend);
+
+    private int SuggestionCount => people.Count(person => !person.IsFriend);
 
     protected override async Task OnInitializedAsync()
     {
@@ -119,7 +128,7 @@
                 otherUserId,
                 NotificationType.FriendAdded,
                 "Bạn mới",
-                "đã thêm bạn vào danh sách bạn bè.",
+                "đã thêm bạn vào danh sách kết nối.",
                 "/friends");
 
             await NotificationBroadcastService.BroadcastNotificationsAsync(notifications);
@@ -149,7 +158,7 @@
         var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         if (parts.Length == 0)
         {
-            return "U";
+            return "MS";
         }
 
         if (parts.Length == 1)
@@ -162,34 +171,15 @@
 }
 
 <style>
-    .friends-toolbar {
+    .friend-summary {
         display: flex;
-        gap: 16px;
-        align-items: center;
-    }
-
-    .friends-search-box {
-        min-height: 46px;
-        display: inline-flex;
-        align-items: center;
+        flex-wrap: wrap;
         gap: 10px;
-        padding: 0 14px;
-        border-radius: 12px;
-        background: var(--bg-muted);
-        color: var(--text-secondary);
-        border: 1px solid var(--border-soft);
     }
 
     .friend-card {
         display: grid;
-        gap: 16px;
-    }
-
-    .friend-card .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        justify-content: center;
+        gap: 18px;
     }
 
     .friend-head {
@@ -197,6 +187,11 @@
         grid-template-columns: auto minmax(0, 1fr);
         gap: 16px;
         align-items: center;
+    }
+
+    .friend-copy,
+    .friend-actions {
+        min-width: 0;
     }
 
     .friend-title-row {
@@ -207,8 +202,13 @@
     }
 
     .friend-title-row h3,
+    .friend-meta,
     .friend-bio {
         margin: 0;
+    }
+
+    .friend-meta {
+        color: var(--text-muted);
     }
 
     .friend-state {
@@ -233,5 +233,12 @@
     .friend-bio {
         color: var(--text-secondary);
         line-height: 1.65;
+    }
+
+    .friend-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: center;
     }
 </style>

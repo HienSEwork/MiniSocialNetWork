@@ -32,7 +32,7 @@
                     <strong>Khám phá</strong>
                 </div>
                 <div class="shortcut-list">
-                    <NavLink class="shortcut-item" href="/" Match="NavLinkMatch.All">
+                    <NavLink class="shortcut-item" href="/feed">
                         <span class="shortcut-icon-circle accent home">
                             <AppIcon Name="feed-solid" />
                         </span>
@@ -160,6 +160,21 @@
                 </div>
             </section>
 
+            <section class="shortcut-section">
+                <div class="shortcut-section-head">
+                    <strong>Xu hướng</strong>
+                    <small>tags</small>
+                </div>
+                <div class="tag-cloud">
+                    <span class="tag-chip">#bangtin</span>
+                    <span class="tag-chip">#ketnoi</span>
+                    <span class="tag-chip">#nhom</span>
+                    <span class="tag-chip">#chat</span>
+                    <span class="tag-chip">#realtime</span>
+                    <span class="tag-chip">#mini-social</span>
+                </div>
+            </section>
+
             <form action="Account/Logout" method="post" class="logout-form shortcut-footer">
                 <AntiforgeryToken />
                 <input type="hidden" name="ReturnUrl" value="/Account/Login" />
@@ -176,7 +191,7 @@
         </Authorized>
         <NotAuthorized>
             <div class="shortcut-list guest-list">
-                <a class="shortcut-item" href="/Account/Login">
+                <a class="shortcut-item" href="/Account/Login" data-enhance-nav="false">
                     <span class="shortcut-icon-circle accent home">
                         <AppIcon Name="profile" />
                     </span>
@@ -185,7 +200,7 @@
                         <small>Vào bảng tin cá nhân của bạn</small>
                     </span>
                 </a>
-                <a class="shortcut-item" href="/Account/Register">
+                <a class="shortcut-item" href="/Account/Register" data-enhance-nav="false">
                     <span class="shortcut-icon-circle accent groups">
                         <AppIcon Name="friends" />
                     </span>

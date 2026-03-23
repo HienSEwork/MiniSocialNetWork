@@ -8,25 +8,25 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<Disable2fa> Logger
 
-<PageTitle>Disable two-factor authentication (2FA)</PageTitle>
+<PageTitle>Tắt xác thực hai lớp</PageTitle>
 
 <StatusMessage />
-<h3>Disable two-factor authentication (2FA)</h3>
+<h3>Tắt xác thực hai lớp</h3>
 
 <div class="alert alert-warning" role="alert">
     <p>
-        <strong>This action only disables 2FA.</strong>
+        <strong>Thao tác này chỉ tắt 2FA.</strong>
     </p>
     <p>
-        Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a href="Account/Manage/ResetAuthenticator">reset your authenticator keys.</a>
+        Việc tắt 2FA không làm thay đổi khóa đang dùng trong ứng dụng xác thực. Nếu muốn đổi khóa, hãy
+        <a href="Account/Manage/ResetAuthenticator">đặt lại khóa xác thực</a>.
     </p>
 </div>
 
 <div>
     <form @formname="disable-2fa" @onsubmit="OnSubmitAsync" method="post">
         <AntiforgeryToken />
-        <button class="btn btn-danger" type="submit">Disable 2FA</button>
+        <button class="btn btn-danger" type="submit">Tắt 2FA</button>
     </form>
 </div>
 
@@ -34,13 +34,15 @@
     private ApplicationUser user = default!;
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    private HttpContext? HttpContext { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
 
-        if (HttpMethods.IsGet(HttpContext.Request.Method) && !await UserManager.GetTwoFactorEnabledAsync(user))
+        if (HttpContext is not null &&
+            HttpMethods.IsGet(HttpContext.Request.Method) &&
+            !await UserManager.GetTwoFactorEnabledAsync(user))
         {
             throw new InvalidOperationException("Cannot disable 2FA for user as it's not currently enabled.");
         }
@@ -48,6 +50,11 @@
 
     private async Task OnSubmitAsync()
     {
+        if (HttpContext is null)
+        {
+            throw new InvalidOperationException("Không thể tắt 2FA vì ngữ cảnh yêu cầu không còn khả dụng.");
+        }
+
         var disable2faResult = await UserManager.SetTwoFactorEnabledAsync(user, false);
         if (!disable2faResult.Succeeded)
         {
@@ -58,7 +65,7 @@
         Logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", userId);
         RedirectManager.RedirectToWithStatus(
             "Account/Manage/TwoFactorAuthentication",
-            "2fa has been disabled. You can reenable 2fa when you setup an authenticator app",
+            "2FA đã được tắt. Bạn có thể bật lại sau khi thiết lập ứng dụng xác thực.",
             HttpContext);
     }
 }

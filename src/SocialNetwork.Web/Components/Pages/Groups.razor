@@ -13,11 +13,12 @@
 <PageTitle>Nhóm</PageTitle>
 
 <section class="page-section">
-    <div class="content-stack">
+    <div class="content-stack page-wide">
         <div class="page-header">
             <div>
                 <span class="section-kicker">Cộng đồng</span>
                 <h2>Nhóm</h2>
+                <p>Quản lý danh sách nhóm, tạo mới, chỉnh sửa và mở chat nhóm trong một giao diện ít nhiễu hơn.</p>
             </div>
             <span class="badge-soft">@groups.Count nhóm</span>
         </div>
@@ -28,18 +29,20 @@
         }
 
         <div class="groups-layout">
-            <aside class="section-grid">
-                <EditForm Model="groupForm" OnValidSubmit="CreateGroupAsync" class="panel">
+            <aside class="section-grid groups-sidebar">
+                <EditForm Model="groupForm" OnValidSubmit="CreateGroupAsync" class="panel group-create-panel">
                     <DataAnnotationsValidator />
-                    <span class="section-kicker">Tạo mới</span>
-                    <h3>Tạo nhóm</h3>
+                    <div>
+                        <span class="section-kicker">Tạo mới</span>
+                        <h3>Tạo nhóm</h3>
+                    </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating">
                         <InputText @bind-Value="groupForm.Name" class="form-control" placeholder="Tên nhóm" />
                         <label>Tên nhóm</label>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="form-floating">
                         <InputTextArea @bind-Value="groupForm.Description" class="form-control group-description" placeholder="Mô tả nhóm" />
                         <label>Mô tả</label>
                     </div>
@@ -50,21 +53,26 @@
                     </button>
                 </EditForm>
 
-                <div class="panel section-grid">
-                    <span class="section-kicker">Danh sách</span>
-                    <h3>Tất cả nhóm</h3>
+                <div class="panel section-grid group-list-panel">
+                    <div class="group-list-head">
+                        <div>
+                            <span class="section-kicker">Danh sách</span>
+                            <h3>Tất cả nhóm</h3>
+                        </div>
+                    </div>
 
                     @if (groups.Count == 0)
                     {
-                        <EmptyState Title="Chưa có nhóm" Description="Không tải được dữ liệu nhóm." />
+                        <EmptyState Title="Chưa có nhóm" Description="Danh sách nhóm đang trống hoặc chưa tải được dữ liệu." />
                     }
                     else
                     {
-                        @foreach (var group in groups)
+                        @foreach (var group in groups.OrderByDescending(group => group.IsJoined).ThenBy(group => group.Name))
                         {
                             <button class="group-item @(selectedGroupSummary?.Id == group.Id ? "active" : null)"
                                     @onclick="() => SelectGroupAsync(group)">
                                 <img class="group-thumb" src="@GetGroupCover(group.Name)" alt="@group.Name" />
+
                                 <div class="group-item-body">
                                     <div class="group-item-head">
                                         <strong>@group.Name</strong>
@@ -72,6 +80,7 @@
                                             @(group.IsJoined ? "Đã tham gia" : "Mở")
                                         </span>
                                     </div>
+
                                     <p>@group.Description</p>
                                     <span>@group.MemberCount thành viên</span>
                                 </div>
@@ -81,23 +90,25 @@
                 </div>
             </aside>
 
-            <div class="section-grid">
+            <div class="section-grid groups-main">
                 @if (selectedGroupSummary is null)
                 {
-                    <EmptyState Title="Chưa chọn nhóm" Description="Chọn một nhóm để xem nội dung." />
+                    <EmptyState Title="Chưa chọn nhóm" Description="Chọn một nhóm trong danh sách để xem thành viên, bài viết và chat nhóm." />
                 }
                 else
                 {
                     <div class="panel group-hero">
                         <img class="group-hero-cover" src="@GetGroupCover(selectedGroupSummary.Name)" alt="@selectedGroupSummary.Name" />
+
                         <div class="group-hero-body">
                             <div class="group-header">
                                 <div>
-                                    <span class="section-kicker">Nhóm đang chọn</span>
+                                    <span class="section-kicker">Nhóm đang mở</span>
                                     <h3>@selectedGroupSummary.Name</h3>
                                     <p>@selectedGroupSummary.Description</p>
                                     <small>Chủ nhóm: @selectedGroupSummary.OwnerName</small>
                                 </div>
+
                                 <div class="group-actions">
                                     @if (!selectedGroupSummary.IsJoined)
                                     {
@@ -121,17 +132,30 @@
                                 </div>
                             </div>
 
+                            <div class="meta-grid two-up">
+                                <div class="meta-card">
+                                    <span>Thành viên</span>
+                                    <strong>@selectedGroupSummary.MemberCount</strong>
+                                </div>
+                                <div class="meta-card">
+                                    <span>Trạng thái</span>
+                                    <strong>@(selectedGroupSummary.IsJoined ? "Đang theo dõi" : "Chưa tham gia")</strong>
+                                </div>
+                            </div>
+
                             @if (editingGroup)
                             {
-                                <EditForm Model="editGroupForm" OnValidSubmit="SaveGroupAsync" class="section-grid">
+                                <EditForm Model="editGroupForm" OnValidSubmit="SaveGroupAsync" class="section-grid group-edit-form">
                                     <div class="form-floating">
                                         <InputText @bind-Value="editGroupForm.Name" class="form-control" placeholder="Tên nhóm" />
                                         <label>Tên nhóm</label>
                                     </div>
+
                                     <div class="form-floating">
                                         <InputTextArea @bind-Value="editGroupForm.Description" class="form-control group-description" placeholder="Mô tả" />
                                         <label>Mô tả</label>
                                     </div>
+
                                     <button class="btn btn-primary" type="submit">Lưu nhóm</button>
                                 </EditForm>
                             }
@@ -144,6 +168,7 @@
                             <div class="panel">
                                 <span class="section-kicker">Thành viên</span>
                                 <h3>Danh sách thành viên</h3>
+
                                 <div class="member-list">
                                     @foreach (var member in selectedGroupDetail.Members)
                                     {
@@ -156,7 +181,7 @@
                             </div>
 
                             <ConversationPanel Title="Chat nhóm"
-                                               Subtitle="Tin nhắn realtime trong nhóm"
+                                               Subtitle="Trao đổi realtime trong nhóm"
                                                Messages="groupMessages"
                                                ErrorMessage="@groupChatError"
                                                OnSend="SendGroupMessageAsync" />
@@ -166,16 +191,16 @@
 
                         @if (selectedGroupDetail.Posts.Count == 0)
                         {
-                            <EmptyState Title="Chưa có bài đăng" Description="Không có bài đăng trong nhóm." />
+                            <EmptyState Title="Chưa có bài đăng" Description="Nhóm này chưa có bài viết nào. Hãy đăng nội dung đầu tiên." />
                         }
                         else
                         {
-                            <div class="section-grid">
+                            <section class="section-grid">
                                 @foreach (var post in selectedGroupDetail.Posts)
                                 {
                                     <PostCard Post="post" OnChanged="LoadSelectedGroupAsync" />
                                 }
-                            </div>
+                            </section>
                         }
                     }
                 }
@@ -275,10 +300,10 @@
             return;
         }
 
-        await SelectGroupAsync(candidate);
+        await SelectGroupAsync(candidate, false);
     }
 
-    private async Task SelectGroupAsync(GroupSummaryDto group)
+    private async Task SelectGroupAsync(GroupSummaryDto group, bool updateRoute = true)
     {
         selectedGroupSummary = group;
         editingGroup = false;
@@ -287,6 +312,11 @@
             Name = group.Name,
             Description = group.Description
         };
+
+        if (updateRoute)
+        {
+            NavigationManager.NavigateTo($"/groups/{group.Id}");
+        }
 
         await LoadSelectedGroupAsync();
     }
@@ -337,6 +367,7 @@
             groupForm = new GroupFormModel();
             await NotificationBroadcastService.BroadcastSocialUpdatedAsync();
             await LoadGroupsAsync();
+            await EnsureSelectedGroupAsync();
         }
         catch (Exception exception)
         {
@@ -423,6 +454,7 @@
             selectedGroupDetail = null;
             groupMessages.Clear();
             await LoadGroupsAsync();
+            await EnsureSelectedGroupAsync();
         }
         catch (Exception exception)
         {
@@ -514,11 +546,40 @@
 <style>
     .groups-layout {
         display: grid;
-        gap: 16px;
+        gap: 18px;
+        align-items: start;
+    }
+
+    .groups-layout > * {
+        min-width: 0;
+        align-self: start;
+    }
+
+    .groups-sidebar,
+    .groups-main {
+        align-content: start;
+    }
+
+    .group-create-panel,
+    .group-edit-form {
+        display: grid;
+        gap: 14px;
+        align-content: start;
+    }
+
+    .group-list-panel {
+        align-content: start;
     }
 
     .group-description {
         min-height: 120px;
+    }
+
+    .group-list-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
     }
 
     .group-item {
@@ -527,8 +588,8 @@
         gap: 14px;
         text-align: left;
         padding: 14px;
-        border-radius: 14px;
-        border: 1px solid var(--border-soft);
+        border-radius: 18px;
+        border: 1px solid var(--border);
         background: var(--bg-muted);
         color: var(--text-primary);
     }
@@ -542,7 +603,7 @@
 
     .group-item.active {
         background: var(--app-accent-soft);
-        border-color: rgba(37, 99, 235, 0.24);
+        border-color: color-mix(in srgb, var(--accent) 30%, transparent);
     }
 
     .group-item-head,
@@ -558,7 +619,8 @@
     .group-item p,
     .group-header p,
     .member-item span,
-    .group-item span {
+    .group-item span,
+    .group-header small {
         margin: 0;
         color: var(--text-secondary);
         line-height: 1.55;
@@ -598,7 +660,8 @@
     .group-hero-body {
         padding: 20px;
         display: grid;
-        gap: 16px;
+        gap: 18px;
+        align-content: start;
     }
 
     .group-actions .btn {
@@ -610,18 +673,19 @@
     .member-list {
         display: grid;
         gap: 10px;
+        margin-top: 14px;
     }
 
     .member-item {
         padding: 12px 14px;
-        border-radius: 12px;
+        border-radius: 16px;
         background: var(--bg-muted);
-        border: 1px solid var(--border-soft);
+        border: 1px solid var(--border);
     }
 
     @@media (min-width: 1200px) {
         .groups-layout {
-            grid-template-columns: 380px minmax(0, 1fr);
+            grid-template-columns: minmax(300px, 344px) minmax(0, 1fr);
         }
     }
 </style>

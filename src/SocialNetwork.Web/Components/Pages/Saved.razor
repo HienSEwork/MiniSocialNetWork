@@ -8,12 +8,14 @@
 <PageTitle>Bài viết đã lưu</PageTitle>
 
 <section class="page-section">
-    <div class="content-stack">
+    <div class="content-stack page-wide">
         <header class="page-header">
             <div>
-                <p class="section-kicker">Đã lưu</p>
+                <p class="section-kicker">Lưu lại</p>
                 <h1>Bài viết đã lưu</h1>
+                <p>Xem lại các bài viết bạn đã đánh dấu để đọc tiếp hoặc xử lý sau.</p>
             </div>
+            <span class="badge-soft success">@savedPosts.Count bài</span>
         </header>
 
         @if (!string.IsNullOrWhiteSpace(errorMessage))

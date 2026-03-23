@@ -332,26 +332,27 @@
         gap: 0;
         padding: 0;
         overflow: hidden;
+        border-radius: 24px;
     }
 
     .post-main,
     .post-engagement,
     .post-comments {
-        padding: 16px;
+        padding: 18px 20px;
     }
 
     .post-main {
         display: grid;
-        gap: 14px;
+        gap: 16px;
     }
 
     .post-engagement,
     .post-comments {
-        border-top: 1px solid var(--border-soft);
+        border-top: 1px solid var(--border);
     }
 
     .post-comments {
-        background: color-mix(in srgb, var(--bg-shell) 88%, var(--bg-muted) 12%);
+        background: color-mix(in srgb, var(--bg-muted) 82%, var(--bg-shell) 18%);
     }
 
     .post-header,
@@ -395,19 +396,19 @@
         height: 4px;
         border-radius: 999px;
         background: var(--text-muted);
-        opacity: 0.65;
+        opacity: 0.55;
     }
 
     .group-badge,
     .edited-badge {
         display: inline-flex;
         align-items: center;
-        padding: 3px 9px;
+        padding: 4px 10px;
         border-radius: 999px;
-        background: var(--app-accent-soft);
+        background: var(--bg-muted);
         color: var(--accent);
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .post-timestamp small {
@@ -431,8 +432,8 @@
 
     .post-media-shell {
         overflow: hidden;
-        border-radius: 16px;
-        border: 1px solid var(--border-soft);
+        border-radius: 20px;
+        border: 1px solid var(--border);
         background: var(--bg-muted);
     }
 
@@ -465,12 +466,12 @@
         gap: 12px;
         color: var(--text-muted);
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 700;
     }
 
     .reaction-bubble {
         color: var(--accent);
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .post-summary-actions {
@@ -485,17 +486,17 @@
     }
 
     .post-save-button {
-        min-height: 34px;
+        min-height: 36px;
         display: inline-flex;
         align-items: center;
         gap: 6px;
         padding: 0 12px;
         border-radius: 999px;
-        border: 1px solid var(--border-soft);
+        border: 1px solid var(--border);
         background: var(--bg-muted);
         color: var(--text-secondary);
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .post-save-button:hover {
@@ -506,37 +507,39 @@
     .post-save-button.saved {
         background: var(--app-accent-soft);
         color: var(--accent);
-        border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+        border-color: color-mix(in srgb, var(--accent) 24%, transparent);
     }
 
     .reaction-row {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
+        gap: 4px;
+        padding: 4px;
+        border-radius: 18px;
+        background: var(--bg-muted);
     }
 
     .reaction-button {
-        min-height: 42px;
+        min-height: 40px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
         padding: 0 12px;
-        border-radius: 12px;
-        border: 1px solid var(--border-soft);
-        background: var(--bg-shell);
+        border-radius: 14px;
+        border: 0;
+        background: transparent;
         color: var(--text-secondary);
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .reaction-button:hover {
-        background: var(--bg-muted);
-        border-color: var(--border);
+        background: var(--bg-shell);
     }
 
     .reaction-button.selected {
         color: var(--accent);
-        background: var(--app-accent-soft);
-        border-color: rgba(8, 102, 255, 0.16);
+        background: var(--bg-shell);
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
     }
 </style>

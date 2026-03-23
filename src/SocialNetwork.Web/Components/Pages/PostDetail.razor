@@ -13,10 +13,11 @@
     <div class="content-stack narrow">
         <div class="page-header">
             <div>
+                <span class="section-kicker">Bài viết</span>
                 <h2>Chi tiết bài viết</h2>
-                <p>Xem riêng bài viết, bình luận và tương tác.</p>
+                <p>Xem riêng nội dung, bình luận và tương tác trong một khung tập trung hơn.</p>
             </div>
-            <a class="btn btn-outline-dark" href="/">Quay lại trang chủ</a>
+            <a class="btn btn-outline-dark" href="/feed">Quay lại bảng tin</a>
         </div>
 
         @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -26,7 +27,7 @@
 
         @if (post is null && string.IsNullOrWhiteSpace(errorMessage))
         {
-            <EmptyState Title="Không tìm thấy bài viết" Description="Bài viết đã bị xóa hoặc bạn không có quyền xem." />
+            <EmptyState Title="Không tìm thấy bài viết" Description="Bài viết có thể đã bị xóa hoặc bạn không có quyền xem nội dung này." />
         }
         else if (post is not null)
         {

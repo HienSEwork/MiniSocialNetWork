@@ -17,7 +17,7 @@
 
 ## Routing
 - [ ] `/` redirect đúng
-- [ ] `/feed` là entry social chính
+- [x] `/feed` là entry social chính
 - [ ] `/dashboard` tách layout riêng hoàn toàn
 - [ ] `/Account/*` render ổn định, không loop
 
@@ -84,9 +84,9 @@
 - [ ] Không bị tràn ngang
 
 ## Final QA
-- [ ] Build pass
-- [ ] Login pass
-- [ ] Feed pass
+- [x] Build pass
+- [x] Login pass
+- [x] Feed pass
 - [ ] Friends pass
 - [ ] Groups pass
 - [ ] Chat pass

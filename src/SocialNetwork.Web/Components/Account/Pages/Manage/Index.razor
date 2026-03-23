@@ -9,39 +9,46 @@
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Profile</PageTitle>
+<PageTitle>Hồ sơ tài khoản</PageTitle>
 
-<h3>Profile</h3>
-<StatusMessage />
-
-<div class="row">
-    <div class="col-lg-7">
-        <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
-                <label for="username" class="form-label">Username</label>
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.DisplayName" class="form-control" placeholder="Display name" />
-                <label for="display-name" class="form-label">Display name</label>
-                <ValidationMessage For="() => Input.DisplayName" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.AvatarUrl" class="form-control" placeholder="Avatar URL" />
-                <label for="avatar-url" class="form-label">Avatar URL</label>
-                <ValidationMessage For="() => Input.AvatarUrl" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputTextArea @bind-Value="Input.Bio" class="form-control bio-box" placeholder="Bio" />
-                <label for="bio" class="form-label">Bio</label>
-                <ValidationMessage For="() => Input.Bio" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </EditForm>
+<section class="section-grid">
+    <div>
+        <h3>Hồ sơ tài khoản</h3>
+        <p class="page-lead">Cập nhật tên hiển thị, ảnh đại diện và phần giới thiệu dùng cho toàn bộ khu vực social.</p>
     </div>
-</div>
+
+    <StatusMessage />
+
+    <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post" class="section-grid">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" role="alert" />
+
+        <div class="form-floating">
+            <input type="text" value="@username" class="form-control" placeholder="Tên đăng nhập" disabled />
+            <label for="username" class="form-label">Tên đăng nhập</label>
+        </div>
+
+        <div class="form-floating">
+            <InputText @bind-Value="Input.DisplayName" class="form-control" placeholder="Tên hiển thị" />
+            <label for="display-name" class="form-label">Tên hiển thị</label>
+            <ValidationMessage For="() => Input.DisplayName" class="text-danger" />
+        </div>
+
+        <div class="form-floating">
+            <InputText @bind-Value="Input.AvatarUrl" class="form-control" placeholder="Liên kết ảnh đại diện" />
+            <label for="avatar-url" class="form-label">Ảnh đại diện</label>
+            <ValidationMessage For="() => Input.AvatarUrl" class="text-danger" />
+        </div>
+
+        <div class="form-floating">
+            <InputTextArea @bind-Value="Input.Bio" class="form-control bio-box" placeholder="Giới thiệu" />
+            <label for="bio" class="form-label">Giới thiệu</label>
+            <ValidationMessage For="() => Input.Bio" class="text-danger" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu hồ sơ</button>
+    </EditForm>
+</section>
 
 @code {
     private ApplicationUser user = default!;
@@ -72,27 +79,27 @@
         if (!result.Succeeded)
         {
             RedirectManager.RedirectToCurrentPageWithStatus(
-                $"Error: {string.Join(", ", result.Errors.Select(error => error.Description))}",
+                $"Lỗi: {string.Join(", ", result.Errors.Select(error => error.Description))}",
                 HttpContext);
         }
 
         await SignInManager.RefreshSignInAsync(user);
-        RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
+        RedirectManager.RedirectToCurrentPageWithStatus("Hồ sơ đã được cập nhật.", HttpContext);
     }
 
     private sealed class InputModel
     {
         [Required]
         [StringLength(100)]
-        [Display(Name = "Display name")]
+        [Display(Name = "Tên hiển thị")]
         public string DisplayName { get; set; } = "";
 
         [Url]
-        [Display(Name = "Avatar URL")]
+        [Display(Name = "Ảnh đại diện")]
         public string? AvatarUrl { get; set; }
 
         [StringLength(500)]
-        [Display(Name = "Bio")]
+        [Display(Name = "Giới thiệu")]
         public string? Bio { get; set; }
     }
 }
@@ -103,4 +110,3 @@
         resize: vertical;
     }
 </style>
-

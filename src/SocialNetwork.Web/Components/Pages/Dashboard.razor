@@ -4,14 +4,14 @@
 
 @inject IDashboardService DashboardService
 
-<PageTitle>Dashboard</PageTitle>
+<PageTitle>Tổng quan</PageTitle>
 
 <section class="page-section">
     <div class="page-header">
         <div>
-            <span class="section-kicker">Overview</span>
+            <span class="section-kicker">Tổng quan hệ thống</span>
             <h2>Dashboard</h2>
-            <p>Tổng hợp nhanh người dùng, bài đăng và hoạt động gần đây.</p>
+            <p>Theo dõi nhanh người dùng, bài viết, bình luận và nhịp hoạt động 7 ngày gần nhất.</p>
         </div>
     </div>
 
@@ -28,10 +28,11 @@
     {
         <article class="panel dashboard-lead">
             <div>
-                <span class="section-kicker">System snapshot</span>
-                <h3>Hệ thống đã kết nối đủ luồng social chính.</h3>
-                <p class="page-lead">Dashboard này giúp xem nhanh số liệu, hoạt động gần đây và trạng thái dữ liệu của ứng dụng.</p>
+                <span class="section-kicker">Nhịp hiện tại</span>
+                <h3>Dữ liệu lõi của Mini Social đang sẵn sàng cho demo.</h3>
+                <p class="page-lead">Bảng này chỉ giữ các chỉ số cần cho báo cáo, không lẫn thêm widget hoặc khối quản trị thừa.</p>
             </div>
+
             <div class="meta-card">
                 <span>Trung bình bài đăng/ngày</span>
                 <strong>@AveragePostsPerDay</strong>
@@ -70,15 +71,15 @@
 
             <aside class="section-grid">
                 <article class="panel">
-                    <span class="section-kicker">Runtime</span>
+                    <span class="section-kicker">Ghi chú</span>
                     <div class="surface-list">
                         <div class="surface-item">
-                            <strong>Identity + LocalDB</strong>
-                            <p>Ứng dụng tự migrate và seed dữ liệu khi khởi động.</p>
+                            <strong>Khởi tạo dữ liệu</strong>
+                            <p>Tự migrate và seed khi khởi động để demo nhất quán giữa các lần chạy.</p>
                         </div>
                         <div class="surface-item">
-                            <strong>Seed ổn định</strong>
-                            <p>Dữ liệu mẫu dùng ID cố định để test lặp lại ổn định.</p>
+                            <strong>Phạm vi gọn</strong>
+                            <p>Dashboard chỉ giữ số liệu cần thiết, tách riêng khỏi social shell.</p>
                         </div>
                     </div>
                 </article>

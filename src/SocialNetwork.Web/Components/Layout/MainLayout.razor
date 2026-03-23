@@ -16,7 +16,7 @@
                     <span class="topbar-brand-badge">MS</span>
                     <span class="topbar-brand-copy">
                         <strong>Mini Social</strong>
-                        <small>Feed, chat và nhóm trong một nhịp nhìn</small>
+                        <small>Social feed, chat và cộng đồng</small>
                     </span>
                 </a>
             </div>
@@ -24,27 +24,33 @@
             <div class="topbar-center">
                 <button type="button" class="topbar-search" aria-label="Tìm kiếm">
                     <AppIcon Name="search" Class="topbar-search-icon" />
-                    <span>Tìm trên Mini Social</span>
+                    <span>Tìm người, nhóm, bài viết</span>
                 </button>
 
                 <nav class="topbar-modules" aria-label="Điều hướng chính">
-                    <a class="@GetTopbarModuleClass("home")" href="/" title="Trang chủ" aria-label="Trang chủ">
+                    <a class="@GetTopbarModuleClass("home")" href="/feed" title="Trang chủ" aria-label="Trang chủ">
                         <AppIcon Name="feed-solid" Class="topbar-nav-icon" />
+                        <span class="topbar-module-label">Bảng tin</span>
                     </a>
                     <a class="@GetTopbarModuleClass("friends")" href="/friends" title="Bạn bè" aria-label="Bạn bè">
                         <AppIcon Name="friends-solid" Class="topbar-nav-icon" />
+                        <span class="topbar-module-label">Bạn bè</span>
                     </a>
                     <a class="@GetTopbarModuleClass("chat")" href="/chat" title="Tin nhắn" aria-label="Tin nhắn">
                         <AppIcon Name="chat-solid" Class="topbar-nav-icon" />
+                        <span class="topbar-module-label">Tin nhắn</span>
                     </a>
                     <a class="@GetTopbarModuleClass("groups")" href="/groups" title="Nhóm" aria-label="Nhóm">
                         <AppIcon Name="groups-solid" Class="topbar-nav-icon" />
+                        <span class="topbar-module-label">Nhóm</span>
                     </a>
                     <a class="@GetTopbarModuleClass("notifications")" href="/notifications" title="Thông báo" aria-label="Thông báo">
                         <AppIcon Name="notifications-solid" Class="topbar-nav-icon" />
+                        <span class="topbar-module-label">Cập nhật</span>
                     </a>
                     <a class="@GetTopbarModuleClass("profile")" href="/profile" title="Trang cá nhân" aria-label="Trang cá nhân">
                         <AppIcon Name="profile-solid" Class="topbar-nav-icon" />
+                        <span class="topbar-module-label">Hồ sơ</span>
                     </a>
                 </nav>
             </div>
@@ -217,8 +223,8 @@
                     </Authorized>
                     <NotAuthorized>
                         <div class="topbar-auth">
-                            <a class="btn btn-primary btn-sm" href="/Account/Register">Đăng ký</a>
-                            <a class="btn btn-outline-dark btn-sm" href="/Account/Login">Đăng nhập</a>
+                            <a class="btn btn-primary btn-sm" href="/Account/Register" data-enhance-nav="false">Đăng ký</a>
+                            <a class="btn btn-outline-dark btn-sm" href="/Account/Login" data-enhance-nav="false">Đăng nhập</a>
                         </div>
                     </NotAuthorized>
                 </AuthorizeView>

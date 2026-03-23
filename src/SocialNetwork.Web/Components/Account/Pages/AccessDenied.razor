@@ -1,8 +1,18 @@
-﻿@page "/Account/AccessDenied"
+@page "/Account/AccessDenied"
 
-<PageTitle>Access denied</PageTitle>
+<PageTitle>Không có quyền truy cập</PageTitle>
 
-<header>
-    <h1 class="text-danger">Access denied</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
-</header>
+<section class="auth-panel-page">
+    <div class="auth-panel-card">
+        <div class="auth-panel-head">
+            <p class="auth-panel-kicker">Truy cập bị chặn</p>
+            <h1>Không có quyền truy cập</h1>
+            <p class="auth-panel-copy">Tài khoản hiện tại không có quyền mở tài nguyên này. Hãy đăng nhập bằng tài khoản phù hợp hoặc quay lại bảng tin.</p>
+        </div>
+
+        <div class="auth-panel-links">
+            <a href="/Account/Login">Đăng nhập lại</a>
+            <a href="/feed">Quay về bảng tin</a>
+        </div>
+    </div>
+</section>

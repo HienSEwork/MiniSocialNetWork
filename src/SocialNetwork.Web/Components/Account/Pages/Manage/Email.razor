@@ -12,9 +12,9 @@
 @inject IdentityUserAccessor UserAccessor
 @inject NavigationManager NavigationManager
 
-<PageTitle>Manage email</PageTitle>
+<PageTitle>Quản lý email</PageTitle>
 
-<h3>Manage email</h3>
+<h3>Quản lý email</h3>
 
 <StatusMessage Message="@message"/>
 <div class="row">
@@ -28,27 +28,27 @@
             @if (isEmailConfirmed)
             {
                 <div class="form-floating mb-3 input-group">
-                    <input type="text" value="@email" class="form-control" placeholder="Please enter your email." disabled />
+                    <input type="text" value="@email" class="form-control" placeholder="Email hiện tại" disabled />
                     <div class="input-group-append">
                         <span class="h-100 input-group-text text-success font-weight-bold">?</span>
                     </div>
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label">Email hiện tại</label>
                 </div>
             }
             else
             {
                 <div class="form-floating mb-3">
-                    <input type="text" value="@email" class="form-control" placeholder="Please enter your email." disabled />
-                    <label for="email" class="form-label">Email</label>
-                    <button type="submit" class="btn btn-link" form="send-verification-form">Send verification email</button>
+                    <input type="text" value="@email" class="form-control" placeholder="Email hiện tại" disabled />
+                    <label for="email" class="form-label">Email hiện tại</label>
+                    <button type="submit" class="btn btn-link" form="send-verification-form">Gửi lại email xác thực</button>
                 </div>
             }
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
-                <label for="new-email" class="form-label">New email</label>
+                <InputText @bind-Value="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Email mới" />
+                <label for="new-email" class="form-label">Email mới</label>
                 <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Change email</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Đổi email</button>
         </EditForm>
     </div>
 </div>
@@ -78,7 +78,7 @@
     {
         if (Input.NewEmail is null || Input.NewEmail == email)
         {
-            message = "Your email is unchanged.";
+            message = "Email chưa thay đổi.";
             return;
         }
 
@@ -91,7 +91,7 @@
 
         await EmailSender.SendConfirmationLinkAsync(user, Input.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
 
-        message = "Confirmation link to change email sent. Please check your email.";
+        message = "Liên kết xác nhận đổi email đã được gửi. Hãy kiểm tra hộp thư.";
     }
 
     private async Task OnSendEmailVerificationAsync()
@@ -110,14 +110,14 @@
 
         await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
 
-        message = "Verification email sent. Please check your email.";
+        message = "Email xác thực đã được gửi. Hãy kiểm tra hộp thư.";
     }
 
     private sealed class InputModel
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "New email")]
+        [Display(Name = "Email mới")]
         public string? NewEmail { get; set; }
     }
 }

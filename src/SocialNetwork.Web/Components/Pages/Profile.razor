@@ -10,7 +10,7 @@
 <PageTitle>Trang cá nhân</PageTitle>
 
 <section class="page-section">
-    <div class="content-stack">
+    <div class="content-stack page-wide">
         @if (!string.IsNullOrWhiteSpace(errorMessage))
         {
             <div class="alert alert-danger">@errorMessage</div>
@@ -18,7 +18,7 @@
 
         @if (profile is null && string.IsNullOrWhiteSpace(errorMessage))
         {
-            <div class="panel">Đang tải trang cá nhân...</div>
+            <div class="panel">Đang tải hồ sơ...</div>
         }
         else if (profile is not null)
         {
@@ -40,6 +40,7 @@
                     <div class="profile-copy">
                         <div class="profile-title-row">
                             <div>
+                                <span class="section-kicker">Hồ sơ</span>
                                 <h2>@profile.DisplayName</h2>
                                 <p class="profile-email">@profile.Email</p>
                             </div>
@@ -47,26 +48,30 @@
                             @if (isOwner)
                             {
                                 <button class="btn btn-outline-dark" type="button" @onclick="ToggleEdit">
-                                    @(isEditing ? "Đóng" : "Chỉnh sửa")
+                                    @(isEditing ? "Đóng chỉnh sửa" : "Chỉnh sửa hồ sơ")
                                 </button>
                             }
                         </div>
 
                         <p class="profile-bio">@(!string.IsNullOrWhiteSpace(profile.Bio) ? profile.Bio : "Chưa có mô tả cá nhân.")</p>
-                    </div>
 
-                    <div class="meta-grid two-up profile-stats">
-                        <div class="meta-card">
-                            <span>Bài đăng</span>
-                            <strong>@profile.PostCount</strong>
-                        </div>
-                        <div class="meta-card">
-                            <span>Nhóm</span>
-                            <strong>@profile.GroupCount</strong>
-                        </div>
-                        <div class="meta-card">
-                            <span>Tham gia</span>
-                            <strong>@profile.CreatedDate.ToLocalTime().ToString("MM/yyyy")</strong>
+                        <div class="meta-grid two-up profile-stats">
+                            <div class="meta-card">
+                                <span>Bài viết</span>
+                                <strong>@profile.PostCount</strong>
+                            </div>
+                            <div class="meta-card">
+                                <span>Nhóm đang theo dõi</span>
+                                <strong>@profile.GroupCount</strong>
+                            </div>
+                            <div class="meta-card">
+                                <span>Tham gia từ</span>
+                                <strong>@profile.CreatedDate.ToLocalTime().ToString("MM/yyyy")</strong>
+                            </div>
+                            <div class="meta-card">
+                                <span>Bài hiển thị trong feed</span>
+                                <strong>@userPosts.Count</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -74,9 +79,12 @@
 
             @if (isOwner && isEditing)
             {
-                <EditForm Model="editForm" OnValidSubmit="SaveProfileAsync" class="panel section-grid">
+                <EditForm Model="editForm" OnValidSubmit="SaveProfileAsync" class="panel section-grid profile-edit-form">
                     <DataAnnotationsValidator />
-                    <h3>Cập nhật hồ sơ</h3>
+                    <div>
+                        <span class="section-kicker">Chỉnh sửa</span>
+                        <h3>Cập nhật hồ sơ</h3>
+                    </div>
 
                     <div class="form-floating">
                         <InputText @bind-Value="editForm.DisplayName" class="form-control" placeholder="Tên hiển thị" />
@@ -101,16 +109,16 @@
 
             @if (userPosts.Count == 0)
             {
-                <EmptyState Title="Chưa có bài đăng" Description="Không có bài đăng nào để hiển thị." />
+                <EmptyState Title="Chưa có bài đăng" Description="Bài viết của người dùng này sẽ xuất hiện tại đây." />
             }
             else
             {
-                <div class="section-grid">
+                <section class="section-grid">
                     @foreach (var post in userPosts)
                     {
                         <PostCard Post="post" ShowDetailLink="false" OnChanged="LoadAsync" />
                     }
-                </div>
+                </section>
             }
         }
     </div>
@@ -252,7 +260,7 @@
 
     .profile-content {
         display: grid;
-        gap: 16px;
+        gap: 18px;
         padding: 0 20px 20px;
         margin-top: -34px;
         position: relative;
@@ -288,11 +296,15 @@
 
     .profile-bio {
         color: var(--text-secondary);
-        line-height: 1.55;
+        line-height: 1.65;
     }
 
     .profile-stats {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .profile-edit-form {
+        gap: 14px;
     }
 
     .profile-textarea {
@@ -302,5 +314,11 @@
     .profile-edit-actions {
         display: flex;
         justify-content: flex-end;
+    }
+
+    @@media (max-width: 767.98px) {
+        .profile-title-row {
+            grid-template-columns: 1fr;
+        }
     }
 </style>

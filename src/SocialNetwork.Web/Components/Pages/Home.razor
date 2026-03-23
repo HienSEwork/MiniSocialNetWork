@@ -11,7 +11,7 @@
 @inject IFriendshipService FriendshipService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Trang ch?</PageTitle>
+<PageTitle>Bảng tin</PageTitle>
 
 <section class="page-section">
     @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -21,46 +21,36 @@
 
     @if (isLoading)
     {
-        <div class="panel">?ang t?i trang ch?...</div>
+        <div class="panel">Đang tải bảng tin...</div>
     }
     else
     {
-        <div class="home-facebook-shell">
-            <div class="feed-center-column">
-                <section class="panel stories-panel">
-                    <div class="stories-header">
-                        <div>
-                            <p class="section-kicker">Stories</p>
-                            <h3>Kho?nh kh?c n?i b?t</h3>
-                        </div>
-                        <span class="stories-meta">@GetStorySummary()</span>
+        <div class="home-shell">
+            <div class="home-main">
+                <section class="panel home-hero">
+                    <div class="home-hero-copy">
+                        <p class="section-kicker">Bảng tin</p>
+                        <h2>@(isAuthenticated ? "Nhịp cập nhật mới nhất của bạn" : "Một giao diện chung cho feed, nhóm và chat")</h2>
+                        <p class="page-lead">
+                            @(isAuthenticated
+                                ? "Tất cả bài viết, nhóm đang theo dõi và gợi ý kết nối được gom về một khung rõ ràng để thao tác nhanh hơn."
+                                : "Xem trước bố cục thật của Mini Social trước khi đăng nhập. Khi xác thực xong, nội dung thật sẽ xuất hiện ngay trong cùng giao diện này.")
+                        </p>
                     </div>
 
-                    <div class="stories-row">
-                        @foreach (var story in GetVisibleStories())
-                        {
-                            <article class="story-card @(story.IsCreateStory ? "create-story" : null)" style="@story.BackgroundStyle">
-                                <div class="story-overlay"></div>
-                                <div class="story-top">
-                                    @if (story.IsCreateStory)
-                                    {
-                                        <span class="story-create-icon">+</span>
-                                    }
-                                    else if (!string.IsNullOrWhiteSpace(story.AvatarUrl))
-                                    {
-                                        <img class="story-avatar" src="@story.AvatarUrl" alt="@story.Title" />
-                                    }
-                                    else
-                                    {
-                                        <span class="story-avatar story-avatar-fallback">@story.Initials</span>
-                                    }
-                                </div>
-                                <div class="story-copy">
-                                    <strong>@story.Title</strong>
-                                    <small>@story.Subtitle</small>
-                                </div>
-                            </article>
-                        }
+                    <div class="home-hero-metrics">
+                        <span class="home-chip">
+                            <strong>@posts.Count</strong>
+                            <small>@(isAuthenticated ? "bài viết" : "khối preview")</small>
+                        </span>
+                        <span class="home-chip accent">
+                            <strong>@(isAuthenticated ? joinedGroups.Count : guestHighlights.Count)</strong>
+                            <small>@(isAuthenticated ? "nhóm đang theo dõi" : "điểm nhấn chính")</small>
+                        </span>
+                        <span class="home-chip success">
+                            <strong>@(isAuthenticated ? suggestedPeople.Count : guestPreviewPosts.Count)</strong>
+                            <small>@(isAuthenticated ? "gợi ý kết nối" : "bài viết mẫu")</small>
+                        </span>
                     </div>
                 </section>
 
@@ -75,146 +65,128 @@
                 {
                     <section class="panel guest-entry-panel">
                         <div>
-                            <p class="section-kicker">Welcome</p>
-                            <h3>??ng nh?p ?? vi?t b��i, b��nh lu?n v�� nh?n th?ng b��o realtime.</h3>
-                            <p class="page-lead">Trang ch? v?n gi? nguy��n b? c?c feed, ch? kh��a c��c thao t��c c?n t��i kho?n.</p>
+                            <p class="section-kicker">Khách truy cập</p>
+                            <h3>Đăng nhập để đăng bài, bình luận và nhận cập nhật realtime.</h3>
+                            <p class="guest-entry-copy">Bố cục bảng tin, sidebar và luồng điều hướng giữ nguyên trước và sau khi đăng nhập để trải nghiệm không bị gãy.</p>
                         </div>
+
                         <div class="guest-entry-actions">
-                            <a class="btn btn-primary" href="/Account/Login">??ng nh?p</a>
-                            <a class="btn btn-outline-dark" href="/Account/Register">??ng ky</a>
+                            <a class="btn btn-primary" href="/Account/Login" data-enhance-nav="false">Đăng nhập</a>
+                            <a class="btn btn-outline-dark" href="/Account/Register" data-enhance-nav="false">Tạo tài khoản</a>
                         </div>
                     </section>
                 }
 
-                <section class="panel feed-summary-panel">
-                    <div>
-                        <p class="section-kicker">Feed</p>
-                        <h3>@(isAuthenticated ? "D��nh cho b?n" : "Kh��m ph�� Mini Social")</h3>
-                    </div>
-                    <div class="feed-summary-metrics">
-                        <span class="feed-metric">@(isAuthenticated ? $"{posts.Count} b��i vi?t" : "1 giao di?n duy nh?t")</span>
-                        <span class="feed-metric accent">@(isAuthenticated ? $"{joinedGroups.Count} nh��m ?ang theo d?i" : "Sidebar lu?n c? ??nh")</span>
-                        <span class="feed-metric success">@(isAuthenticated ? $"{suggestedPeople.Count} g?i y k?t n?i" : "Realtime sau khi ??ng nh?p")</span>
-                    </div>
-                </section>
-
                 @if (isAuthenticated)
                 {
-                    if (posts.Count == 0)
+                    @if (posts.Count == 0)
                     {
-                        <EmptyState Title="Ch?a c�� b��i ??ng" Description="Hi?n ch?a l?y ???c d? li?u b?ng tin." />
+                        <EmptyState Title="Chưa có bài viết" Description="Feed chưa có dữ liệu để hiển thị. Hãy tạo bài đầu tiên hoặc tham gia thêm nhóm." />
                     }
                     else
                     {
-                        <div class="section-grid feed-post-list">
+                        <section class="section-grid">
                             @foreach (var post in posts)
                             {
                                 <PostCard Post="post" ShowDetailLink="false" OnChanged="LoadFeedAsync" />
                             }
-                        </div>
+                        </section>
                     }
                 }
                 else
                 {
-                    <div class="section-grid guest-feed-list">
-                        @foreach (var preview in guestFeedPreviews)
+                    <section class="card-grid two-up">
+                        @foreach (var preview in guestPreviewPosts)
                         {
-                            <article class="panel guest-feed-card">
-                                <div class="guest-feed-head">
+                            <article class="panel preview-card">
+                                <div class="preview-card-head">
                                     <span class="avatar">@preview.Initials</span>
                                     <div>
                                         <strong>@preview.Title</strong>
                                         <small>@preview.Meta</small>
                                     </div>
                                 </div>
+
                                 <p>@preview.Content</p>
                             </article>
                         }
-                    </div>
+                    </section>
                 }
             </div>
 
-            <aside class="home-right-rail">
+            <aside class="home-rail">
                 @if (isAuthenticated)
                 {
                     <article class="panel home-profile-card">
-                        <div class="profile-card-header">
+                        <div class="rail-head">
                             <div>
-                                <p class="section-kicker">Your space</p>
+                                <p class="section-kicker">Không gian cá nhân</p>
                                 <h3>@(currentProfile?.DisplayName ?? "Mini Social")</h3>
                             </div>
-                            <a class="profile-link" href="/profile">M? h? s?</a>
+                            <a href="/profile">Mở hồ sơ</a>
                         </div>
 
-                        <p class="profile-bio">@(!string.IsNullOrWhiteSpace(currentProfile?.Bio) ? currentProfile!.Bio : "C?p nh?t bio ?? ph?n gi?i thi?u c?a b?n n?i b?t h?n tr��n b?ng tin.")</p>
+                        <p class="rail-copy">@(!string.IsNullOrWhiteSpace(currentProfile?.Bio) ? currentProfile!.Bio : "Cập nhật bio để hồ sơ của bạn nổi bật hơn trên toàn hệ thống.")</p>
 
-                        <div class="profile-stats-grid">
+                        <div class="mini-stat-grid">
                             <div>
-                                <span>B��i vi?t</span>
+                                <span>Bài viết</span>
                                 <strong>@(currentProfile?.PostCount ?? posts.Count)</strong>
                             </div>
                             <div>
-                                <span>Nh��m</span>
+                                <span>Nhóm</span>
                                 <strong>@(currentProfile?.GroupCount ?? joinedGroups.Count)</strong>
                             </div>
                             <div>
-                                <span>Feed h?m nay</span>
-                                <strong>@posts.Count</strong>
+                                <span>Hoạt động mới</span>
+                                <strong>@Math.Min(posts.Count, 4)</strong>
                             </div>
                         </div>
                     </article>
                 }
                 else
                 {
-                    <article class="panel rail-card home-profile-card">
-                        <div class="profile-card-header">
+                    <article class="panel rail-card">
+                        <div class="rail-head">
                             <div>
-                                <p class="section-kicker">Quick start</p>
+                                <p class="section-kicker">Tổng quan</p>
                                 <h3>Mini Social</h3>
                             </div>
-                            <a class="profile-link" href="/Account/Login">V��o ngay</a>
                         </div>
 
-                        <p class="profile-bio">M?t trang ch? duy nh?t cho guest v�� user ??ng nh?p. Khi v��o t��i kho?n, feed th?t s? ?? v��o ?��ng khung n��y.</p>
-
-                        <div class="profile-stats-grid">
-                            <div>
-                                <span>Feed</span>
-                                <strong>1</strong>
-                            </div>
-                            <div>
-                                <span>Layout</span>
-                                <strong>3 c?t</strong>
-                            </div>
-                            <div>
-                                <span>Auth</span>
-                                <strong>S?n s��ng</strong>
-                            </div>
+                        <div class="highlight-list">
+                            @foreach (var item in guestHighlights)
+                            {
+                                <article class="highlight-item">
+                                    <strong>@item.Title</strong>
+                                    <p>@item.Description</p>
+                                </article>
+                            }
                         </div>
                     </article>
                 }
 
                 <article class="panel rail-card">
-                    <div class="rail-heading">
+                    <div class="rail-head">
                         <div>
-                            <p class="section-kicker">People</p>
-                            <h3>@(isAuthenticated ? "G?i y k?t n?i" : "B?n s? th?y g��")</h3>
+                            <p class="section-kicker">Kết nối</p>
+                            <h3>@(isAuthenticated ? "Gợi ý cho bạn" : "Những gì bạn sẽ thấy")</h3>
                         </div>
-                        <a href="@(isAuthenticated ? "/friends" : "/Account/Register")">@(isAuthenticated ? "Xem t?t c?" : "T?o t��i kho?n")</a>
+                        <a href="@(isAuthenticated ? "/friends" : "/Account/Register")" data-enhance-nav="@(isAuthenticated ? null : "false")">@(isAuthenticated ? "Quản lý" : "Bắt đầu")</a>
                     </div>
 
                     @if (isAuthenticated)
                     {
-                        if (suggestedPeople.Count == 0)
+                        @if (suggestedPeople.Count == 0)
                         {
-                            <p class="rail-empty">Hi?n ch?a c�� g?i y m?i.</p>
+                            <p class="rail-empty">Chưa có gợi ý mới ở thời điểm hiện tại.</p>
                         }
                         else
                         {
                             <div class="rail-list">
                                 @foreach (var person in suggestedPeople)
                                 {
-                                    <article class="rail-person-item">
+                                    <article class="rail-item">
                                         <span class="avatar rail-avatar">
                                             @if (!string.IsNullOrWhiteSpace(person.AvatarUrl))
                                             {
@@ -225,6 +197,7 @@
                                                 @GetInitials(person.DisplayName)
                                             }
                                         </span>
+
                                         <div>
                                             <strong>@person.DisplayName</strong>
                                             <small>@(!string.IsNullOrWhiteSpace(person.Bio) ? person.Bio : person.Email)</small>
@@ -237,13 +210,13 @@
                     else
                     {
                         <div class="rail-list">
-                            @foreach (var item in guestPeoplePreviews)
+                            @foreach (var preview in guestPeoplePreviews)
                             {
-                                <article class="rail-person-item">
-                                    <span class="avatar rail-avatar">@item.Initials</span>
+                                <article class="rail-item">
+                                    <span class="avatar rail-avatar">@preview.Initials</span>
                                     <div>
-                                        <strong>@item.Title</strong>
-                                        <small>@item.Meta</small>
+                                        <strong>@preview.Title</strong>
+                                        <small>@preview.Meta</small>
                                     </div>
                                 </article>
                             }
@@ -252,32 +225,33 @@
                 </article>
 
                 <article class="panel rail-card">
-                    <div class="rail-heading">
+                    <div class="rail-head">
                         <div>
-                            <p class="section-kicker">Groups</p>
-                            <h3>@(isAuthenticated ? "Nh��m ?ang theo d?i" : "Nh��m v�� c?ng ??ng")</h3>
+                            <p class="section-kicker">Cộng đồng</p>
+                            <h3>@(isAuthenticated ? "Nhóm đang theo dõi" : "Nhóm và chủ đề")</h3>
                         </div>
-                        <a href="@(isAuthenticated ? "/groups" : "/Account/Login")">@(isAuthenticated ? "Qu?n ly" : "??ng nh?p")</a>
+                        <a href="@(isAuthenticated ? "/groups" : "/Account/Login")" data-enhance-nav="@(isAuthenticated ? null : "false")">@(isAuthenticated ? "Mở nhóm" : "Đăng nhập")</a>
                     </div>
 
                     @if (isAuthenticated)
                     {
-                        if (joinedGroups.Count == 0)
+                        @if (joinedGroups.Count == 0)
                         {
-                            <p class="rail-empty">B?n ch?a tham gia nh��m n��o.</p>
+                            <p class="rail-empty">Bạn chưa tham gia nhóm nào.</p>
                         }
                         else
                         {
                             <div class="rail-list">
                                 @foreach (var group in joinedGroups)
                                 {
-                                    <a class="rail-group-item" href="@($"/groups/{group.Id}")">
-                                        <span class="rail-group-icon">
+                                    <a class="rail-item rail-link" href="@($"/groups/{group.Id}")">
+                                        <span class="rail-icon">
                                             <AppIcon Name="groups" />
                                         </span>
+
                                         <div>
                                             <strong>@group.Name</strong>
-                                            <small>@group.MemberCount th��nh vi��n</small>
+                                            <small>@group.MemberCount thành viên</small>
                                         </div>
                                     </a>
                                 }
@@ -287,15 +261,15 @@
                     else
                     {
                         <div class="rail-list">
-                            @foreach (var item in guestGroupPreviews)
+                            @foreach (var preview in guestGroupPreviews)
                             {
-                                <article class="rail-group-item">
-                                    <span class="rail-group-icon">
+                                <article class="rail-item">
+                                    <span class="rail-icon">
                                         <AppIcon Name="groups" />
                                     </span>
                                     <div>
-                                        <strong>@item.Title</strong>
-                                        <small>@item.Meta</small>
+                                        <strong>@preview.Title</strong>
+                                        <small>@preview.Meta</small>
                                     </div>
                                 </article>
                             }
@@ -303,22 +277,22 @@
                     }
                 </article>
 
-                <article class="panel rail-card activity-card">
-                    <div class="rail-heading">
+                <article class="panel rail-card">
+                    <div class="rail-head">
                         <div>
-                            <p class="section-kicker">Pulse</p>
-                            <h3>Nh?p ho?t ??ng</h3>
+                            <p class="section-kicker">Dòng hoạt động</p>
+                            <h3>@(isAuthenticated ? "Mốc mới trong feed" : "Cách giao diện vận hành")</h3>
                         </div>
                     </div>
 
                     <div class="activity-list">
-                        @foreach (var item in GetVisibleActivityTiles())
+                        @foreach (var item in GetVisibleActivityItems())
                         {
                             <article class="activity-item">
                                 <span class="activity-dot"></span>
                                 <div>
                                     <strong>@item.Title</strong>
-                                    <small>@item.TimeLabel</small>
+                                    <small>@item.Meta</small>
                                     <p>@item.Description</p>
                                 </div>
                             </article>
@@ -334,36 +308,37 @@
     private readonly List<PostFeedItemDto> posts = new();
     private readonly List<GroupSummaryDto> joinedGroups = new();
     private readonly List<FriendSummaryDto> suggestedPeople = new();
-    private readonly List<StoryTileViewModel> storyTiles = new();
-    private readonly List<ActivityTileViewModel> activityTiles = new();
-    private readonly List<StoryTileViewModel> guestStoryTiles =
+
+    private readonly List<PreviewCardViewModel> guestPreviewPosts =
     [
-        new(true, "??ng nh?p", "M? feed th?t c?a b?n", null, "MS", "background: linear-gradient(180deg, #35589a 0%, #223554 100%);"),
-        new(false, "B?ng tin", "Composer, b��i vi?t, b��nh lu?n", null, "BT", "background: linear-gradient(180deg, #4b5563 0%, #1f2937 100%);"),
-        new(false, "Nh��m", "Theo d?i c?ng ??ng", null, "NH", "background: linear-gradient(180deg, #14532d 0%, #0f3d24 100%);"),
-        new(false, "Chat", "Tin nh?n realtime", null, "CH", "background: linear-gradient(180deg, #0f766e 0%, #134e4a 100%);"),
-        new(false, "Th?ng b��o", "C?p nh?t t?p trung", null, "TB", "background: linear-gradient(180deg, #6b21a8 0%, #3b0764 100%);")
+        new("BT", "Bảng tin gọn hơn", "Một giao diện duy nhất", "Feed, gợi ý kết nối và nhóm được gom về cùng một nhịp nhìn để không còn cảm giác chuyển trang chắp vá."),
+        new("RT", "Tương tác realtime", "Thông báo và chat", "Ngay khi đăng nhập, luồng chat và thông báo dùng lại đúng khung giao diện hiện có mà không tạo thêm màn trung gian.")
     ];
-    private readonly List<ActivityTileViewModel> guestActivityTiles =
-    [
-        new("Tin nh?n realtime", "S?n s��ng", "??ng nh?p ?? nh?n c?p nh?t chat ngay tr��n topbar."),
-        new("B?ng tin c�� nhan", "S?n s��ng", "Feed th?t s? hi?n th? ?��ng trong khung trung tam n��y."),
-        new("Nh��m v�� g?i y", "S?n s��ng", "Sidebar, nh��m v�� b?n b�� gi? nguy��n b? c?c khi chuy?n tr?ng th��i ??ng nh?p.")
-    ];
-    private readonly List<PreviewCardViewModel> guestFeedPreviews =
-    [
-        new("MS", "B��i ??ng m?u", "B? c?c feed gi? nguy��n, ch? thay d? li?u th?t sau khi x��c th?c.", "Trang ch? d��ng m?t layout duy nh?t, kh?ng t��ch guest page ri��ng n?a."),
-        new("RT", "Realtime v�� t??ng t��c", "Th?ng b��o, nh?n tin v�� nh��m s? b?t ngay khi user ??ng nh?p.", "Kh?ng c��n giao di?n ph? t?m th?i gay l?ch tr?i nghi?m.")
-    ];
+
     private readonly List<PreviewCardViewModel> guestPeoplePreviews =
     [
-        new("KB", "K?t b?n", "G?i y b?n b�� v�� l?i m?i s? hi?n ? ?ay"),
-        new("HS", "H? s?", "Trang c�� nhan v�� tr?ng th��i k?t n?i ??ng b?")
+        new("KB", "Kết bạn", "Quản lý lời mời và danh sách kết nối"),
+        new("HS", "Hồ sơ", "Trang cá nhân, bio và ảnh đại diện đồng bộ")
     ];
+
     private readonly List<PreviewCardViewModel> guestGroupPreviews =
     [
-        new("NH", "Nh��m h?c t?p", "B��i vi?t, th��nh vi��n v�� ho?t ??ng"),
-        new("CL", "C?ng ??ng", "Theo d?i nh��m ?ang tham gia ngay tr��n rail ph?i")
+        new("NH", "Nhóm học tập", "Thành viên, chat nhóm và bài đăng"),
+        new("CD", "Cộng đồng nội bộ", "Theo dõi chủ đề đang hoạt động")
+    ];
+
+    private readonly List<HighlightViewModel> guestHighlights =
+    [
+        new("Feed tập trung", "Các module chính dùng một layout nhất quán thay vì tách thành nhiều màn rời."),
+        new("Realtime rõ ràng", "Thông báo, chat và bài viết được cập nhật ngay trong đúng khu vực thao tác."),
+        new("Sidebar hữu ích", "Nhóm, bạn bè và điều hướng nhanh luôn nằm đúng vị trí trên mọi màn hình chính.")
+    ];
+
+    private readonly List<ActivityItemViewModel> guestActivityItems =
+    [
+        new("Bảng tin cá nhân", "Sẵn sàng", "Sau khi đăng nhập, bài viết thật sẽ xuất hiện ngay ở cột chính."),
+        new("Nhóm và chat", "Sẵn sàng", "Không cần đổi layout để vào nhóm hoặc mở hội thoại riêng."),
+        new("Thông báo tập trung", "Sẵn sàng", "Mọi tương tác mới được gom về topbar và trang thông báo riêng.")
     ];
 
     private string currentUserId = string.Empty;
@@ -397,7 +372,6 @@
         {
             posts.Clear();
             posts.AddRange(await PostService.GetFeedAsync(currentUserId));
-            RebuildDecorations();
         }
         catch (Exception exception)
         {
@@ -422,62 +396,18 @@
 
             suggestedPeople.Clear();
             suggestedPeople.AddRange(peopleTask.Result.Where(person => !person.IsFriend).Take(4));
+
             if (suggestedPeople.Count == 0)
             {
                 suggestedPeople.AddRange(peopleTask.Result.Take(4));
             }
-
-            RebuildDecorations();
         }
         catch
         {
             if (string.IsNullOrWhiteSpace(errorMessage))
             {
-                errorMessage = "M?t s? d? li?u ph? ch?a t?i ???c, nh?ng feed v?n ho?t ??ng.";
+                errorMessage = "Một phần dữ liệu phụ chưa tải được, nhưng bảng tin vẫn hoạt động.";
             }
-        }
-    }
-
-    private void RebuildDecorations()
-    {
-        storyTiles.Clear();
-        activityTiles.Clear();
-
-        storyTiles.Add(new StoryTileViewModel(
-            true,
-            "T?o story",
-            "Chia s? m?t kho?nh kh?c m?i",
-            currentProfile?.AvatarUrl,
-            GetInitials(currentProfile?.DisplayName),
-            "background: linear-gradient(180deg, #1f2937 0%, #111827 100%);"));
-
-        var storyCandidates = posts
-            .Where(post => post.UserId != currentUserId)
-            .GroupBy(post => post.UserId)
-            .Select(group => group.OrderByDescending(post => post.CreatedDate).First())
-            .Take(4)
-            .ToList();
-
-        for (var index = 0; index < storyCandidates.Count; index++)
-        {
-            var storyPost = storyCandidates[index];
-            storyTiles.Add(new StoryTileViewModel(
-                false,
-                storyPost.AuthorName,
-                string.IsNullOrWhiteSpace(storyPost.GroupName) ? "C?p nh?t m?i" : storyPost.GroupName!,
-                storyPost.AuthorAvatarUrl,
-                GetInitials(storyPost.AuthorName),
-                BuildStoryBackground(storyPost, index)));
-        }
-
-        foreach (var post in posts.Take(4))
-        {
-            activityTiles.Add(new ActivityTileViewModel(
-                post.AuthorName,
-                GetRelativeTime(post.CreatedDate),
-                string.IsNullOrWhiteSpace(post.GroupName)
-                    ? Truncate(post.Content, 88)
-                    : $"{post.GroupName}: {Truncate(post.Content, 72)}"));
         }
     }
 
@@ -493,6 +423,7 @@
             await InvokeAsync(async () =>
             {
                 await LoadFeedAsync();
+                await LoadSidebarDataAsync();
                 StateHasChanged();
             });
         });
@@ -508,30 +439,26 @@
         }
     }
 
-    private IReadOnlyList<StoryTileViewModel> GetVisibleStories() => isAuthenticated ? storyTiles : guestStoryTiles;
-
-    private IReadOnlyList<ActivityTileViewModel> GetVisibleActivityTiles() => isAuthenticated ? activityTiles : guestActivityTiles;
-
-    private string GetStorySummary() => isAuthenticated
-        ? $"{posts.Count} b��i vi?t trong feed"
-        : "C��ng m?t khung giao di?n tr??c v�� sau ??ng nh?p";
-
-    private static string BuildStoryBackground(PostFeedItemDto post, int index)
+    private IReadOnlyList<ActivityItemViewModel> GetVisibleActivityItems()
     {
-        if (post.MediaType == MediaType.Image && !string.IsNullOrWhiteSpace(post.MediaUrl))
+        if (!isAuthenticated)
         {
-            return $"background-image: linear-gradient(180deg, rgba(15,23,42,.08), rgba(15,23,42,.72)), url('{post.MediaUrl}'); background-size: cover; background-position: center;";
+            return guestActivityItems;
         }
 
-        string[] gradients =
-        [
-            "linear-gradient(180deg, #374151 0%, #111827 100%)",
-            "linear-gradient(180deg, #334155 0%, #0f172a 100%)",
-            "linear-gradient(180deg, #3f3f46 0%, #18181b 100%)",
-            "linear-gradient(180deg, #3b4252 0%, #1f2937 100%)"
-        ];
+        var items = posts
+            .Take(4)
+            .Select(post => new ActivityItemViewModel(
+                post.AuthorName,
+                GetRelativeTime(post.CreatedDate),
+                string.IsNullOrWhiteSpace(post.GroupName)
+                    ? Truncate(post.Content, 96)
+                    : $"{post.GroupName}: {Truncate(post.Content, 72)}"))
+            .ToList();
 
-        return $"background: {gradients[index % gradients.Length]};";
+        return items.Count == 0
+            ? [new ActivityItemViewModel("Feed trống", "Hiện tại", "Chưa có bài mới để hiển thị trong bảng hoạt động.")]
+            : items;
     }
 
     private static string Truncate(string value, int maxLength) =>
@@ -564,154 +491,124 @@
 
         if (delta.TotalMinutes < 1)
         {
-            return "V?a xong";
+            return "Vừa xong";
         }
 
         if (delta.TotalHours < 1)
         {
-            return $"{Math.Max(1, (int)delta.TotalMinutes)} ph��t tr??c";
+            return $"{Math.Max(1, (int)delta.TotalMinutes)} phút trước";
         }
 
         if (delta.TotalDays < 1)
         {
-            return $"{Math.Max(1, (int)delta.TotalHours)} gi? tr??c";
+            return $"{Math.Max(1, (int)delta.TotalHours)} giờ trước";
         }
 
-        return $"{Math.Max(1, (int)delta.TotalDays)} ng��y tr??c";
+        return $"{Math.Max(1, (int)delta.TotalDays)} ngày trước";
     }
-
-    private sealed record StoryTileViewModel(
-        bool IsCreateStory,
-        string Title,
-        string Subtitle,
-        string? AvatarUrl,
-        string Initials,
-        string BackgroundStyle);
-
-    private sealed record ActivityTileViewModel(
-        string Title,
-        string TimeLabel,
-        string Description);
 
     private sealed record PreviewCardViewModel(
         string Initials,
         string Title,
         string Meta,
         string Content = "");
+
+    private sealed record HighlightViewModel(
+        string Title,
+        string Description);
+
+    private sealed record ActivityItemViewModel(
+        string Title,
+        string Meta,
+        string Description);
 }
 
 <style>
-    .home-facebook-shell {
+    .home-shell {
         display: grid;
-        gap: 18px;
+        gap: 24px;
         align-items: start;
     }
 
-    .feed-center-column,
-    .home-right-rail {
+    .home-main,
+    .home-rail {
         display: grid;
-        gap: 16px;
+        gap: 18px;
         min-width: 0;
     }
 
-    .stories-panel,
-    .feed-summary-panel,
-    .home-profile-card,
-    .rail-card,
-    .guest-entry-panel,
-    .guest-feed-card {
-        overflow: hidden;
-    }
-
-    .stories-header,
-    .rail-heading,
-    .profile-card-header,
-    .feed-summary-panel,
-    .guest-entry-panel {
-        display: flex;
-        justify-content: space-between;
-        align-items: start;
-        gap: 12px;
-    }
-
-    .stories-meta,
-    .profile-link,
-    .rail-heading a {
-        font-size: 0.84rem;
-        font-weight: 700;
-        color: #8ab4ff;
-    }
-
-    .stories-row {
+    .home-hero {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 14px;
+        gap: 18px;
+        padding: 22px;
+        background: linear-gradient(135deg, #fff7f9 0%, #ffffff 72%);
+        border: 1px solid #f4dce3;
+        box-shadow: 0 18px 34px rgba(228, 91, 120, 0.08);
     }
 
-    .story-card {
-        position: relative;
-        min-height: 210px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 12px;
-        border-radius: 20px;
-        overflow: hidden;
-        color: #fff;
-        background-size: cover;
-        background-position: center;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-    }
-
-    .story-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, rgba(15, 23, 42, 0.08), rgba(15, 23, 42, 0.72));
-    }
-
-    .story-card.create-story .story-overlay {
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.28));
-    }
-
-    .story-top,
-    .story-copy {
-        position: relative;
-        z-index: 1;
-    }
-
-    .story-avatar,
-    .story-create-icon {
-        width: 42px;
-        height: 42px;
+    .home-hero-copy {
         display: grid;
-        place-items: center;
-        border-radius: 999px;
-        border: 3px solid rgba(255, 255, 255, 0.72);
-        background: rgba(255, 255, 255, 0.18);
-        object-fit: cover;
-        font-weight: 800;
+        gap: 8px;
     }
 
-    .story-create-icon {
-        font-size: 1.4rem;
-        background: var(--accent);
-        color: #fff;
-        border-color: rgba(255, 255, 255, 0.28);
+    .home-hero-copy h2 {
+        max-width: 18ch;
     }
 
-    .story-copy {
+    .home-hero-metrics {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .home-chip {
         display: grid;
         gap: 4px;
+        padding: 16px;
+        border-radius: 18px;
+        background: var(--bg-muted);
+        border: 1px solid var(--border);
     }
 
-    .story-copy strong {
-        font-size: 0.96rem;
+    .home-chip strong {
+        font-size: 1.25rem;
     }
 
-    .story-copy small {
-        color: rgba(255, 255, 255, 0.82);
-        font-size: 0.78rem;
+    .home-chip small {
+        color: var(--text-muted);
+    }
+
+    .home-chip.accent {
+        background: color-mix(in srgb, var(--app-accent-soft) 80%, #fff 20%);
+    }
+
+    .home-chip.success {
+        background: color-mix(in srgb, var(--app-highlight-soft) 82%, #fff 18%);
+    }
+
+    .guest-entry-panel,
+    .rail-head {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: start;
+    }
+
+    .guest-entry-panel {
+        padding: 20px 22px;
+        border: 1px solid var(--border);
+    }
+
+    .guest-entry-copy,
+    .rail-copy,
+    .rail-empty,
+    .activity-item p,
+    .highlight-item p,
+    .preview-card p {
+        margin: 0;
+        color: var(--text-secondary);
+        line-height: 1.65;
     }
 
     .guest-entry-actions {
@@ -720,143 +617,101 @@
         gap: 10px;
     }
 
-    .feed-summary-panel {
-        flex-wrap: wrap;
-    }
-
-    .feed-summary-metrics {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: flex-end;
-    }
-
-    .feed-metric {
-        display: inline-flex;
-        align-items: center;
-        min-height: 34px;
-        padding: 0 12px;
-        border-radius: 999px;
-        background: var(--bg-muted);
-        color: var(--text-primary);
-        font-size: 0.84rem;
-        font-weight: 700;
-    }
-
-    .feed-metric.accent {
-        background: var(--app-accent-soft);
-        color: var(--accent);
-    }
-
-    .feed-metric.success {
-        background: var(--app-highlight-soft);
-        color: var(--success);
-    }
-
-    .feed-post-list,
-    .guest-feed-list {
-        gap: 16px;
-    }
-
-    .guest-feed-card {
+    .preview-card,
+    .highlight-list,
+    .highlight-item {
         display: grid;
-        gap: 14px;
+        gap: 12px;
     }
 
-    .guest-feed-head {
+    .preview-card {
+        border-radius: 22px;
+    }
+
+    .preview-card-head,
+    .rail-item {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
         gap: 12px;
         align-items: center;
     }
 
-    .guest-feed-head small,
-    .profile-bio,
-    .rail-empty {
-        margin: 4px 0 0;
+    .preview-card small,
+    .rail-item small,
+    .activity-item small {
         color: var(--text-muted);
-        font-size: 0.9rem;
-        line-height: 1.6;
-    }
-
-    .guest-feed-card p,
-    .activity-item p {
-        margin: 0;
-        color: var(--text-secondary);
-        font-size: 0.86rem;
-        line-height: 1.6;
     }
 
     .home-profile-card {
-        background: linear-gradient(180deg, rgba(48, 49, 50, 0.94), rgba(36, 37, 38, 1));
+        background: linear-gradient(180deg, #fff8fa 0%, #ffffff 100%);
+        border-color: #f1d7de;
     }
 
-    .profile-stats-grid {
+    .mini-stat-grid {
         display: grid;
+        gap: 12px;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
         margin-top: 16px;
     }
 
-    .profile-stats-grid div {
-        padding: 12px;
-        border-radius: 12px;
+    .mini-stat-grid div {
+        padding: 14px;
+        border-radius: 18px;
         background: var(--bg-muted);
         border: 1px solid var(--border);
     }
 
-    .profile-stats-grid span,
-    .rail-person-item small,
-    .rail-group-item small,
-    .activity-item small {
+    .mini-stat-grid span {
         display: block;
         color: var(--text-muted);
         font-size: 0.8rem;
     }
 
-    .profile-stats-grid strong {
+    .mini-stat-grid strong {
         display: block;
         margin-top: 4px;
-        font-size: 1.08rem;
+        font-size: 1.06rem;
     }
 
+    .highlight-list,
     .rail-list,
     .activity-list {
         display: grid;
-        gap: 12px;
+        gap: 14px;
         margin-top: 14px;
     }
 
-    .rail-person-item,
-    .rail-group-item,
-    .activity-item {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 12px;
-        align-items: start;
+    .highlight-item,
+    .rail-item {
+        padding: 14px;
+        border-radius: 18px;
+        background: var(--bg-muted);
+        border: 1px solid var(--border);
     }
 
-    .rail-group-item {
+    .rail-link {
         color: inherit;
     }
 
     .rail-avatar,
-    .rail-group-icon {
+    .rail-icon {
         width: 42px;
         height: 42px;
     }
 
-    .rail-group-icon {
+    .rail-icon {
         display: grid;
         place-items: center;
         border-radius: 14px;
-        background: var(--bg-muted);
-        color: #8ab4ff;
+        background: var(--app-accent-soft);
+        color: var(--accent);
     }
 
     .activity-item {
+        display: grid;
         grid-template-columns: 10px minmax(0, 1fr);
-        gap: 10px;
+        gap: 12px;
+        align-items: start;
     }
 
     .activity-dot {
@@ -864,36 +719,32 @@
         height: 10px;
         border-radius: 999px;
         margin-top: 8px;
-        background: #2374e1;
-        box-shadow: 0 0 0 6px rgba(35, 116, 225, 0.16);
+        background: var(--accent);
+        box-shadow: 0 0 0 6px rgba(228, 91, 120, 0.12);
     }
 
     @@media (min-width: 1200px) {
-        .home-facebook-shell {
-            grid-template-columns: minmax(0, 1fr) 340px;
+        .home-shell {
+            grid-template-columns: minmax(0, 1fr) 320px;
         }
 
-        .home-right-rail {
-            position: sticky;
-            top: 88px;
-            align-self: start;
-        }
-    }
-
-    @@media (max-width: 1199.98px) {
-        .stories-row {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+        .home-rail {
+            align-content: start;
         }
     }
 
     @@media (max-width: 767.98px) {
-        .stories-row,
-        .profile-stats-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+        .home-hero-metrics,
+        .mini-stat-grid {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
         }
 
         .guest-entry-panel {
             flex-direction: column;
+        }
+
+        .home-hero-copy h2 {
+            max-width: none;
         }
     }
 </style>

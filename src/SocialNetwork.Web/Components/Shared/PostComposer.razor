@@ -1,6 +1,12 @@
-﻿<EditForm Model="composer" OnValidSubmit="HandleSubmitAsync" class="panel composer-shell">
+<EditForm Model="composer" OnValidSubmit="HandleSubmitAsync" class="panel composer-shell">
     <DataAnnotationsValidator />
     <ValidationSummary />
+
+    <div class="composer-topline">
+        <span class="badge-soft @(GroupId.HasValue ? string.Empty : "success")">
+            @(GroupId.HasValue ? "Đăng trong nhóm" : "Đăng lên bảng tin")
+        </span>
+    </div>
 
     <div class="composer-header">
         <span class="composer-avatar avatar">
@@ -16,29 +22,10 @@
 
         <div class="composer-prompt-shell">
             <div class="form-floating composer-floating">
-                <InputTextArea @bind-Value="composer.Content" class="form-control composer-input" placeholder="Bạn đang nghĩ gì?" />
-                <label>@(string.IsNullOrWhiteSpace(CurrentUserDisplayName) ? "Chia sẻ gì đó" : $"{CurrentUserDisplayName} đang nghĩ gì?")</label>
+                <InputTextArea @bind-Value="composer.Content" class="form-control composer-input" placeholder="Viết nội dung bài đăng" />
+                <label>@(string.IsNullOrWhiteSpace(CurrentUserDisplayName) ? "Bạn muốn chia sẻ gì?" : $"{CurrentUserDisplayName} muốn chia sẻ gì?")</label>
             </div>
         </div>
-    </div>
-
-    <div class="composer-toolbar">
-        <span class="composer-action-pill photo">
-            <AppIcon Name="album" />
-            <span>Ảnh</span>
-        </span>
-        <span class="composer-action-pill mood">
-            <AppIcon Name="activity" />
-            <span>Cảm xúc</span>
-        </span>
-        <span class="composer-action-pill place">
-            <AppIcon Name="location" />
-            <span>Check-in</span>
-        </span>
-        <span class="composer-action-pill tag">
-            <AppIcon Name="tag" />
-            <span>Gắn thẻ</span>
-        </span>
     </div>
 
     <div class="media-grid">
@@ -64,8 +51,8 @@
     }
 
     <div class="composer-actions">
-        <p class="composer-helper">Giữ nguyên nội dung, thêm ảnh hoặc video nếu muốn làm bài đăng nổi bật hơn.</p>
-        <button type="submit" class="btn btn-primary">Đăng bài</button>
+        <p class="composer-helper">Có thể bỏ trống liên kết media nếu chỉ muốn đăng văn bản.</p>
+        <button type="submit" class="btn btn-primary composer-submit">Đăng bài</button>
     </div>
 </EditForm>
 
@@ -167,8 +154,13 @@
 <style>
     .composer-shell {
         display: grid;
-        gap: 14px;
-        padding: 14px 16px 16px;
+        gap: 16px;
+        padding: 18px 20px;
+    }
+
+    .composer-topline {
+        display: flex;
+        justify-content: flex-start;
     }
 
     .composer-header {
@@ -196,58 +188,28 @@
         gap: 12px;
     }
 
+    .composer-floating {
+        min-width: 0;
+    }
+
     .composer-floating :deep(textarea.form-control) {
         padding-top: 1.55rem;
     }
 
     .composer-input {
-        min-height: 92px;
+        min-height: 112px;
         resize: vertical;
+        border-radius: 18px;
+        background: var(--bg-shell);
+        border: 1px solid var(--border);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .media-grid {
+        padding: 14px;
         border-radius: 20px;
-        background: color-mix(in srgb, var(--bg-muted) 88%, #fff 12%);
-    }
-
-    .composer-toolbar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        padding-top: 2px;
-        border-top: 1px solid var(--border-soft);
-    }
-
-    .composer-action-pill {
-        min-height: 38px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0 14px;
-        border-radius: 999px;
+        border: 1px dashed color-mix(in srgb, var(--border) 82%, var(--accent) 18%);
         background: var(--bg-muted);
-        border: 1px solid transparent;
-        color: var(--text-secondary);
-        font-size: 14px;
-        font-weight: 700;
-    }
-
-    .composer-action-pill.photo {
-        color: #16a34a;
-    }
-
-    .composer-action-pill.mood {
-        color: #d97706;
-    }
-
-    .composer-action-pill.place {
-        color: #0f7abf;
-    }
-
-    .composer-action-pill.tag {
-        color: #7c3aed;
-    }
-
-    .composer-action-pill:hover {
-        background: var(--bg-hover);
-        border-color: var(--border-soft);
     }
 
     .composer-actions {
@@ -256,12 +218,17 @@
         justify-content: space-between;
         align-items: center;
         gap: 10px;
+        padding-top: 2px;
     }
 
     .composer-helper {
         margin: 0;
         color: var(--text-muted);
         font-size: 0.86rem;
+    }
+
+    .composer-submit {
+        min-width: 148px;
     }
 
     @@media (min-width: 768px) {

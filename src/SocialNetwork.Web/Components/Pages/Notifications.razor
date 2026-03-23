@@ -10,15 +10,18 @@
 <PageTitle>Thông báo</PageTitle>
 
 <section class="page-section">
-    <div class="content-stack">
+    <div class="content-stack page-wide">
         <div class="page-header">
             <div>
-                <span class="section-kicker">Notifications</span>
+                <span class="section-kicker">Tương tác</span>
                 <h2>Thông báo</h2>
+                <p>Theo dõi bình luận, cảm xúc, lời mời kết bạn và các cập nhật mới theo thứ tự dễ đọc hơn.</p>
             </div>
+
             <div class="notification-header-actions">
                 <span class="badge-soft success">@UnreadCount chưa đọc</span>
-                <button class="btn btn-outline-dark" @onclick="MarkAllAsReadAsync">
+                <span class="badge-soft">@notifications.Count tổng số</span>
+                <button class="btn btn-outline-dark" @onclick="MarkAllAsReadAsync" disabled="@(UnreadCount == 0)">
                     <AppIcon Name="markread" />
                     <span>Đánh dấu đã đọc</span>
                 </button>
@@ -32,18 +35,19 @@
 
         @if (notifications.Count == 0)
         {
-            <EmptyState Title="Chưa có thông báo" Description="Không tải được dữ liệu thông báo." />
+            <EmptyState Title="Chưa có thông báo" Description="Khi có tương tác mới, danh sách sẽ được cập nhật tại đây." />
         }
         else
         {
-            <div class="section-grid">
-                @foreach (var notification in notifications)
+            <section class="section-grid">
+                @foreach (var notification in notifications.OrderBy(notification => notification.IsRead).ThenByDescending(notification => notification.CreatedDate))
                 {
                     <article class="panel notification-card @(notification.IsRead ? "read" : "unread")">
                         <div class="notification-body">
                             <div class="notification-icon-badge @(notification.IsRead ? "is-read" : "is-new")">
                                 <AppIcon Name="@GetNotificationIcon(notification.Type)" />
                             </div>
+
                             <div class="notification-copy">
                                 <div class="notification-copy-head">
                                     <strong>@notification.Title</strong>
@@ -52,17 +56,19 @@
                                         <span class="notification-dot" aria-hidden="true"></span>
                                     }
                                 </div>
+
                                 <p><span>@notification.ActorName</span> @notification.Message</p>
                                 <small>@notification.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
                             </div>
                         </div>
+
                         @if (!string.IsNullOrWhiteSpace(notification.Link))
                         {
                             <a class="btn btn-outline-dark btn-sm" href="@notification.Link">Mở</a>
                         }
                     </article>
                 }
-            </div>
+            </section>
         }
     </div>
 </section>
@@ -190,12 +196,8 @@
     }
 
     .notification-card.unread {
-        background: #f0f6ff;
-        border-left: 3px solid var(--accent);
-    }
-
-    body[data-theme="dark"] .notification-card.unread {
         background: rgba(109, 168, 255, 0.1);
+        border-left: 3px solid var(--accent);
     }
 
     .notification-copy {
@@ -224,6 +226,7 @@
 
     .notification-card p {
         color: var(--text-secondary);
+        line-height: 1.6;
     }
 
     .notification-card p span {

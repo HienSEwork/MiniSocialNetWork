@@ -12,25 +12,37 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Resend email confirmation</PageTitle>
+<PageTitle>Gửi lại email xác nhận</PageTitle>
 
-<h1>Resend email confirmation</h1>
-<h2>Enter your email.</h2>
-<hr />
-<StatusMessage Message="@message" />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="Input" FormName="resend-email-confirmation" OnValidSubmit="OnValidSubmitAsync" method="post">
+<div class="auth-panel-page">
+    <section class="auth-panel-card">
+        <div class="auth-panel-head">
+            <p class="auth-panel-kicker">Xác nhận tài khoản</p>
+            <h1>Gửi lại email xác nhận</h1>
+            <p class="auth-panel-copy">Nhập email để nhận lại liên kết xác nhận tài khoản.</p>
+        </div>
+
+        <StatusMessage Message="@message" />
+
+        <EditForm Model="Input" FormName="resend-email-confirmation" OnValidSubmit="OnValidSubmitAsync" method="post" class="auth-panel-form">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
-                <label for="email" class="form-label">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            <div class="auth-panel-fields">
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <div class="form-floating">
+                    <InputText @bind-Value="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
+                    <label>Email</label>
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Resend</button>
+
+            <button type="submit" class="btn auth-panel-submit">Gửi lại email</button>
+
+            <div class="auth-panel-links">
+                <a href="/Account/Login">Quay lại đăng nhập</a>
+            </div>
         </EditForm>
-    </div>
+    </section>
 </div>
 
 @code {
@@ -44,7 +56,7 @@
         var user = await UserManager.FindByEmailAsync(Input.Email!);
         if (user is null)
         {
-            message = "Verification email sent. Please check your email.";
+            message = "Nếu email hợp lệ, hệ thống đã gửi lại liên kết xác nhận.";
             return;
         }
 
@@ -56,7 +68,7 @@
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
         await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
-        message = "Verification email sent. Please check your email.";
+        message = "Nếu email hợp lệ, hệ thống đã gửi lại liên kết xác nhận.";
     }
 
     private sealed class InputModel

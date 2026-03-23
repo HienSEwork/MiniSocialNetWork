@@ -9,11 +9,24 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Confirm email change</PageTitle>
+<PageTitle>Xác nhận đổi email</PageTitle>
 
-<h1>Confirm email change</h1>
+<section class="auth-panel-page">
+    <div class="auth-panel-card">
+        <div class="auth-panel-head">
+            <p class="auth-panel-kicker">Xác thực tài khoản</p>
+            <h1>Xác nhận đổi email</h1>
+            <p class="auth-panel-copy">Luồng đổi email chỉ hoàn tất khi liên kết xác nhận còn hợp lệ và người dùng được xác minh thành công.</p>
+        </div>
 
-<StatusMessage Message="@message" />
+        <StatusMessage Message="@message" />
+
+        <div class="auth-panel-links">
+            <a href="/Account/Login">Về đăng nhập</a>
+            <a href="/Account/Manage/Email">Quản lý email</a>
+        </div>
+    </div>
+</section>
 
 @code {
     private string? message;
@@ -35,13 +48,15 @@
         if (UserId is null || Email is null || Code is null)
         {
             RedirectManager.RedirectToWithStatus(
-                "Account/Login", "Error: Invalid email change confirmation link.", HttpContext);
+                "Account/Login",
+                "Lỗi: liên kết xác nhận đổi email không hợp lệ.",
+                HttpContext);
         }
 
         var user = await UserManager.FindByIdAsync(UserId);
         if (user is null)
         {
-            message = "Unable to find user with Id '{userId}'";
+            message = "Không tìm thấy tài khoản cần cập nhật email.";
             return;
         }
 
@@ -49,21 +64,18 @@
         var result = await UserManager.ChangeEmailAsync(user, Email, code);
         if (!result.Succeeded)
         {
-            message = "Error changing email.";
+            message = "Không thể đổi email. Liên kết có thể đã hết hạn hoặc bị thay đổi.";
             return;
         }
 
-        // In our UI email and user name are one and the same, so when we update the email
-        // we need to update the user name.
         var setUserNameResult = await UserManager.SetUserNameAsync(user, Email);
         if (!setUserNameResult.Succeeded)
         {
-            message = "Error changing user name.";
+            message = "Email đã đổi nhưng không thể đồng bộ tên đăng nhập.";
             return;
         }
 
         await SignInManager.RefreshSignInAsync(user);
-        message = "Thank you for confirming your email change.";
+        message = "Email mới đã được xác nhận thành công.";
     }
 }
-
