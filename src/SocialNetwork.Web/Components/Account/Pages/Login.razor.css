@@ -1,198 +1,28 @@
 .login-page {
-    display: grid;
-}
-
-.login-card {
-    max-width: 540px;
     width: 100%;
-    padding: 24px;
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    background:
-        linear-gradient(140deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 28%, rgba(255, 255, 255, 0.08) 52%, rgba(255, 255, 255, 0.02) 100%),
-        linear-gradient(160deg, #0a56d8 0%, #0866ff 48%, #3f8cff 100%);
-    box-shadow: 0 14px 30px rgba(8, 51, 128, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-.login-card::before,
-.login-card::after {
-    content: "";
-    position: absolute;
-    inset: auto;
-    pointer-events: none;
-}
-
-.login-card::before {
-    width: 180px;
-    height: 180px;
-    top: -60px;
-    right: -40px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.03));
-    clip-path: polygon(50% 0%, 100% 35%, 78% 100%, 22% 100%, 0% 35%);
-    opacity: 0.75;
-}
-
-.login-card::after {
-    width: 130px;
-    height: 130px;
-    bottom: -34px;
-    left: -22px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.02));
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    opacity: 0.65;
-}
-
-.login-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 38px rgba(8, 51, 128, 0.2);
-}
-
-.login-card-head {
-    display: grid;
-    gap: 6px;
-    margin-bottom: 18px;
-    position: relative;
-    z-index: 1;
-}
-
-.login-kicker {
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 12px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.76);
-}
-
-.login-card-head h1 {
-    margin: 0;
-    color: #fff;
-    font-size: 34px;
-}
-
-.login-card-head p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.86);
-    line-height: 1.6;
 }
 
 .login-form {
-    display: grid;
-    gap: 14px;
-    position: relative;
-    z-index: 1;
-}
-
-.login-fields {
-    display: grid;
     gap: 12px;
-    padding: 14px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(12px);
-}
-
-.login-form ::deep .validation-message,
-.login-form ::deep .text-danger,
-.login-form ::deep .validation-errors {
-    color: #fff1f1 !important;
-}
-
-.login-form ::deep .form-control {
-    min-height: 50px;
-    background: rgba(255, 255, 255, 0.96);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: var(--text-primary);
-    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-}
-
-.login-form ::deep .form-control:hover {
-    border-color: rgba(8, 102, 255, 0.4);
-}
-
-.login-form ::deep .form-control:focus {
-    transform: translateY(-1px);
-}
-
-.login-form ::deep .form-floating > label {
-    color: #556074;
-}
-
-.login-form ::deep .checkbox {
-    margin: 0;
-}
-
-.login-form ::deep .checkbox label {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    color: #fff;
-    font-weight: 500;
-}
-
-.login-form ::deep .form-check-input {
-    border-color: rgba(255, 255, 255, 0.45);
-}
-
-.login-submit {
-    min-height: 50px;
-    width: 180px;
-    border: 0;
-    border-radius: 10px;
-    background: #fff;
-    color: #0a56d8;
-    font-size: 16px;
-    font-weight: 700;
-    transition: transform 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
-}
-
-.login-submit:hover,
-.login-submit:focus {
-    background: #eef4ff;
-    color: #0847b7;
-    transform: translateY(-1px);
-    box-shadow: 0 10px 18px rgba(4, 36, 112, 0.16);
 }
 
 .login-links {
-    display: grid;
-    gap: 8px;
-    position: relative;
-    z-index: 1;
+    gap: 10px;
 }
 
 .login-links a {
-    color: #fff;
-    font-weight: 500;
-    width: fit-content;
-    transition: opacity 160ms ease, transform 160ms ease;
+    line-height: 1.4;
 }
 
-.login-links a:hover {
-    color: #eef4ff;
-    transform: translateX(2px);
+.login-remember label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: var(--text-secondary);
+    font-weight: 600;
 }
 
-@media (max-width: 767.98px) {
-    .login-card {
-        padding: 20px;
-        border-radius: 14px;
-    }
-
-    .login-fields {
-        padding: 14px;
-        border-radius: 10px;
-    }
-
-    .login-submit {
-        width: 100%;
-    }
+.login-remember .form-check-input {
+    margin-top: 0;
 }

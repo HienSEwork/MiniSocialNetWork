@@ -1,20 +1,24 @@
 @page "/Account/InvalidUser"
 
-<PageTitle>Tài khoản không hợp lệ</PageTitle>
+<PageTitle>@T("Tài khoản không hợp lệ", "Invalid account")</PageTitle>
 
 <section class="auth-panel-page">
     <div class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Tài khoản</p>
-            <h1>Không tìm thấy tài khoản phù hợp</h1>
-            <p class="auth-panel-copy">Liên kết bạn vừa mở không còn hợp lệ hoặc người dùng liên quan không tồn tại trong hệ thống.</p>
+            <p class="auth-panel-kicker">@T("Tài khoản", "Account")</p>
+            <h1>@T("Không tìm thấy tài khoản phù hợp", "Matching account not found")</h1>
+            <p class="auth-panel-copy">@T("Liên kết bạn vừa mở không còn hợp lệ hoặc người dùng liên quan không tồn tại trong hệ thống.", "The link you opened is no longer valid or the related user does not exist in the system.")</p>
         </div>
 
         <StatusMessage />
 
         <div class="auth-panel-links">
-            <a href="/Account/Login">Đăng nhập</a>
-            <a href="/Account/Register">Tạo tài khoản mới</a>
+            <a href="/Account/Login">@T("Đăng nhập", "Sign in")</a>
+            <a href="/Account/Register">@T("Tạo tài khoản mới", "Create a new account")</a>
         </div>
     </div>
 </section>
+
+@code {
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+}

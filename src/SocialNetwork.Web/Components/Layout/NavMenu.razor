@@ -1,4 +1,6 @@
-﻿@implements IDisposable
+@implements IDisposable
+
+@using System.Globalization
 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -7,140 +9,189 @@
 @inject IGroupService GroupService
 @inject IChatService ChatService
 
-<aside class="nav-shell">
+<aside class="sociala-nav-shell">
     <AuthorizeView>
         <Authorized>
-            <NavLink class="shortcut-item profile-shortcut" href="/profile">
-                <span class="shortcut-avatar">
-                    @if (!string.IsNullOrWhiteSpace(currentUserAvatarUrl))
-                    {
-                        <img src="@currentUserAvatarUrl" alt="@currentUserDisplayName" />
-                    }
-                    else
-                    {
-                        @GetInitials(currentUserDisplayName)
-                    }
-                </span>
-                <span class="shortcut-copy">
-                    <strong class="shortcut-label">@currentUserDisplayName</strong>
-                    <small>Trang cá nhân và cài đặt nhanh</small>
-                </span>
-            </NavLink>
-
-            <section class="shortcut-section shortcut-primary">
-                <div class="shortcut-section-head">
-                    <strong>Khám phá</strong>
-                </div>
-                <div class="shortcut-list">
-                    <NavLink class="shortcut-item" href="/feed">
-                        <span class="shortcut-icon-circle accent home">
-                            <AppIcon Name="feed-solid" />
-                        </span>
-                        <span class="shortcut-copy">
-                            <strong class="shortcut-label">Trang chủ</strong>
-                            <small>Bảng tin, stories và gợi ý mới</small>
-                        </span>
-                    </NavLink>
-                    <NavLink class="shortcut-item" href="/friends">
-                        <span class="shortcut-icon-circle accent friends">
-                            <AppIcon Name="friends-solid" />
-                        </span>
-                        <span class="shortcut-copy">
-                            <strong class="shortcut-label">Bạn bè</strong>
-                            <small>Quản lý lời mời và kết nối</small>
-                        </span>
-                    </NavLink>
-                    <NavLink class="shortcut-item" href="/groups">
-                        <span class="shortcut-icon-circle accent groups">
-                            <AppIcon Name="groups-solid" />
-                        </span>
-                        <span class="shortcut-copy">
-                            <strong class="shortcut-label">Nhóm</strong>
-                            <small>Không gian cộng đồng của bạn</small>
-                        </span>
-                    </NavLink>
-                    <NavLink class="shortcut-item" href="/chat">
-                        <span class="shortcut-icon-circle accent chat">
-                            <AppIcon Name="chat-solid" />
-                        </span>
-                        <span class="shortcut-copy">
-                            <strong class="shortcut-label">Tin nhắn</strong>
-                            <small>Chat realtime với bạn bè</small>
-                        </span>
-                    </NavLink>
-                    <NavLink class="shortcut-item" href="/saved">
-                        <span class="shortcut-icon-circle accent saved">
-                            <AppIcon Name="heart" />
-                        </span>
-                        <span class="shortcut-copy">
-                            <strong class="shortcut-label">Đã lưu</strong>
-                            <small>Xem lại các bài viết quan trọng</small>
-                        </span>
-                    </NavLink>
-                    <NavLink class="shortcut-item" href="/notifications">
-                        <span class="shortcut-icon-circle accent notify">
-                            <AppIcon Name="notifications-solid" />
-                        </span>
-                        <span class="shortcut-copy">
-                            <strong class="shortcut-label">Thông báo</strong>
-                            <small>Cập nhật tương tác mới nhất</small>
-                        </span>
-                    </NavLink>
-                </div>
+            <section class="sociala-nav-profile">
+                <a class="sociala-nav-profile-link" href="/profile">
+                    <span class="sociala-nav-avatar">
+                        @if (!string.IsNullOrWhiteSpace(currentUserAvatarUrl))
+                        {
+                            <img src="@currentUserAvatarUrl" alt="@currentUserDisplayName" />
+                        }
+                        else
+                        {
+                            @GetInitials(currentUserDisplayName)
+                        }
+                    </span>
+                    <span class="sociala-nav-profile-copy">
+                        <strong>@currentUserDisplayName</strong>
+                        <small>@T("Trang cá nhân và lối tắt tài khoản", "Profile and account shortcuts")</small>
+                    </span>
+                </a>
             </section>
 
-            <section class="shortcut-section">
-                <div class="shortcut-section-head">
-                    <strong>Nhóm của bạn</strong>
-                    <small>@groups.Count</small>
+            <details class="sociala-nav-block sociala-nav-block-collapsible" open>
+                <summary class="sociala-nav-caption sociala-nav-caption-toggle">
+                    <span class="sociala-nav-caption-title"><span>@T("Điều", "Quick")</span> @T("hướng", "Links")</span>
+                    <span class="sociala-nav-caption-arrow">
+                        <AppIcon Name="chevron-down" />
+                    </span>
+                </summary>
+
+                <nav class="sociala-nav-list" aria-label="@T("Điều hướng nhanh", "Quick navigation")">
+                    <NavLink class="sociala-nav-item" href="/feed">
+                        <span class="sociala-nav-icon feed">
+                            <AppIcon Name="feed-solid" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>Newsfeed</strong>
+                            <small>@T("Bảng tin trung tâm và stories", "Main feed and stories")</small>
+                        </span>
+                    </NavLink>
+
+                    <NavLink class="sociala-nav-item" href="/friends">
+                        <span class="sociala-nav-icon friends">
+                            <AppIcon Name="friends-solid" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Bạn bè", "Friends")</strong>
+                            <small>@T("Lời mời, kết nối và gợi ý", "Requests, connections, and suggestions")</small>
+                        </span>
+                    </NavLink>
+
+                    <NavLink class="sociala-nav-item" href="/groups">
+                        <span class="sociala-nav-icon groups">
+                            <AppIcon Name="groups-solid" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Nhóm", "Groups")</strong>
+                            <small>@T("Cộng đồng bạn đang theo dõi", "Communities you are following")</small>
+                        </span>
+                    </NavLink>
+
+                    <NavLink class="sociala-nav-item" href="/chat">
+                        <span class="sociala-nav-icon chat">
+                            <AppIcon Name="chat-solid" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Tin nhắn", "Messages")</strong>
+                            <small>@T("Hộp thư realtime", "Realtime inbox")</small>
+                        </span>
+                    </NavLink>
+
+                    <NavLink class="sociala-nav-item" href="/notifications">
+                        <span class="sociala-nav-icon notify">
+                            <AppIcon Name="notifications-solid" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Thông báo", "Notifications")</strong>
+                            <small>@T("Tương tác mới nhất", "Latest activity")</small>
+                        </span>
+                    </NavLink>
+                </nav>
+            </details>
+
+            <details class="sociala-nav-block sociala-nav-block-collapsible" open>
+                <summary class="sociala-nav-caption sociala-nav-caption-toggle">
+                    <span class="sociala-nav-caption-title"><span>@T("Tài", "Account")</span> @T("khoản", "Tools")</span>
+                    <span class="sociala-nav-caption-arrow">
+                        <AppIcon Name="chevron-down" />
+                    </span>
+                </summary>
+
+                <div class="sociala-nav-list">
+                    <NavLink class="sociala-nav-item" href="/profile">
+                        <span class="sociala-nav-icon profile">
+                            <AppIcon Name="profile-solid" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Hồ sơ", "Profile")</strong>
+                            <small>@T("Thông tin cá nhân và bio", "Personal info and bio")</small>
+                        </span>
+                    </NavLink>
+
+                    <NavLink class="sociala-nav-item" href="/saved">
+                        <span class="sociala-nav-icon saved">
+                            <AppIcon Name="heart" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Đã lưu", "Saved")</strong>
+                            <small>@T("Xem lại các bài viết quan trọng", "Revisit important posts")</small>
+                        </span>
+                    </NavLink>
+
+                    <NavLink class="sociala-nav-item" href="/settings">
+                        <span class="sociala-nav-icon settings">
+                            <AppIcon Name="dashboard" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Cài đặt", "Settings")</strong>
+                            <small>@T("Tùy chỉnh giao diện và tài khoản", "Theme and account preferences")</small>
+                        </span>
+                    </NavLink>
                 </div>
-                <div class="shortcut-list">
+            </details>
+
+            <details class="sociala-nav-block sociala-nav-block-collapsible" open>
+                <summary class="sociala-nav-caption sociala-nav-caption-toggle">
+                    <span class="sociala-nav-caption-title"><span>@T("Nhóm", "Your")</span> @T("của bạn", "Groups")</span>
+                    <span class="sociala-nav-caption-arrow">
+                        <AppIcon Name="chevron-down" />
+                    </span>
+                </summary>
+
+                <div class="sociala-nav-inline-list">
                     @if (!string.IsNullOrWhiteSpace(loadError))
                     {
-                        <p class="shortcut-fallback">@loadError</p>
+                        <p class="sociala-nav-empty">@loadError</p>
                     }
                     else if (groups.Count == 0)
                     {
-                        <p class="shortcut-fallback">Bạn chưa tham gia nhóm nào.</p>
+                        <p class="sociala-nav-empty">@T("Bạn chưa tham gia nhóm nào.", "You have not joined any groups yet.")</p>
                     }
                     else
                     {
                         @foreach (var group in groups)
                         {
-                            <a class="shortcut-item" href="@($"/groups/{group.Id}")">
-                                <span class="shortcut-icon-circle group">
+                            <a class="sociala-nav-inline-item" href="@($"/groups/{group.Id}")">
+                                <span class="sociala-nav-icon groups">
                                     <AppIcon Name="groups" />
                                 </span>
-                                <span class="shortcut-copy">
-                                    <strong class="shortcut-label">@group.Name</strong>
-                                    <small>@group.MemberCount thành viên</small>
+                                <span class="sociala-nav-copy">
+                                    <strong>@group.Name</strong>
+                                    <small>@FormatMemberCount(group.MemberCount)</small>
                                 </span>
+                                <span class="sociala-nav-badge">@group.MemberCount</span>
                             </a>
                         }
                     }
                 </div>
-            </section>
+            </details>
 
-            <section class="shortcut-section">
-                <div class="shortcut-section-head">
-                    <strong>Đang trò chuyện</strong>
-                    <small>@chatUsers.Count</small>
-                </div>
-                <div class="shortcut-list">
+            <details class="sociala-nav-block sociala-nav-block-collapsible" open>
+                <summary class="sociala-nav-caption sociala-nav-caption-toggle">
+                    <span class="sociala-nav-caption-title"><span>@T("Đoạn", "Recent")</span> @T("chat", "Chats")</span>
+                    <span class="sociala-nav-caption-arrow">
+                        <AppIcon Name="chevron-down" />
+                    </span>
+                </summary>
+
+                <div class="sociala-nav-inline-list">
                     @if (!string.IsNullOrWhiteSpace(loadError))
                     {
-                        <p class="shortcut-fallback">@loadError</p>
+                        <p class="sociala-nav-empty">@loadError</p>
                     }
                     else if (chatUsers.Count == 0)
                     {
-                        <p class="shortcut-fallback">Chưa có cuộc trò chuyện gần đây.</p>
+                        <p class="sociala-nav-empty">@T("Chưa có cuộc trò chuyện gần đây.", "No recent conversations yet.")</p>
                     }
                     else
                     {
                         @foreach (var user in chatUsers)
                         {
-                            <a class="shortcut-item" href="@($"/chat/{user.Id}")">
-                                <span class="shortcut-avatar small">
+                            <a class="sociala-nav-inline-item" href="@($"/chat/{user.Id}")">
+                                <span class="sociala-nav-avatar-small">
                                     @if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
                                     {
                                         <img src="@user.AvatarUrl" alt="@user.DisplayName" />
@@ -150,66 +201,105 @@
                                         @GetInitials(user.DisplayName)
                                     }
                                 </span>
-                                <span class="shortcut-copy">
-                                    <strong class="shortcut-label">@user.DisplayName</strong>
+                                <span class="sociala-nav-copy">
+                                    <strong>@user.DisplayName</strong>
                                     <small>@(!string.IsNullOrWhiteSpace(user.Bio) ? user.Bio : user.Email)</small>
                                 </span>
                             </a>
                         }
                     }
                 </div>
-            </section>
+            </details>
 
-            <section class="shortcut-section">
-                <div class="shortcut-section-head">
-                    <strong>Xu hướng</strong>
-                    <small>tags</small>
-                </div>
-                <div class="tag-cloud">
-                    <span class="tag-chip">#bangtin</span>
-                    <span class="tag-chip">#ketnoi</span>
-                    <span class="tag-chip">#nhom</span>
-                    <span class="tag-chip">#chat</span>
-                    <span class="tag-chip">#realtime</span>
-                    <span class="tag-chip">#mini-social</span>
-                </div>
-            </section>
+            <details class="sociala-nav-block sociala-nav-block-collapsible" open>
+                <summary class="sociala-nav-caption sociala-nav-caption-toggle">
+                    <span class="sociala-nav-caption-title"><span>@T("Thẻ", "Trending")</span> @T("nổi bật", "Tags")</span>
+                    <span class="sociala-nav-caption-arrow">
+                        <AppIcon Name="chevron-down" />
+                    </span>
+                </summary>
 
-            <form action="Account/Logout" method="post" class="logout-form shortcut-footer">
-                <AntiforgeryToken />
-                <input type="hidden" name="ReturnUrl" value="/Account/Login" />
-                <button type="submit" class="shortcut-item shortcut-button">
-                    <span class="shortcut-icon-circle logout">
-                        <AppIcon Name="logout" />
-                    </span>
-                    <span class="shortcut-copy">
-                        <strong class="shortcut-label">Đăng xuất</strong>
-                        <small>Thoát khỏi tài khoản hiện tại</small>
-                    </span>
-                </button>
-            </form>
+                <div class="sociala-nav-tags">
+                    <span class="sociala-nav-tag">#newsfeed</span>
+                    <span class="sociala-nav-tag">#chat</span>
+                    <span class="sociala-nav-tag">#groups</span>
+                    <span class="sociala-nav-tag">#friends</span>
+                    <span class="sociala-nav-tag">#realtime</span>
+                    <span class="sociala-nav-tag">#sociala</span>
+                </div>
+            </details>
+
+            <section class="sociala-nav-footer">
+                <form action="Account/Logout" method="post" class="sociala-nav-footer-form">
+                    <AntiforgeryToken />
+                    <input type="hidden" name="ReturnUrl" value="/Account/Login" />
+                    <button type="submit" class="sociala-nav-footer-button">
+                        <span class="sociala-nav-icon notify">
+                            <AppIcon Name="logout" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Đăng xuất", "Log out")</strong>
+                            <small>@T("Thoát khỏi tài khoản hiện tại", "Leave the current account")</small>
+                        </span>
+                    </button>
+                </form>
+            </section>
         </Authorized>
+
         <NotAuthorized>
-            <div class="shortcut-list guest-list">
-                <a class="shortcut-item" href="/Account/Login" data-enhance-nav="false">
-                    <span class="shortcut-icon-circle accent home">
-                        <AppIcon Name="profile" />
+            <details class="sociala-nav-block sociala-nav-block-collapsible" open>
+                <summary class="sociala-nav-caption sociala-nav-caption-toggle">
+                    <span class="sociala-nav-caption-title"><span>@T("Khách", "Guest")</span> @T("truy cập", "Access")</span>
+                    <span class="sociala-nav-caption-arrow">
+                        <AppIcon Name="chevron-down" />
                     </span>
-                    <span class="shortcut-copy">
-                        <strong class="shortcut-label">Đăng nhập</strong>
-                        <small>Vào bảng tin cá nhân của bạn</small>
+                </summary>
+
+                <div class="sociala-nav-list">
+                    <a class="sociala-nav-item" href="/feed">
+                        <span class="sociala-nav-icon feed">
+                            <AppIcon Name="feed-solid" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Xem newsfeed", "Preview feed")</strong>
+                        </span>
+                    </a>
+
+                    <a class="sociala-nav-item" href="/Account/Login" data-enhance-nav="false">
+                        <span class="sociala-nav-icon profile">
+                            <AppIcon Name="profile" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Đăng nhập", "Log in")</strong>
+                        </span>
+                    </a>
+
+                    <a class="sociala-nav-item" href="/Account/Register" data-enhance-nav="false">
+                        <span class="sociala-nav-icon groups">
+                            <AppIcon Name="friends" />
+                        </span>
+                        <span class="sociala-nav-copy">
+                            <strong>@T("Tạo tài khoản", "Create account")</strong>
+                        </span>
+                    </a>
+                </div>
+            </details>
+
+            <details class="sociala-nav-block sociala-nav-block-collapsible" open>
+                <summary class="sociala-nav-caption sociala-nav-caption-toggle">
+                    <span class="sociala-nav-caption-title"><span>@T("Thẻ", "Preview")</span> @T("xem trước", "Tags")</span>
+                    <span class="sociala-nav-caption-arrow">
+                        <AppIcon Name="chevron-down" />
                     </span>
-                </a>
-                <a class="shortcut-item" href="/Account/Register" data-enhance-nav="false">
-                    <span class="shortcut-icon-circle accent groups">
-                        <AppIcon Name="friends" />
-                    </span>
-                    <span class="shortcut-copy">
-                        <strong class="shortcut-label">Đăng ký</strong>
-                        <small>Tạo tài khoản để bắt đầu kết nối</small>
-                    </span>
-                </a>
-            </div>
+                </summary>
+
+                <div class="sociala-nav-tags">
+                    <span class="sociala-nav-tag">#public-feed</span>
+                    <span class="sociala-nav-tag">#discover</span>
+                    <span class="sociala-nav-tag">#communities</span>
+                    <span class="sociala-nav-tag">#stories</span>
+                </div>
+            </details>
         </NotAuthorized>
     </AuthorizeView>
 </aside>
@@ -219,8 +309,10 @@
     private readonly List<UserSummaryDto> chatUsers = new();
     private string? loadError;
     private string currentUserId = string.Empty;
-    private string currentUserDisplayName = "Trang cá nhân";
+    private string currentUserDisplayName = "Profile";
     private string? currentUserAvatarUrl;
+
+    private bool IsEnglish => string.Equals(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, "en", StringComparison.OrdinalIgnoreCase);
 
     protected override async Task OnInitializedAsync()
     {
@@ -237,7 +329,7 @@
             currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
             var profile = await ProfileService.GetProfileAsync(currentUserId);
 
-            currentUserDisplayName = profile?.DisplayName ?? "Trang cá nhân";
+            currentUserDisplayName = profile?.DisplayName ?? T("Trang cá nhân", "Profile");
             currentUserAvatarUrl = profile?.AvatarUrl;
 
             groups.Clear();
@@ -253,7 +345,7 @@
         }
         catch
         {
-            loadError = "Không thể tải dữ liệu bảng điều hướng.";
+            loadError = T("Không thể tải dữ liệu điều hướng.", "Unable to load navigation data.");
         }
     }
 
@@ -261,6 +353,11 @@
     {
         StateHasChanged();
     }
+
+    private string T(string vietnamese, string english) => IsEnglish ? english : vietnamese;
+
+    private string FormatMemberCount(int count) =>
+        IsEnglish ? $"{count} members" : $"{count} thành viên";
 
     private static string GetInitials(string? name)
     {

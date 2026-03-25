@@ -1,18 +1,22 @@
 @page "/Account/AccessDenied"
 
-<PageTitle>Không có quyền truy cập</PageTitle>
+<PageTitle>@T("Không có quyền truy cập", "Access denied")</PageTitle>
 
 <section class="auth-panel-page">
     <div class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Truy cập bị chặn</p>
-            <h1>Không có quyền truy cập</h1>
-            <p class="auth-panel-copy">Tài khoản hiện tại không có quyền mở tài nguyên này. Hãy đăng nhập bằng tài khoản phù hợp hoặc quay lại bảng tin.</p>
+            <p class="auth-panel-kicker">@T("Truy cập bị chặn", "Access blocked")</p>
+            <h1>@T("Không có quyền truy cập", "Access denied")</h1>
+            <p class="auth-panel-copy">@T("Tài khoản hiện tại không có quyền mở tài nguyên này. Hãy đăng nhập bằng tài khoản phù hợp hoặc quay lại bảng tin.", "The current account does not have permission to open this resource. Sign in with the appropriate account or return to the feed.")</p>
         </div>
 
         <div class="auth-panel-links">
-            <a href="/Account/Login">Đăng nhập lại</a>
-            <a href="/feed">Quay về bảng tin</a>
+            <a href="/Account/Login">@T("Đăng nhập lại", "Sign in again")</a>
+            <a href="/feed">@T("Quay về bảng tin", "Back to feed")</a>
         </div>
     </div>
 </section>
+
+@code {
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+}

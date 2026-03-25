@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            @if (Post.CanEdit)
+            @if (!IsReadOnly && Post.CanEdit)
             {
                 <div class="post-owner-actions">
                     <button class="btn btn-link btn-sm" @onclick="ToggleEdit">Sửa</button>
@@ -100,10 +100,17 @@
             </div>
 
             <div class="post-summary-actions">
-                <button type="button" class="post-save-button @(Post.IsSaved ? "saved" : null)" @onclick="ToggleSavedPostAsync">
-                    <AppIcon Name="heart" />
-                    <span>@(Post.IsSaved ? "Bỏ lưu" : "Lưu")</span>
-                </button>
+                @if (!IsReadOnly)
+                {
+                    <button type="button" class="post-save-button @(Post.IsSaved ? "saved" : null)" @onclick="ToggleSavedPostAsync">
+                        <AppIcon Name="heart" />
+                        <span>@(Post.IsSaved ? "Bỏ lưu" : "Lưu")</span>
+                    </button>
+                }
+                else
+                {
+                    <a class="post-detail-link" href="/Account/Login" data-enhance-nav="false">Đăng nhập để tương tác</a>
+                }
 
                 @if (ShowDetailLink)
                 {
@@ -112,21 +119,31 @@
             </div>
         </div>
 
-        <div class="reaction-row">
-            @foreach (var reactionType in Enum.GetValues<ReactionType>())
-            {
-                <button class="reaction-button @(Post.CurrentUserReaction == reactionType ? "selected" : null)"
-                        @onclick="() => ToggleReactionAsync(reactionType)">
-                    <AppIcon Name="@GetReactionIcon(reactionType)" />
-                    <span>@GetReactionLabel(reactionType)</span>
-                    <strong>@GetReactionCount(reactionType)</strong>
-                </button>
-            }
-        </div>
+        @if (!IsReadOnly)
+        {
+            <div class="reaction-row">
+                @foreach (var reactionType in Enum.GetValues<ReactionType>())
+                {
+                    <button class="reaction-button @(Post.CurrentUserReaction == reactionType ? "selected" : null)"
+                            @onclick="() => ToggleReactionAsync(reactionType)">
+                        <AppIcon Name="@GetReactionIcon(reactionType)" />
+                        <span>@GetReactionLabel(reactionType)</span>
+                        <strong>@GetReactionCount(reactionType)</strong>
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="post-readonly-note">
+                <span>Bạn đang xem newsfeed công khai.</span>
+                <a href="/Account/Login" data-enhance-nav="false">Đăng nhập để bày tỏ cảm xúc và bình luận</a>
+            </div>
+        }
     </div>
 
     <div class="post-comments">
-        <CommentSection PostId="Post.Id" Comments="Post.Comments" OnChanged="OnChanged" />
+        <CommentSection PostId="Post.Id" Comments="Post.Comments" OnChanged="OnChanged" IsReadOnly="IsReadOnly" />
     </div>
 </article>
 
@@ -139,6 +156,9 @@
 
     [Parameter]
     public EventCallback OnChanged { get; set; }
+
+    [Parameter]
+    public bool IsReadOnly { get; set; }
 
     [Inject]
     private IPostService PostService { get; set; } = default!;
@@ -541,5 +561,24 @@
         color: var(--accent);
         background: var(--bg-shell);
         box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+
+    .post-readonly-note {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: var(--bg-muted);
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .post-readonly-note a {
+        color: var(--accent);
+        font-weight: 800;
     }
 </style>

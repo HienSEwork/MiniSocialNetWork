@@ -12,5 +12,9 @@ public interface IFriendshipService
 
     Task AddFriendAsync(string currentUserId, string otherUserId);
 
+    Task AcceptFriendRequestAsync(string currentUserId, string otherUserId);
+
+    Task RejectFriendRequestAsync(string currentUserId, string otherUserId);
+
     Task RemoveFriendAsync(string currentUserId, string otherUserId);
 }

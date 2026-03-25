@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.DAL.Entities;
+using SocialNetwork.DAL.Enums;
 
 namespace SocialNetwork.DAL;
 
@@ -179,6 +180,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         {
             entity.HasIndex(friendship => new { friendship.RequesterId, friendship.AddresseeId })
                 .IsUnique();
+
+            entity.Property(friendship => friendship.Status)
+                .HasConversion<int>();
 
             entity.HasOne(friendship => friendship.Requester)
                 .WithMany(user => user.FriendshipsRequested)

@@ -9,7 +9,7 @@
 {
     <div>
         <p>
-            Chưa có dịch vụ đăng nhập ngoài nào được cấu hình cho hệ thống.
+            @T("Chưa có dịch vụ đăng nhập ngoài nào được cấu hình cho hệ thống.", "No external sign-in providers are configured for this system.")
         </p>
     </div>
 }
@@ -22,7 +22,7 @@ else
             <p>
                 @foreach (var provider in externalLogins)
                 {
-                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Đăng nhập bằng tài khoản @provider.DisplayName">@provider.DisplayName</button>
+                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="@T($"Đăng nhập bằng tài khoản {provider.DisplayName}", $"Sign in with your {provider.DisplayName} account")">@provider.DisplayName</button>
                 }
             </p>
         </div>
@@ -32,6 +32,8 @@ else
 @code {
     private AuthenticationScheme[] externalLogins = [];
 
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
@@ -40,4 +42,3 @@ else
         externalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
     }
 }
-

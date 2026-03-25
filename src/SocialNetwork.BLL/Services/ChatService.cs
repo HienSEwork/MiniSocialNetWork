@@ -1,12 +1,11 @@
-using Microsoft.EntityFrameworkCore;
 using SocialNetwork.BLL.Contracts;
 using SocialNetwork.BLL.Interfaces;
-using SocialNetwork.DAL;
 using SocialNetwork.DAL.Entities;
+using SocialNetwork.DAL.Repositories;
 
 namespace SocialNetwork.BLL.Services;
 
-public class ChatService(IDbContextFactory<ApplicationDbContext> dbContextFactory, IFriendshipService friendshipService) : IChatService
+public class ChatService(IChatRepository chatRepository, IFriendshipService friendshipService) : IChatService
 {
     public async Task<IReadOnlyList<UserSummaryDto>> GetChatUsersAsync(string currentUserId)
     {
@@ -15,48 +14,28 @@ public class ChatService(IDbContextFactory<ApplicationDbContext> dbContextFactor
 
     public async Task<IReadOnlyList<MessageDto>> GetPrivateConversationAsync(string currentUserId, string otherUserId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         if (!await friendshipService.AreFriendsAsync(currentUserId, otherUserId))
         {
             throw new InvalidOperationException("Chỉ có thể nhắn tin riêng với người đã kết bạn.");
         }
 
-        return await dbContext.Messages
-            .AsNoTracking()
-            .Include(message => message.Sender)
-            .Where(message => !message.IsGroupMessage &&
-                              ((message.SenderId == currentUserId && message.ReceiverId == otherUserId) ||
-                               (message.SenderId == otherUserId && message.ReceiverId == currentUserId)))
-            .OrderBy(message => message.CreatedDate)
-            .ToListAsync()
-            .ContinueWith(task => (IReadOnlyList<MessageDto>)task.Result.Select(message => MapMessage(message, currentUserId)).ToList());
+        var messages = await chatRepository.GetPrivateConversationAsync(currentUserId, otherUserId);
+        return messages.Select(message => MapMessage(message, currentUserId)).ToList();
     }
 
     public async Task<IReadOnlyList<MessageDto>> GetGroupConversationAsync(string currentUserId, Guid groupId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var isMember = await dbContext.GroupMembers.AnyAsync(member => member.GroupId == groupId && member.UserId == currentUserId);
-        if (!isMember)
+        if (!await chatRepository.IsUserMemberOfGroupAsync(currentUserId, groupId))
         {
             throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi mở chat nhóm.");
         }
 
-        var messages = await dbContext.Messages
-            .AsNoTracking()
-            .Include(message => message.Sender)
-            .Where(message => message.IsGroupMessage && message.GroupId == groupId)
-            .OrderBy(message => message.CreatedDate)
-            .ToListAsync();
-
+        var messages = await chatRepository.GetGroupConversationAsync(groupId);
         return messages.Select(message => MapMessage(message, currentUserId)).ToList();
     }
 
     public async Task<MessageDto> SavePrivateMessageAsync(string senderId, string receiverId, string content)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         if (string.IsNullOrWhiteSpace(content))
         {
             throw new InvalidOperationException("Nội dung tin nhắn là bắt buộc.");
@@ -75,25 +54,21 @@ public class ChatService(IDbContextFactory<ApplicationDbContext> dbContextFactor
             IsGroupMessage = false
         };
 
-        dbContext.Messages.Add(message);
-        await dbContext.SaveChangesAsync();
+        await chatRepository.AddMessageAsync(message);
 
-        var sender = await dbContext.Users.FirstAsync(user => user.Id == senderId);
+        var sender = await chatRepository.GetRequiredUserAsync(senderId);
         message.Sender = sender;
         return MapMessage(message, senderId);
     }
 
     public async Task<MessageDto> SaveGroupMessageAsync(string senderId, Guid groupId, string content)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         if (string.IsNullOrWhiteSpace(content))
         {
             throw new InvalidOperationException("Nội dung tin nhắn là bắt buộc.");
         }
 
-        var isMember = await dbContext.GroupMembers.AnyAsync(member => member.GroupId == groupId && member.UserId == senderId);
-        if (!isMember)
+        if (!await chatRepository.IsUserMemberOfGroupAsync(senderId, groupId))
         {
             throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi gửi tin nhắn.");
         }
@@ -106,10 +81,9 @@ public class ChatService(IDbContextFactory<ApplicationDbContext> dbContextFactor
             IsGroupMessage = true
         };
 
-        dbContext.Messages.Add(message);
-        await dbContext.SaveChangesAsync();
+        await chatRepository.AddMessageAsync(message);
 
-        var sender = await dbContext.Users.FirstAsync(user => user.Id == senderId);
+        var sender = await chatRepository.GetRequiredUserAsync(senderId);
         message.Sender = sender;
         return MapMessage(message, senderId);
     }

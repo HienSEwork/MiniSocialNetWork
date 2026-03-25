@@ -1,52 +1,27 @@
-using Microsoft.EntityFrameworkCore;
 using SocialNetwork.BLL.Contracts;
 using SocialNetwork.BLL.Interfaces;
-using SocialNetwork.DAL;
 using SocialNetwork.DAL.Entities;
 using SocialNetwork.DAL.Enums;
+using SocialNetwork.DAL.Repositories;
 
 namespace SocialNetwork.BLL.Services;
 
-public class NotificationService(IDbContextFactory<ApplicationDbContext> dbContextFactory, IFriendshipService friendshipService) : INotificationService
+public class NotificationService(INotificationRepository notificationRepository, IFriendshipService friendshipService) : INotificationService
 {
     public async Task<IReadOnlyList<NotificationDto>> GetNotificationsAsync(string userId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var notifications = await dbContext.Notifications
-            .AsNoTracking()
-            .Include(item => item.Actor)
-            .Where(item => item.UserId == userId)
-            .OrderByDescending(item => item.CreatedDate)
-            .Take(50)
-            .ToListAsync();
-
+        var notifications = await notificationRepository.GetNotificationsForUserAsync(userId);
         return notifications.Select(MapNotification).ToList();
     }
 
-    public async Task MarkAllAsReadAsync(string userId)
-    {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var notifications = await dbContext.Notifications.Where(item => item.UserId == userId && !item.IsRead).ToListAsync();
-        foreach (var notification in notifications)
-        {
-            notification.IsRead = true;
-        }
-
-        await dbContext.SaveChangesAsync();
-    }
+    public Task MarkAllAsReadAsync(string userId) =>
+        notificationRepository.MarkAllAsReadAsync(userId);
 
     public async Task<IReadOnlyList<NotificationDto>> CreateFriendNotificationsForPostAsync(string actorId, Guid postId, string message)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         var friends = await friendshipService.GetFriendsAsync(actorId);
-        var notifications = new List<Notification>();
-
-        foreach (var friend in friends)
-        {
-            notifications.Add(new Notification
+        var notifications = friends
+            .Select(friend => new Notification
             {
                 UserId = friend.Id,
                 ActorId = actorId,
@@ -54,28 +29,25 @@ public class NotificationService(IDbContextFactory<ApplicationDbContext> dbConte
                 Title = "Bài đăng mới",
                 Message = message,
                 Link = $"/posts/{postId}"
-            });
-        }
+            })
+            .ToList();
 
         if (notifications.Count == 0)
         {
-            return Array.Empty<NotificationDto>();
+            return [];
         }
 
-        dbContext.Notifications.AddRange(notifications);
-        await dbContext.SaveChangesAsync();
-        await LoadActorsAsync(dbContext, notifications);
+        await notificationRepository.AddNotificationsAsync(notifications);
+        await notificationRepository.LoadActorsAsync(notifications);
         return notifications.Select(MapNotification).ToList();
     }
 
     public async Task<IReadOnlyList<NotificationDto>> CreateInteractionNotificationAsync(string actorId, string recipientId, NotificationType type, string title, string message, string? link = null)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         var areFriends = await friendshipService.AreFriendsAsync(actorId, recipientId);
         if (actorId == recipientId || (type != NotificationType.FriendAdded && !areFriends))
         {
-            return Array.Empty<NotificationDto>();
+            return [];
         }
 
         var notification = new Notification
@@ -88,9 +60,8 @@ public class NotificationService(IDbContextFactory<ApplicationDbContext> dbConte
             Link = link
         };
 
-        dbContext.Notifications.Add(notification);
-        await dbContext.SaveChangesAsync();
-        await LoadActorsAsync(dbContext, [notification]);
+        await notificationRepository.AddNotificationAsync(notification);
+        await notificationRepository.LoadActorsAsync([notification]);
         return [MapNotification(notification)];
     }
 
@@ -102,17 +73,6 @@ public class NotificationService(IDbContextFactory<ApplicationDbContext> dbConte
             "Tin nhắn mới",
             message,
             "/chat");
-
-    private static async Task LoadActorsAsync(ApplicationDbContext dbContext, IEnumerable<Notification> notifications)
-    {
-        var actorIds = notifications.Select(item => item.ActorId).Distinct().ToList();
-        var actors = await dbContext.Users.Where(user => actorIds.Contains(user.Id)).ToDictionaryAsync(user => user.Id);
-
-        foreach (var notification in notifications)
-        {
-            notification.Actor = actors[notification.ActorId];
-        }
-    }
 
     private static NotificationDto MapNotification(Notification notification) =>
         new(

@@ -13,3 +13,6 @@ node_modules/
 *.sln.docstates
 
 cookies.txt
+.env
+.env.*
+!.env.example

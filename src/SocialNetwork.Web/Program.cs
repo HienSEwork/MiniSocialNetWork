@@ -1,6 +1,8 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Identity;
+using SocialNetwork.Web.Configuration;
 using SocialNetwork.Web.Components;
 using SocialNetwork.Web.Components.Account;
 using SocialNetwork.Web.Hubs;
@@ -9,6 +11,8 @@ using SocialNetwork.BLL;
 using SocialNetwork.DAL;
 using SocialNetwork.DAL.Entities;
 using SocialNetwork.DAL.Seeding;
+
+DotEnvLoader.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +26,10 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddScoped<NotificationBroadcastService>();
-builder.Services.Configure<DatabaseStartupOptions>(builder.Configuration.GetSection("Database"));
+builder.Services.AddSingleton<IdentityLinkStore>();
+builder.Services.AddSingleton(sp => IdentityEmailOptionsResolver.Resolve(sp.GetRequiredService<IConfiguration>()));
 builder.Services.AddSingleton<DatabaseStartupService>();
-builder.Services.AddSocialNetworkDal(builder.Configuration);
+builder.Services.AddSocialNetworkDal();
 builder.Services.AddSocialNetworkBll();
 builder.Services.AddLocalization();
 builder.Services.AddSignalR();
@@ -52,7 +57,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentitySmtpEmailSender>();
 
 var app = builder.Build();
 
@@ -88,6 +93,31 @@ app.MapHub<NotificationHub>("/hubs/notifications");
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+app.MapGet("/preferences/set-language", (string culture, string? returnUrl, HttpContext httpContext) =>
+{
+    var normalizedCulture = string.Equals(culture, "en", StringComparison.OrdinalIgnoreCase) ? "en" : "vi";
+    var cookieValue = CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(normalizedCulture));
+
+    httpContext.Response.Cookies.Append(
+        CookieRequestCultureProvider.DefaultCookieName,
+        cookieValue,
+        new CookieOptions
+        {
+            Expires = DateTimeOffset.UtcNow.AddYears(1),
+            IsEssential = true,
+            SameSite = SameSiteMode.Lax,
+            Path = "/"
+        });
+
+    var safeReturnUrl = !string.IsNullOrWhiteSpace(returnUrl)
+        && Uri.TryCreate(returnUrl, UriKind.Relative, out _)
+        && returnUrl.StartsWith("/", StringComparison.Ordinal)
+        && !returnUrl.StartsWith("//", StringComparison.Ordinal)
+            ? returnUrl
+            : "/settings";
+
+    return Results.LocalRedirect(safeReturnUrl);
+});
 
 await app.Services.GetRequiredService<DatabaseStartupService>().InitializeAsync();
 

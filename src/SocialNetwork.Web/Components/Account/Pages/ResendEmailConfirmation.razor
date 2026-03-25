@@ -9,20 +9,28 @@
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IEmailSender<ApplicationUser> EmailSender
+@inject IdentityLinkStore IdentityLinkStore
 @inject NavigationManager NavigationManager
-@inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Gửi lại email xác nhận</PageTitle>
+<PageTitle>@T("Gửi lại email xác nhận", "Resend confirmation email")</PageTitle>
 
 <div class="auth-panel-page">
     <section class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Xác nhận tài khoản</p>
-            <h1>Gửi lại email xác nhận</h1>
-            <p class="auth-panel-copy">Nhập email để nhận lại liên kết xác nhận tài khoản.</p>
+            <p class="auth-panel-kicker">@T("Xác nhận tài khoản", "Confirm account")</p>
+            <h1>@T("Gửi lại email xác nhận", "Resend confirmation email")</h1>
+            <p class="auth-panel-copy">@T("Nhập email để nhận lại liên kết xác nhận tài khoản.", "Enter your email to receive a new account confirmation link.")</p>
         </div>
 
         <StatusMessage Message="@message" />
+
+        @if (EmailSender is IdentitySmtpEmailSender sender && !sender.IsConfigured && confirmationLink is not null)
+        {
+            <p class="auth-panel-note">
+                @T("Môi trường hiện tại chưa cấu hình mail server thật. Bạn có thể mở ngay", "SMTP is not configured in this environment. You can open")
+                <a class="auth-inline-link" href="@confirmationLink">@T("liên kết xác nhận cục bộ này", "this local confirmation link")</a>.
+            </p>
+        }
 
         <EditForm Model="Input" FormName="resend-email-confirmation" OnValidSubmit="OnValidSubmitAsync" method="post" class="auth-panel-form">
             <DataAnnotationsValidator />
@@ -36,27 +44,31 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn auth-panel-submit">Gửi lại email</button>
+            <button type="submit" class="btn auth-panel-submit">@T("Gửi lại email", "Resend email")</button>
 
             <div class="auth-panel-links">
-                <a href="/Account/Login">Quay lại đăng nhập</a>
+                <a href="/Account/Login">@T("Quay lại đăng nhập", "Back to sign in")</a>
             </div>
         </EditForm>
     </section>
 </div>
 
 @code {
+    private string? confirmationLink;
     private string? message;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
     private async Task OnValidSubmitAsync()
     {
-        var user = await UserManager.FindByEmailAsync(Input.Email!);
+        var user = await UserManager.FindByEmailAsync(Input.Email);
         if (user is null)
         {
-            message = "Nếu email hợp lệ, hệ thống đã gửi lại liên kết xác nhận.";
+            message = T("Nếu email hợp lệ, hệ thống đã gửi lại liên kết xác nhận.", "If the email is valid, a new confirmation link has been sent.");
+            confirmationLink = null;
             return;
         }
 
@@ -66,9 +78,11 @@
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
             NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
+
         await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
-        message = "Nếu email hợp lệ, hệ thống đã gửi lại liên kết xác nhận.";
+        message = T("Nếu email hợp lệ, hệ thống đã gửi lại liên kết xác nhận.", "If the email is valid, a new confirmation link has been sent.");
+        confirmationLink = IdentityLinkStore.GetConfirmationLink(Input.Email);
     }
 
     private sealed class InputModel
@@ -78,4 +92,3 @@
         public string Email { get; set; } = "";
     }
 }
-

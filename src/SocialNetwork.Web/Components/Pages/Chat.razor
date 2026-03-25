@@ -16,7 +16,7 @@
             <div>
                 <span class="section-kicker">Hộp thư</span>
                 <h2>Tin nhắn</h2>
-                <p>Mở nhanh các cuộc trò chuyện riêng và giữ khung hội thoại gọn, tập trung vào nội dung đang trao đổi.</p>
+                <p>Khung chat được cố định chiều cao để chỉ vùng nội dung tin nhắn cuộn bên trong, không kéo dài toàn trang.</p>
             </div>
             <span class="badge-soft">@chatUsers.Count cuộc trò chuyện</span>
         </div>
@@ -33,33 +33,35 @@
                     <p>Chọn một người để mở hội thoại realtime.</p>
                 </div>
 
-                @if (chatUsers.Count == 0)
-                {
-                    <EmptyState Title="Chưa có đoạn chat" Description="Hãy kết bạn trước để bắt đầu trao đổi riêng." />
-                }
-                else
-                {
-                    @foreach (var user in chatUsers)
+                <div class="user-list-body">
+                    @if (chatUsers.Count == 0)
                     {
-                        <button class="user-item @(selectedUser?.Id == user.Id ? "active" : null)" @onclick="() => SelectUserAsync(user)">
-                            <div class="avatar">
-                                @if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
-                                {
-                                    <img src="@user.AvatarUrl" alt="@user.DisplayName" />
-                                }
-                                else
-                                {
-                                    @GetInitials(user.DisplayName)
-                                }
-                            </div>
-
-                            <div class="user-copy">
-                                <strong>@user.DisplayName</strong>
-                                <span>@(!string.IsNullOrWhiteSpace(user.Bio) ? user.Bio : user.Email)</span>
-                            </div>
-                        </button>
+                        <EmptyState Title="Chưa có đoạn chat" Description="Hãy kết bạn trước để bắt đầu trao đổi riêng." />
                     }
-                }
+                    else
+                    {
+                        @foreach (var user in chatUsers)
+                        {
+                            <button class="user-item @(selectedUser?.Id == user.Id ? "active" : null)" @onclick="() => SelectUserAsync(user)">
+                                <div class="avatar">
+                                    @if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
+                                    {
+                                        <img src="@user.AvatarUrl" alt="@user.DisplayName" />
+                                    }
+                                    else
+                                    {
+                                        @GetInitials(user.DisplayName)
+                                    }
+                                </div>
+
+                                <div class="user-copy">
+                                    <strong>@user.DisplayName</strong>
+                                    <span>@(!string.IsNullOrWhiteSpace(user.Bio) ? user.Bio : user.Email)</span>
+                                </div>
+                            </button>
+                        }
+                    }
+                </div>
             </aside>
 
             <div class="chat-conversation-column">
@@ -253,8 +255,12 @@
 
     .user-list {
         display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
         gap: 10px;
         align-content: start;
+        height: clamp(420px, 68vh, 760px);
+        padding: 18px;
+        overflow: hidden;
     }
 
     .user-list-header {
@@ -270,6 +276,15 @@
     .user-list-header p {
         color: var(--text-muted);
         font-size: 13px;
+    }
+
+    .user-list-body {
+        min-height: 0;
+        display: grid;
+        gap: 8px;
+        align-content: start;
+        overflow-y: auto;
+        padding-right: 4px;
     }
 
     .user-item {
@@ -324,7 +339,7 @@
     .chat-placeholder {
         display: grid;
         gap: 10px;
-        min-height: 320px;
+        min-height: clamp(420px, 68vh, 760px);
         align-content: center;
         text-align: center;
     }

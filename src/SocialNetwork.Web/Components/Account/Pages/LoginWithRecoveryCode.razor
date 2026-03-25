@@ -8,15 +8,16 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<LoginWithRecoveryCode> Logger
+@inject NavigationManager NavigationManager
 
-<PageTitle>Xác minh mã khôi phục</PageTitle>
+<PageTitle>@T("Xác minh mã khôi phục", "Recovery code verification")</PageTitle>
 
 <section class="auth-panel-page">
     <div class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Bảo mật</p>
-            <h1>Xác minh mã khôi phục</h1>
-            <p class="auth-panel-copy">Dùng mã khôi phục khi bạn không thể truy cập ứng dụng xác thực. Phiên đăng nhập này sẽ không được ghi nhớ như đăng nhập thường.</p>
+            <p class="auth-panel-kicker">@T("Bảo mật", "Security")</p>
+            <h1>@T("Xác minh mã khôi phục", "Recovery code verification")</h1>
+            <p class="auth-panel-copy">@T("Dùng mã khôi phục khi bạn không thể truy cập ứng dụng xác thực. Phiên đăng nhập này sẽ không được ghi nhớ như đăng nhập thường.", "Use a recovery code when you cannot access your authenticator app. This sign-in session will not be remembered like a regular sign-in.")</p>
         </div>
 
         <StatusMessage Message="@message" />
@@ -27,17 +28,17 @@
 
             <div class="auth-panel-fields">
                 <div class="form-floating">
-                    <InputText @bind-Value="Input.RecoveryCode" class="form-control" autocomplete="off" placeholder="Mã khôi phục" />
-                    <label for="recovery-code" class="form-label">Mã khôi phục</label>
+                    <InputText @bind-Value="Input.RecoveryCode" class="form-control" autocomplete="off" placeholder="@T("Mã khôi phục", "Recovery code")" />
+                    <label for="recovery-code" class="form-label">@T("Mã khôi phục", "Recovery code")</label>
                     <ValidationMessage For="() => Input.RecoveryCode" class="text-danger" />
                 </div>
             </div>
 
-            <button type="submit" class="auth-panel-submit">Đăng nhập</button>
+            <button type="submit" class="auth-panel-submit">@T("Đăng nhập", "Sign in")</button>
         </EditForm>
 
         <div class="auth-panel-links">
-            <a href="/Account/Login">Quay lại đăng nhập</a>
+            <a href="/Account/Login">@T("Quay lại đăng nhập", "Back to sign in")</a>
         </div>
     </div>
 </section>
@@ -45,6 +46,12 @@
 @code {
     private string? message;
     private ApplicationUser user = default!;
+    private bool forceLoadTriggered;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -58,8 +65,25 @@
             throw new InvalidOperationException("Unable to load two-factor authentication user.");
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender || forceLoadTriggered || HttpContext is not null)
+        {
+            return;
+        }
+
+        forceLoadTriggered = true;
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
     private async Task OnValidSubmitAsync()
     {
+        if (HttpContext is null || HttpContext.Response.HasStarted)
+        {
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            return;
+        }
+
         var recoveryCode = Input.RecoveryCode.Replace(" ", string.Empty);
         var result = await SignInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
         var userId = await UserManager.GetUserIdAsync(user);
@@ -77,7 +101,7 @@
         else
         {
             Logger.LogWarning("Invalid recovery code entered for user with ID '{UserId}' ", userId);
-            message = "Lỗi: mã khôi phục không hợp lệ.";
+            message = T("Lỗi: mã khôi phục không hợp lệ.", "Error: invalid recovery code.");
         }
     }
 
@@ -85,7 +109,7 @@
     {
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "Mã khôi phục")]
+        [Display(Name = "Recovery code")]
         public string RecoveryCode { get; set; } = "";
     }
 }

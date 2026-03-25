@@ -1,23 +1,21 @@
 @page "/Account/RegisterConfirmation"
 
-@using System.Text
 @using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.WebUtilities
 @using SocialNetwork.DAL.Entities
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IEmailSender<ApplicationUser> EmailSender
-@inject NavigationManager NavigationManager
+@inject IdentityLinkStore IdentityLinkStore
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Xác nhận đăng ký</PageTitle>
+<PageTitle>@T("Xác nhận đăng ký", "Registration confirmation")</PageTitle>
 
 <section class="auth-panel-page">
     <div class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Tạo tài khoản</p>
-            <h1>Xác nhận đăng ký</h1>
-            <p class="auth-panel-copy">Tài khoản đã được tạo. Hãy xác nhận email để hoàn tất kích hoạt và bắt đầu dùng bảng tin, nhóm và chat.</p>
+            <p class="auth-panel-kicker">@T("Tạo tài khoản", "Create account")</p>
+            <h1>@T("Xác nhận đăng ký", "Registration confirmation")</h1>
+            <p class="auth-panel-copy">@T("Tài khoản đã được tạo. Hãy xác nhận email để hoàn tất kích hoạt và bắt đầu dùng bảng tin, nhóm và chat.", "Your account has been created. Confirm your email to finish activation and start using the feed, groups, and chat.")</p>
         </div>
 
         <StatusMessage Message="@statusMessage" />
@@ -25,17 +23,17 @@
         @if (emailConfirmationLink is not null)
         {
             <p class="auth-panel-note">
-                Môi trường hiện tại chưa cấu hình email sender thực. Bạn có thể dùng ngay
-                <a class="auth-inline-link" href="@emailConfirmationLink">liên kết xác nhận cục bộ này</a>.
+                @T("Môi trường hiện tại chưa cấu hình mail server thật. Bạn có thể dùng ngay", "SMTP is not configured in this environment. You can use")
+                <a class="auth-inline-link" href="@emailConfirmationLink">@T("liên kết xác nhận cục bộ này", "this local confirmation link")</a>.
             </p>
         }
         else
         {
-            <p class="auth-panel-note">Hãy kiểm tra hộp thư để mở liên kết xác nhận tài khoản.</p>
+            <p class="auth-panel-note">@T("Hãy kiểm tra hộp thư để mở liên kết xác nhận tài khoản.", "Check your inbox for the account confirmation link.")</p>
         }
 
         <div class="auth-panel-links">
-            <a href="/Account/Login">Về đăng nhập</a>
+            <a href="/Account/Login">@T("Về đăng nhập", "Go to sign in")</a>
         </div>
     </div>
 </section>
@@ -44,14 +42,13 @@
     private string? emailConfirmationLink;
     private string? statusMessage;
 
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromQuery]
     private string? Email { get; set; }
-
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,16 +61,13 @@
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = "Không tìm thấy tài khoản cần xác nhận.";
+            statusMessage = T("Không tìm thấy tài khoản cần xác nhận.", "The account to confirm could not be found.");
+            return;
         }
-        else if (EmailSender is IdentityNoOpEmailSender)
+
+        if (EmailSender is IdentitySmtpEmailSender sender && !sender.IsConfigured)
         {
-            var userId = await UserManager.GetUserIdAsync(user);
-            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            emailConfirmationLink = NavigationManager.GetUriWithQueryParameters(
-                NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+            emailConfirmationLink = IdentityLinkStore.GetConfirmationLink(Email);
         }
     }
 }

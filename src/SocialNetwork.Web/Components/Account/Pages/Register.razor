@@ -15,26 +15,27 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Đăng ký</PageTitle>
+<PageTitle>@T("Đăng ký", "Register")</PageTitle>
 
-<div class="register-page">
-    <section class="register-card">
-        <div class="register-card-head">
-            <p class="register-kicker">Tạo tài khoản</p>
-            <h1>Đăng ký</h1>
+<div class="auth-panel-page register-page">
+    <section class="auth-panel-card register-card">
+        <div class="auth-panel-head register-card-head">
+            <p class="auth-panel-kicker register-kicker">@T("Tạo tài khoản", "Create account")</p>
+            <h1>@T("Đăng ký", "Register")</h1>
+            <p class="auth-panel-copy">@T("Tạo hồ sơ mới để đăng bài, tham gia nhóm và mở nhắn tin realtime trong cùng giao diện.", "Create a profile to post, join groups, and start realtime chats in the same interface.")</p>
         </div>
 
         <StatusMessage Message="@Message" />
 
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register" class="register-form">
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register" class="auth-panel-form register-form">
             <DataAnnotationsValidator />
 
-            <div class="register-fields">
+            <div class="auth-panel-fields register-fields">
                 <ValidationSummary class="text-danger" role="alert" />
 
                 <div class="form-floating">
-                    <InputText @bind-Value="Input.DisplayName" class="form-control" aria-required="true" placeholder="Tên hiển thị" />
-                    <label>Tên hiển thị</label>
+                    <InputText @bind-Value="Input.DisplayName" class="form-control" aria-required="true" placeholder="@T("Tên hiển thị", "Display name")" />
+                    <label>@T("Tên hiển thị", "Display name")</label>
                     <ValidationMessage For="() => Input.DisplayName" class="text-danger" />
                 </div>
 
@@ -45,28 +46,28 @@
                 </div>
 
                 <div class="form-floating">
-                    <InputTextArea @bind-Value="Input.Bio" class="form-control register-bio" placeholder="Giới thiệu ngắn" />
-                    <label>Giới thiệu</label>
+                    <InputTextArea @bind-Value="Input.Bio" class="form-control register-bio" placeholder="@T("Giới thiệu ngắn", "Short bio")" />
+                    <label>@T("Giới thiệu", "Bio")</label>
                     <ValidationMessage For="() => Input.Bio" class="text-danger" />
                 </div>
 
                 <div class="form-floating">
                     <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                    <label>Mật khẩu</label>
+                    <label>@T("Mật khẩu", "Password")</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
 
                 <div class="form-floating">
                     <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="confirm password" />
-                    <label>Xác nhận mật khẩu</label>
+                    <label>@T("Xác nhận mật khẩu", "Confirm password")</label>
                     <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
                 </div>
             </div>
 
-            <button type="submit" class="btn register-submit">Tạo tài khoản</button>
+            <button type="submit" class="btn auth-panel-submit register-submit">@T("Tạo tài khoản", "Create account")</button>
 
-            <div class="register-links">
-                <a href="/Account/Login">Đã có tài khoản? Đăng nhập</a>
+            <div class="auth-panel-links register-links">
+                <a href="/Account/Login" data-enhance-nav="false">@T("Đã có tài khoản? Đăng nhập", "Already have an account? Sign in")</a>
             </div>
         </EditForm>
     </section>
@@ -74,6 +75,12 @@
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
+    private bool forceLoadTriggered;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -81,10 +88,27 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    private string? Message => identityErrors is null ? null : $"Không thể tạo tài khoản: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender || forceLoadTriggered || HttpContext is not null)
+        {
+            return;
+        }
+
+        forceLoadTriggered = true;
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    private string? Message => identityErrors is null ? null : $"{T("Không thể tạo tài khoản", "Unable to create account")}: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     public async Task RegisterUser(EditContext editContext)
     {
+        if (HttpContext is null || HttpContext.Response.HasStarted)
+        {
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            return;
+        }
+
         var user = CreateUser();
         user.DisplayName = Input.DisplayName.Trim();
         user.Bio = string.IsNullOrWhiteSpace(Input.Bio) ? null : Input.Bio.Trim();
@@ -101,7 +125,7 @@
             return;
         }
 
-        Logger.LogInformation("Người dùng đã tạo tài khoản mới.");
+        Logger.LogInformation("New account created.");
 
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
@@ -132,7 +156,7 @@
         catch
         {
             throw new InvalidOperationException(
-                $"Không thể tạo instance của '{nameof(ApplicationUser)}'. Hãy bảo đảm '{nameof(ApplicationUser)}' có constructor rỗng.");
+                $"Unable to create an instance of '{nameof(ApplicationUser)}'. Ensure '{nameof(ApplicationUser)}' has a parameterless constructor.");
         }
     }
 
@@ -140,7 +164,7 @@
     {
         if (!UserManager.SupportsUserEmail)
         {
-            throw new NotSupportedException("Hệ thống yêu cầu user store có hỗ trợ email.");
+            throw new NotSupportedException("The user store must support email.");
         }
 
         return (IUserEmailStore<ApplicationUser>)UserStore;
@@ -150,7 +174,7 @@
     {
         [Required]
         [StringLength(100)]
-        [Display(Name = "Tên hiển thị")]
+        [Display(Name = "Display name")]
         public string DisplayName { get; set; } = "";
 
         [Required]
@@ -159,18 +183,18 @@
         public string Email { get; set; } = "";
 
         [StringLength(500)]
-        [Display(Name = "Giới thiệu")]
+        [Display(Name = "Bio")]
         public string? Bio { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "{0} phải có từ {2} đến {1} ký tự.", MinimumLength = 6)]
+        [StringLength(100, MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Mật khẩu")]
+        [Display(Name = "Password")]
         public string Password { get; set; } = "";
 
         [DataType(DataType.Password)]
-        [Display(Name = "Xác nhận mật khẩu")]
-        [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp.")]
+        [Display(Name = "Confirm password")]
+        [Compare("Password")]
         public string ConfirmPassword { get; set; } = "";
     }
 }

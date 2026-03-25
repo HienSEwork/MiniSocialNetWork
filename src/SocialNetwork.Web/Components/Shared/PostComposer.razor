@@ -3,8 +3,13 @@
     <ValidationSummary />
 
     <div class="composer-topline">
+        <div>
+            <p class="section-kicker">Create Post</p>
+            <h3>@(GroupId.HasValue ? "Đăng trong nhóm" : "Tạo bài viết mới")</h3>
+        </div>
+
         <span class="badge-soft @(GroupId.HasValue ? string.Empty : "success")">
-            @(GroupId.HasValue ? "Đăng trong nhóm" : "Đăng lên bảng tin")
+            @(GroupId.HasValue ? "Group post" : "Newsfeed")
         </span>
     </div>
 
@@ -23,12 +28,12 @@
         <div class="composer-prompt-shell">
             <div class="form-floating composer-floating">
                 <InputTextArea @bind-Value="composer.Content" class="form-control composer-input" placeholder="Viết nội dung bài đăng" />
-                <label>@(string.IsNullOrWhiteSpace(CurrentUserDisplayName) ? "Bạn muốn chia sẻ gì?" : $"{CurrentUserDisplayName} muốn chia sẻ gì?")</label>
+                <label>@(string.IsNullOrWhiteSpace(CurrentUserDisplayName) ? "Bạn muốn chia sẻ gì hôm nay?" : $"{CurrentUserDisplayName} muốn chia sẻ gì hôm nay?")</label>
             </div>
         </div>
     </div>
 
-    <div class="media-grid">
+    <div class="composer-media-grid">
         <div class="form-floating">
             <InputSelect @bind-Value="composer.MediaType" class="form-select">
                 @foreach (var mediaType in Enum.GetValues<MediaType>())
@@ -51,7 +56,7 @@
     }
 
     <div class="composer-actions">
-        <p class="composer-helper">Có thể bỏ trống liên kết media nếu chỉ muốn đăng văn bản.</p>
+        <p class="composer-helper">Bạn có thể để trống liên kết media nếu chỉ muốn đăng văn bản.</p>
         <button type="submit" class="btn btn-primary composer-submit">Đăng bài</button>
     </div>
 </EditForm>
@@ -158,21 +163,29 @@
         padding: 18px 20px;
     }
 
-    .composer-topline {
+    .composer-topline,
+    .composer-actions {
         display: flex;
-        justify-content: flex-start;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .composer-topline h3 {
+        margin-top: 2px;
     }
 
     .composer-header {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
-        gap: 12px;
+        gap: 14px;
         align-items: start;
     }
 
     .composer-avatar {
-        width: 46px;
-        height: 46px;
+        width: 48px;
+        height: 48px;
         overflow: hidden;
     }
 
@@ -183,42 +196,28 @@
     }
 
     .composer-prompt-shell,
-    .media-grid {
+    .composer-media-grid {
         display: grid;
         gap: 12px;
     }
 
-    .composer-floating {
-        min-width: 0;
-    }
-
     .composer-floating :deep(textarea.form-control) {
-        padding-top: 1.55rem;
+        padding-top: 1.6rem;
     }
 
     .composer-input {
-        min-height: 112px;
+        min-height: 118px;
         resize: vertical;
-        border-radius: 18px;
+        border-radius: 20px;
         background: var(--bg-shell);
         border: 1px solid var(--border);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
     }
 
-    .media-grid {
+    .composer-media-grid {
         padding: 14px;
-        border-radius: 20px;
-        border: 1px dashed color-mix(in srgb, var(--border) 82%, var(--accent) 18%);
-        background: var(--bg-muted);
-    }
-
-    .composer-actions {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-        padding-top: 2px;
+        border-radius: 22px;
+        border: 1px dashed color-mix(in srgb, var(--border) 76%, var(--accent) 24%);
+        background: color-mix(in srgb, var(--bg-muted) 90%, var(--bg-shell) 10%);
     }
 
     .composer-helper {
@@ -232,7 +231,7 @@
     }
 
     @@media (min-width: 768px) {
-        .media-grid {
+        .composer-media-grid {
             grid-template-columns: 180px minmax(0, 1fr);
         }
     }

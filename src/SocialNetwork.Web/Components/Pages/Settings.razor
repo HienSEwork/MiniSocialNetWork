@@ -1,17 +1,19 @@
 @page "/settings"
 @attribute [Authorize]
 
+@using System.Globalization
+
 @inject IJSRuntime JSRuntime
 
-<PageTitle>Cài đặt</PageTitle>
+<PageTitle>@T("Cài đặt", "Settings")</PageTitle>
 
 <section class="page-section">
     <div class="content-stack narrow">
         <header class="page-header">
             <div>
-                <p class="section-kicker">Tùy chọn cá nhân</p>
-                <h1>Cài đặt</h1>
-                <p>Điều chỉnh giao diện và ngôn ngữ hiển thị cho tài khoản đang dùng.</p>
+                <p class="section-kicker">@T("Tùy chọn cá nhân", "Personal Preferences")</p>
+                <h1>@T("Cài đặt", "Settings")</h1>
+                <p>@T("Điều chỉnh giao diện và ngôn ngữ hiển thị cho tài khoản đang dùng.", "Adjust the visual theme and display language for the current account.")</p>
             </div>
         </header>
 
@@ -21,21 +23,24 @@
                     <AppIcon Name="theme" />
                 </div>
                 <div>
-                    <h3>Giao diện</h3>
-                    <p class="settings-copy">Chọn sáng hoặc tối cho toàn bộ hệ thống.</p>
+                    <h3>@T("Giao diện", "Theme")</h3>
+                    <p class="settings-copy">@T("Chọn bảng màu dịu mắt hơn để dùng lâu mà không bị lệch tông với phần còn lại của hệ thống.", "Pick a palette that feels more cohesive and comfortable during longer sessions.")</p>
                 </div>
             </div>
 
             <div class="settings-options">
                 <button type="button"
                         class="@GetOptionClass(currentTheme, LightTheme)"
-                        @onclick='() => SetThemeAsync("light")'>
-                    Sáng
+                        @onclick='() => SetThemeAsync(LightTheme)'>
+                    <span class="settings-option-title">@T("Sáng", "Light")</span>
+                    <small class="settings-option-note">@T("Nền sáng, nhấn hồng nhẹ và bề mặt trung tính", "Bright surface with a softer accent balance")</small>
                 </button>
+
                 <button type="button"
                         class="@GetOptionClass(currentTheme, DarkTheme)"
-                        @onclick='() => SetThemeAsync("dark")'>
-                    Tối
+                        @onclick='() => SetThemeAsync(DarkTheme)'>
+                    <span class="settings-option-title">@T("Tối", "Dark")</span>
+                    <small class="settings-option-note">@T("Slate đậm, header và panel đồng bộ hơn", "Slate-toned dark mode with a calmer header and panels")</small>
                 </button>
             </div>
         </article>
@@ -46,21 +51,24 @@
                     <AppIcon Name="globe" />
                 </div>
                 <div>
-                    <h3>Ngôn ngữ</h3>
-                    <p class="settings-copy">Ưu tiên tiếng Việt, vẫn có thể chuyển nhanh sang tiếng Anh khi cần.</p>
+                    <h3>@T("Ngôn ngữ", "Language")</h3>
+                    <p class="settings-copy">@T("Đổi culture hiển thị rồi tải lại giao diện để header, menu và nhãn điều hướng đổi theo.", "Switch the UI culture and reload the interface so the header, menu, and navigation labels change with it.")</p>
                 </div>
             </div>
 
             <div class="settings-options">
                 <button type="button"
                         class="@GetOptionClass(currentLanguage, Vietnamese)"
-                        @onclick='() => SetLanguageAsync("vi")'>
-                    Tiếng Việt
+                        @onclick='() => SetLanguageAsync(Vietnamese)'>
+                    <span class="settings-option-title">Tiếng Việt</span>
+                    <small class="settings-option-note">@T("Giữ nguyên toàn bộ nhãn tiếng Việt", "Keep the full Vietnamese interface")</small>
                 </button>
+
                 <button type="button"
                         class="@GetOptionClass(currentLanguage, English)"
-                        @onclick='() => SetLanguageAsync("en")'>
-                    Tiếng Anh
+                        @onclick='() => SetLanguageAsync(English)'>
+                    <span class="settings-option-title">English</span>
+                    <small class="settings-option-note">@T("Chuyển header, menu và nhãn hệ thống sang tiếng Anh", "Switch the shell and system labels to English")</small>
                 </button>
             </div>
         </article>
@@ -74,7 +82,9 @@
     private const string English = "en";
 
     private string currentTheme = LightTheme;
-    private string currentLanguage = Vietnamese;
+    private string currentLanguage = NormalizeLanguage(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+
+    private bool IsEnglish => string.Equals(currentLanguage, English, StringComparison.OrdinalIgnoreCase);
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -84,53 +94,58 @@
         }
 
         var preferences = await JSRuntime.InvokeAsync<UiPreferenceState>("themeInterop.getPreferences");
-        currentTheme = preferences.Theme;
-        currentLanguage = preferences.Language;
+        currentTheme = NormalizeTheme(preferences.Theme);
         StateHasChanged();
     }
 
     private async Task SetThemeAsync(string theme)
     {
-        currentTheme = theme;
-        await JSRuntime.InvokeVoidAsync("themeInterop.setTheme", theme);
+        currentTheme = NormalizeTheme(theme);
+        await JSRuntime.InvokeVoidAsync("themeInterop.setTheme", currentTheme);
     }
 
     private async Task SetLanguageAsync(string language)
     {
-        currentLanguage = language;
-        await JSRuntime.InvokeVoidAsync("themeInterop.setLanguage", language);
+        currentLanguage = NormalizeLanguage(language);
+        await JSRuntime.InvokeVoidAsync("themeInterop.setLanguage", currentLanguage);
     }
+
+    private string T(string vietnamese, string english) => IsEnglish ? english : vietnamese;
 
     private static string GetOptionClass(string currentValue, string expectedValue) =>
         currentValue == expectedValue ? "settings-option active" : "settings-option";
 
+    private static string NormalizeTheme(string? theme) =>
+        string.Equals(theme, DarkTheme, StringComparison.OrdinalIgnoreCase) ? DarkTheme : LightTheme;
+
+    private static string NormalizeLanguage(string? language) =>
+        string.Equals(language, English, StringComparison.OrdinalIgnoreCase) ? English : Vietnamese;
+
     private sealed class UiPreferenceState
     {
-        public string Theme { get; set; } = "light";
-
-        public string Language { get; set; } = "vi";
+        public string Theme { get; set; } = LightTheme;
     }
 }
 
 <style>
     .settings-card {
         display: grid;
-        gap: 16px;
+        gap: 18px;
     }
 
     .settings-card-head {
         display: grid;
-        grid-template-columns: 44px minmax(0, 1fr);
-        gap: 12px;
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 14px;
         align-items: start;
     }
 
     .settings-icon {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         display: grid;
         place-items: center;
-        border-radius: 12px;
+        border-radius: 14px;
         background: var(--app-accent-soft);
         color: var(--accent);
     }
@@ -139,35 +154,56 @@
         margin: 4px 0 0;
         color: var(--text-secondary);
         font-size: 14px;
-        line-height: 1.55;
+        line-height: 1.6;
     }
 
     .settings-options {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 12px;
     }
 
     .settings-option {
-        min-height: 46px;
-        border-radius: 12px;
+        min-height: 92px;
+        display: grid;
+        align-content: center;
+        gap: 5px;
+        border-radius: 20px;
         border: 1px solid var(--border-soft);
         background: var(--bg-muted);
         color: var(--text-primary);
-        font-weight: 700;
         text-align: left;
-        padding: 0 14px;
+        padding: 16px 18px;
+        transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease, color 160ms ease;
     }
 
     .settings-option:hover {
         background: var(--bg-hover);
         border-color: var(--border);
+        transform: translateY(-1px);
     }
 
     .settings-option.active {
-        background: var(--app-accent-soft);
-        border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+        background: color-mix(in srgb, var(--app-accent-soft) 74%, var(--bg-shell) 26%);
+        border-color: color-mix(in srgb, var(--accent) 24%, var(--border) 76%);
         color: var(--accent);
+        box-shadow: 0 14px 28px rgba(228, 91, 120, 0.1);
+    }
+
+    .settings-option-title {
+        font-size: 1.02rem;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .settings-option-note {
+        color: var(--text-secondary);
+        font-size: 0.84rem;
+        line-height: 1.45;
+    }
+
+    .settings-option.active .settings-option-note {
+        color: color-mix(in srgb, var(--accent) 84%, var(--text-secondary) 16%);
     }
 
     @@media (min-width: 768px) {

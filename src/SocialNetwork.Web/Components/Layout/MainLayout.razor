@@ -1,5 +1,7 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @implements IAsyncDisposable
+
+@using System.Globalization
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject CurrentUserService CurrentUserService
@@ -8,154 +10,150 @@
 @inject INotificationService NotificationService
 @inject NavigationManager NavigationManager
 
-<div class="app-shell">
-    <header class="top-row">
-        <div class="topbar-shell">
-            <div class="topbar-left">
-                <a class="topbar-brand" href="/" aria-label="Mini Social">
-                    <span class="topbar-brand-badge">MS</span>
-                    <span class="topbar-brand-copy">
-                        <strong>Mini Social</strong>
-                        <small>Social feed, chat và cộng đồng</small>
-                    </span>
+<div class="sociala-shell">
+    <header class="sociala-header">
+        <div class="sociala-header-inner">
+            <a class="sociala-brand" href="/" aria-label="Mini Social">
+                <span class="sociala-brand-mark">
+                    <AppIcon Name="activity" />
+                </span>
+                <span class="sociala-brand-copy">
+                    <strong>Mini Social</strong>
+                    <small>@T("Không gian mạng xã hội trên Blazor", "Social space built on Blazor")</small>
+                </span>
+            </a>
+
+            <button type="button" class="sociala-search" aria-label="@T("Tìm kiếm", "Search")">
+                <AppIcon Name="search" />
+                <span>@T("Tìm người, nhóm, bài viết", "Search people, groups, posts")</span>
+            </button>
+
+            <nav class="sociala-topnav" aria-label="@T("Điều hướng chính", "Primary navigation")">
+                <a class="@GetTopbarModuleClass("home")" href="/feed" title="@T("Bảng tin", "Feed")" aria-label="@T("Bảng tin", "Feed")">
+                    <AppIcon Name="feed-solid" Class="sociala-topnav-icon" />
+                    <span>@T("Bảng tin", "Feed")</span>
                 </a>
-            </div>
+                <a class="@GetTopbarModuleClass("friends")" href="/friends" title="@T("Bạn bè", "Friends")" aria-label="@T("Bạn bè", "Friends")">
+                    <AppIcon Name="friends-solid" Class="sociala-topnav-icon" />
+                    <span>@T("Bạn bè", "Friends")</span>
+                </a>
+                <a class="@GetTopbarModuleClass("chat")" href="/chat" title="@T("Tin nhắn", "Messages")" aria-label="@T("Tin nhắn", "Messages")">
+                    <AppIcon Name="chat-solid" Class="sociala-topnav-icon" />
+                    <span>@T("Tin nhắn", "Messages")</span>
+                </a>
+                <a class="@GetTopbarModuleClass("groups")" href="/groups" title="@T("Nhóm", "Groups")" aria-label="@T("Nhóm", "Groups")">
+                    <AppIcon Name="groups-solid" Class="sociala-topnav-icon" />
+                    <span>@T("Nhóm", "Groups")</span>
+                </a>
+                <a class="@GetTopbarModuleClass("notifications")" href="/notifications" title="@T("Cập nhật", "Updates")" aria-label="@T("Cập nhật", "Updates")">
+                    <AppIcon Name="notifications-solid" Class="sociala-topnav-icon" />
+                    <span>@T("Cập nhật", "Updates")</span>
+                </a>
+                <a class="@GetTopbarModuleClass("profile")" href="/profile" title="@T("Hồ sơ", "Profile")" aria-label="@T("Hồ sơ", "Profile")">
+                    <AppIcon Name="profile-solid" Class="sociala-topnav-icon" />
+                    <span>@T("Hồ sơ", "Profile")</span>
+                </a>
+            </nav>
 
-            <div class="topbar-center">
-                <button type="button" class="topbar-search" aria-label="Tìm kiếm">
-                    <AppIcon Name="search" Class="topbar-search-icon" />
-                    <span>Tìm người, nhóm, bài viết</span>
-                </button>
-
-                <nav class="topbar-modules" aria-label="Điều hướng chính">
-                    <a class="@GetTopbarModuleClass("home")" href="/feed" title="Trang chủ" aria-label="Trang chủ">
-                        <AppIcon Name="feed-solid" Class="topbar-nav-icon" />
-                        <span class="topbar-module-label">Bảng tin</span>
-                    </a>
-                    <a class="@GetTopbarModuleClass("friends")" href="/friends" title="Bạn bè" aria-label="Bạn bè">
-                        <AppIcon Name="friends-solid" Class="topbar-nav-icon" />
-                        <span class="topbar-module-label">Bạn bè</span>
-                    </a>
-                    <a class="@GetTopbarModuleClass("chat")" href="/chat" title="Tin nhắn" aria-label="Tin nhắn">
-                        <AppIcon Name="chat-solid" Class="topbar-nav-icon" />
-                        <span class="topbar-module-label">Tin nhắn</span>
-                    </a>
-                    <a class="@GetTopbarModuleClass("groups")" href="/groups" title="Nhóm" aria-label="Nhóm">
-                        <AppIcon Name="groups-solid" Class="topbar-nav-icon" />
-                        <span class="topbar-module-label">Nhóm</span>
-                    </a>
-                    <a class="@GetTopbarModuleClass("notifications")" href="/notifications" title="Thông báo" aria-label="Thông báo">
-                        <AppIcon Name="notifications-solid" Class="topbar-nav-icon" />
-                        <span class="topbar-module-label">Cập nhật</span>
-                    </a>
-                    <a class="@GetTopbarModuleClass("profile")" href="/profile" title="Trang cá nhân" aria-label="Trang cá nhân">
-                        <AppIcon Name="profile-solid" Class="topbar-nav-icon" />
-                        <span class="topbar-module-label">Hồ sơ</span>
-                    </a>
-                </nav>
-            </div>
-
-            <div class="topbar-right">
+            <div class="sociala-header-actions">
                 <AuthorizeView>
                     <Authorized>
-                        <div class="topbar-tools">
-                            <details class="topbar-tool-menu">
-                                <summary class="topbar-tool-menu-toggle topbar-tool" aria-label="Thông báo">
-                                    <AppIcon Name="notifications" />
+                        <details class="sociala-action-menu">
+                            <summary class="sociala-action-button" aria-label="@T("Thông báo", "Notifications")">
+                                <AppIcon Name="notifications" />
+                                @if (UnreadNotificationCount > 0)
+                                {
+                                    <span class="sociala-action-count">@Math.Min(UnreadNotificationCount, 9)</span>
+                                }
+                            </summary>
+
+                            <div class="sociala-dropdown sociala-dropdown-wide">
+                                <div class="sociala-dropdown-head">
+                                    <strong>@T("Thông báo", "Notifications")</strong>
                                     @if (UnreadNotificationCount > 0)
                                     {
-                                        <span class="tool-count">@Math.Min(UnreadNotificationCount, 9)</span>
+                                        <button type="button" class="sociala-dropdown-link" @onclick="MarkAllNotificationsAsReadAsync">@T("Đánh dấu đã đọc", "Mark all as read")</button>
                                     }
-                                </summary>
-
-                                <div class="topbar-dropdown dropdown-panel topbar-tool-dropdown">
-                                    <div class="topbar-dropdown-head">
-                                        <strong>Thông báo</strong>
-                                        @if (UnreadNotificationCount > 0)
-                                        {
-                                            <button type="button" class="topbar-dropdown-link" @onclick="MarkAllNotificationsAsReadAsync">Đánh dấu đã đọc</button>
-                                        }
-                                    </div>
-
-                                    <div class="topbar-dropdown-stack">
-                                        @if (notifications.Count == 0)
-                                        {
-                                            <p class="topbar-dropdown-empty">Chưa có thông báo mới.</p>
-                                        }
-                                        else
-                                        {
-                                            @foreach (var notification in notifications.Take(5))
-                                            {
-                                                <a class="topbar-dropdown-card @(notification.IsRead ? null : "is-unread")"
-                                                   href="@GetNotificationLink(notification)">
-                                                    <span class="topbar-dropdown-card-icon">
-                                                        <AppIcon Name="@GetNotificationIcon(notification.Type)" />
-                                                    </span>
-                                                    <span class="topbar-dropdown-card-copy">
-                                                        <strong>@notification.ActorName</strong>
-                                                        <small>@notification.Message</small>
-                                                        <em>@GetRelativeTime(notification.CreatedDate)</em>
-                                                    </span>
-                                                </a>
-                                            }
-                                        }
-                                    </div>
-
-                                    <a class="topbar-dropdown-footer" href="/notifications">Xem tất cả</a>
                                 </div>
-                            </details>
 
-                            <details class="topbar-tool-menu">
-                                <summary class="topbar-tool-menu-toggle topbar-tool" aria-label="Tin nhắn">
-                                    <AppIcon Name="chat" />
-                                    @if (recentChats.Count > 0)
+                                <div class="sociala-dropdown-stack">
+                                    @if (notifications.Count == 0)
                                     {
-                                        <span class="tool-count alt">@Math.Min(recentChats.Count, 9)</span>
+                                        <p class="sociala-dropdown-empty">@T("Chưa có thông báo mới.", "No new notifications yet.")</p>
                                     }
-                                </summary>
-
-                                <div class="topbar-dropdown dropdown-panel topbar-tool-dropdown">
-                                    <div class="topbar-dropdown-head">
-                                        <strong>Tin nhắn</strong>
-                                    </div>
-
-                                    <div class="topbar-dropdown-stack">
-                                        @if (recentChats.Count == 0)
+                                    else
+                                    {
+                                        @foreach (var notification in notifications.Take(5))
                                         {
-                                            <p class="topbar-dropdown-empty">Chưa có cuộc trò chuyện gần đây.</p>
+                                            <a class="sociala-dropdown-card @(notification.IsRead ? null : "is-unread")"
+                                               href="@GetNotificationLink(notification)">
+                                                <span class="sociala-dropdown-card-icon">
+                                                    <AppIcon Name="@GetNotificationIcon(notification.Type)" />
+                                                </span>
+                                                <span class="sociala-dropdown-card-copy">
+                                                    <strong>@notification.ActorName</strong>
+                                                    <small>@notification.Message</small>
+                                                    <em>@GetRelativeTime(notification.CreatedDate)</em>
+                                                </span>
+                                            </a>
                                         }
-                                        else
-                                        {
-                                            @foreach (var chatUser in recentChats.Take(5))
-                                            {
-                                                <a class="topbar-dropdown-card chat-card" href="@($"/chat/{chatUser.Id}")">
-                                                    <span class="topbar-dropdown-avatar small">
-                                                        @if (!string.IsNullOrWhiteSpace(chatUser.AvatarUrl))
-                                                        {
-                                                            <img src="@chatUser.AvatarUrl" alt="@chatUser.DisplayName" />
-                                                        }
-                                                        else
-                                                        {
-                                                            @GetInitials(chatUser.DisplayName)
-                                                        }
-                                                    </span>
-                                                    <span class="topbar-dropdown-card-copy">
-                                                        <strong>@chatUser.DisplayName</strong>
-                                                        <small>@(!string.IsNullOrWhiteSpace(chatUser.Bio) ? chatUser.Bio : chatUser.Email)</small>
-                                                    </span>
-                                                </a>
-                                            }
-                                        }
-                                    </div>
-
-                                    <a class="topbar-dropdown-footer" href="/chat">Mở hộp thư</a>
+                                    }
                                 </div>
-                            </details>
-                        </div>
 
-                        <details class="topbar-user-menu">
-                            <summary class="topbar-user-menu-toggle" aria-label="Tài khoản">
-                                <span class="topbar-avatar">
+                                <a class="sociala-dropdown-footer" href="/notifications">@T("Xem tất cả", "View all")</a>
+                            </div>
+                        </details>
+
+                        <details class="sociala-action-menu">
+                            <summary class="sociala-action-button" aria-label="@T("Tin nhắn", "Messages")">
+                                <AppIcon Name="chat" />
+                                @if (recentChats.Count > 0)
+                                {
+                                    <span class="sociala-action-count alt">@Math.Min(recentChats.Count, 9)</span>
+                                }
+                            </summary>
+
+                            <div class="sociala-dropdown sociala-dropdown-wide">
+                                <div class="sociala-dropdown-head">
+                                    <strong>@T("Tin nhắn", "Messages")</strong>
+                                </div>
+
+                                <div class="sociala-dropdown-stack">
+                                    @if (recentChats.Count == 0)
+                                    {
+                                        <p class="sociala-dropdown-empty">@T("Chưa có cuộc trò chuyện gần đây.", "No recent conversations yet.")</p>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var chatUser in recentChats.Take(5))
+                                        {
+                                            <a class="sociala-dropdown-card sociala-chat-card" href="@($"/chat/{chatUser.Id}")">
+                                                <span class="sociala-dropdown-avatar small">
+                                                    @if (!string.IsNullOrWhiteSpace(chatUser.AvatarUrl))
+                                                    {
+                                                        <img src="@chatUser.AvatarUrl" alt="@chatUser.DisplayName" />
+                                                    }
+                                                    else
+                                                    {
+                                                        @GetInitials(chatUser.DisplayName)
+                                                    }
+                                                </span>
+                                                <span class="sociala-dropdown-card-copy">
+                                                    <strong>@chatUser.DisplayName</strong>
+                                                    <small>@(!string.IsNullOrWhiteSpace(chatUser.Bio) ? chatUser.Bio : chatUser.Email)</small>
+                                                </span>
+                                            </a>
+                                        }
+                                    }
+                                </div>
+
+                                <a class="sociala-dropdown-footer" href="/chat">@T("Mở hộp thư", "Open inbox")</a>
+                            </div>
+                        </details>
+
+                        <details class="sociala-user-menu">
+                            <summary class="sociala-user-toggle" aria-label="@T("Tài khoản", "Account")">
+                                <span class="sociala-user-avatar">
                                     @if (!string.IsNullOrWhiteSpace(currentUserAvatarUrl))
                                     {
                                         <img src="@currentUserAvatarUrl" alt="@currentUserDisplayName" />
@@ -165,11 +163,15 @@
                                         @GetInitials(currentUserDisplayName)
                                     }
                                 </span>
+                                <span class="sociala-user-copy">
+                                    <strong>@currentUserDisplayName</strong>
+                                    <small>@T("Tài khoản", "Account")</small>
+                                </span>
                             </summary>
 
-                            <div class="topbar-dropdown dropdown-panel">
-                                <a class="topbar-dropdown-profile" href="/profile">
-                                    <span class="topbar-dropdown-avatar">
+                            <div class="sociala-dropdown">
+                                <a class="sociala-dropdown-profile" href="/profile">
+                                    <span class="sociala-dropdown-avatar">
                                         @if (!string.IsNullOrWhiteSpace(currentUserAvatarUrl))
                                         {
                                             <img src="@currentUserAvatarUrl" alt="@currentUserDisplayName" />
@@ -179,42 +181,42 @@
                                             @GetInitials(currentUserDisplayName)
                                         }
                                     </span>
-                                    <span class="topbar-dropdown-profile-text">
+                                    <span class="sociala-dropdown-profile-text">
                                         <strong>@currentUserDisplayName</strong>
-                                        <small>Mở trang cá nhân</small>
+                                        <small>@T("Mở trang cá nhân", "Open profile")</small>
                                     </span>
                                 </a>
 
-                                <nav class="topbar-dropdown-list" aria-label="Tài khoản">
-                                    <a class="topbar-dropdown-item" href="/profile">
-                                        <span class="topbar-dropdown-icon">
+                                <nav class="sociala-dropdown-list" aria-label="@T("Tài khoản", "Account")">
+                                    <a class="sociala-dropdown-item" href="/profile">
+                                        <span class="sociala-dropdown-card-icon">
                                             <AppIcon Name="profile" />
                                         </span>
-                                        <span>Trang cá nhân</span>
+                                        <span>@T("Trang cá nhân", "Profile")</span>
                                     </a>
 
-                                    <a class="topbar-dropdown-item" href="/settings">
-                                        <span class="topbar-dropdown-icon">
+                                    <a class="sociala-dropdown-item" href="/settings">
+                                        <span class="sociala-dropdown-card-icon">
                                             <AppIcon Name="dashboard" />
                                         </span>
-                                        <span>Cài đặt</span>
+                                        <span>@T("Cài đặt", "Settings")</span>
                                     </a>
 
-                                    <a class="topbar-dropdown-item" href="/saved">
-                                        <span class="topbar-dropdown-icon">
+                                    <a class="sociala-dropdown-item" href="/saved">
+                                        <span class="sociala-dropdown-card-icon">
                                             <AppIcon Name="heart" />
                                         </span>
-                                        <span>Bài viết đã lưu</span>
+                                        <span>@T("Bài viết đã lưu", "Saved posts")</span>
                                     </a>
 
-                                    <form action="Account/Logout" method="post" class="topbar-dropdown-logout">
+                                    <form action="Account/Logout" method="post" class="sociala-dropdown-logout">
                                         <AntiforgeryToken />
                                         <input type="hidden" name="ReturnUrl" value="/Account/Login" />
-                                        <button type="submit" class="topbar-dropdown-item topbar-dropdown-button">
-                                            <span class="topbar-dropdown-icon">
+                                        <button type="submit" class="sociala-dropdown-item sociala-dropdown-button">
+                                            <span class="sociala-dropdown-card-icon">
                                                 <AppIcon Name="logout" />
                                             </span>
-                                            <span>Đăng xuất</span>
+                                            <span>@T("Đăng xuất", "Log out")</span>
                                         </button>
                                     </form>
                                 </nav>
@@ -222,9 +224,9 @@
                         </details>
                     </Authorized>
                     <NotAuthorized>
-                        <div class="topbar-auth">
-                            <a class="btn btn-primary btn-sm" href="/Account/Register" data-enhance-nav="false">Đăng ký</a>
-                            <a class="btn btn-outline-dark btn-sm" href="/Account/Login" data-enhance-nav="false">Đăng nhập</a>
+                        <div class="sociala-auth-buttons">
+                            <a class="sociala-auth-button dark" href="/Account/Login" data-enhance-nav="false">@T("Đăng nhập", "Log in")</a>
+                            <a class="sociala-auth-button accent" href="/Account/Register" data-enhance-nav="false">@T("Đăng ký", "Sign up")</a>
                         </div>
                     </NotAuthorized>
                 </AuthorizeView>
@@ -232,13 +234,13 @@
         </div>
     </header>
 
-    <div class="page">
-        <aside class="sidebar">
+    <div class="sociala-body">
+        <aside class="sociala-sidebar">
             <NavMenu />
         </aside>
 
-        <main class="main-stage">
-            <article class="content-shell page-enter">
+        <main class="sociala-main">
+            <article class="sociala-main-inner page-enter">
                 @Body
             </article>
         </main>
@@ -246,8 +248,8 @@
 </div>
 
 <div id="blazor-error-ui">
-    Đã xảy ra lỗi ngoài dự kiến.
-    <a href="" class="reload">Tải lại</a>
+    @T("Đã xảy ra lỗi ngoài dự kiến.", "An unexpected error has occurred.")
+    <a href="" class="reload">@T("Tải lại", "Reload")</a>
     <a class="dismiss">x</a>
 </div>
 
@@ -256,13 +258,15 @@
     private readonly List<UserSummaryDto> recentChats = new();
 
     private string currentUserId = string.Empty;
-    private string currentUserDisplayName = "Tài khoản";
+    private string currentUserDisplayName = "Account";
     private string? currentUserAvatarUrl;
     private string currentPath = "/";
     private HubConnection? notificationHub;
     private HubConnection? chatHub;
 
     private int UnreadNotificationCount => notifications.Count(item => !item.IsRead);
+
+    private bool IsEnglish => string.Equals(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, "en", StringComparison.OrdinalIgnoreCase);
 
     protected override void OnInitialized()
     {
@@ -288,7 +292,7 @@
     private async Task LoadHeaderDataAsync()
     {
         var profile = await ProfileService.GetProfileAsync(currentUserId);
-        currentUserDisplayName = profile?.DisplayName ?? "Tài khoản";
+        currentUserDisplayName = profile?.DisplayName ?? T("Tài khoản", "Account");
         currentUserAvatarUrl = profile?.AvatarUrl;
 
         notifications.Clear();
@@ -364,7 +368,7 @@
     }
 
     private string GetTopbarModuleClass(string section) =>
-        IsActiveSection(section) ? "topbar-module active" : "topbar-module";
+        IsActiveSection(section) ? "sociala-topnav-link active" : "sociala-topnav-link";
 
     private bool IsActiveSection(string section) => section switch
     {
@@ -372,6 +376,8 @@
         _ => currentPath.Equals($"/{section}", StringComparison.OrdinalIgnoreCase) ||
              currentPath.StartsWith($"/{section}/", StringComparison.OrdinalIgnoreCase)
     };
+
+    private string T(string vietnamese, string english) => IsEnglish ? english : vietnamese;
 
     private static string GetCurrentPath(string absoluteOrRelativeUri)
     {
@@ -421,25 +427,31 @@
         return string.Concat(parts[0][0], parts[^1][0]).ToUpperInvariant();
     }
 
-    private static string GetRelativeTime(DateTime createdDate)
+    private string GetRelativeTime(DateTime createdDate)
     {
         var delta = DateTime.UtcNow - createdDate.ToUniversalTime();
 
         if (delta.TotalMinutes < 1)
         {
-            return "Vừa xong";
+            return T("Vừa xong", "Just now");
         }
 
         if (delta.TotalHours < 1)
         {
-            return $"{Math.Max(1, (int)delta.TotalMinutes)} phút trước";
+            return IsEnglish
+                ? $"{Math.Max(1, (int)delta.TotalMinutes)} min ago"
+                : $"{Math.Max(1, (int)delta.TotalMinutes)} phút trước";
         }
 
         if (delta.TotalDays < 1)
         {
-            return $"{Math.Max(1, (int)delta.TotalHours)} giờ trước";
+            return IsEnglish
+                ? $"{Math.Max(1, (int)delta.TotalHours)} hr ago"
+                : $"{Math.Max(1, (int)delta.TotalHours)} giờ trước";
         }
 
-        return $"{Math.Max(1, (int)delta.TotalDays)} ngày trước";
+        return IsEnglish
+            ? $"{Math.Max(1, (int)delta.TotalDays)} day(s) ago"
+            : $"{Math.Max(1, (int)delta.TotalDays)} ngày trước";
     }
 }

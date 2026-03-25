@@ -7,20 +7,22 @@
 @inject INotificationService NotificationService
 @inject NotificationBroadcastService NotificationBroadcastService
 
-<PageTitle>Bạn bè</PageTitle>
+<PageTitle>@T("Bạn bè", "Friends")</PageTitle>
 
 <section class="page-section">
     <div class="content-stack page-wide">
         <div class="page-header">
             <div>
-                <span class="section-kicker">Kết nối</span>
-                <h2>Bạn bè</h2>
-                <p>Gom danh sách bạn bè, gợi ý kết nối và thao tác thêm hoặc hủy kết bạn vào cùng một màn rõ ràng hơn.</p>
+                <span class="section-kicker">@T("Kết nối", "Connections")</span>
+                <h2>@T("Bạn bè", "Friends")</h2>
+                <p>@T("Quản lý gợi ý kết nối, lời mời đã gửi, lời mời đến và danh sách bạn bè trong cùng một màn hình.", "Manage suggestions, sent requests, incoming requests, and your friend list in one place.")</p>
             </div>
 
             <div class="friend-summary">
-                <span class="badge-soft success">@FriendCount đang kết nối</span>
-                <span class="badge-soft">@SuggestionCount gợi ý</span>
+                <span class="badge-soft success">@FriendCount @T("đang kết nối", "connected")</span>
+                <span class="badge-soft incoming">@IncomingRequestCount @T("lời mời đến", "incoming")</span>
+                <span class="badge-soft sent">@SentRequestCount @T("đã gửi", "sent")</span>
+                <span class="badge-soft">@SuggestionCount @T("gợi ý", "suggestions")</span>
             </div>
         </div>
 
@@ -31,12 +33,14 @@
 
         @if (people.Count == 0)
         {
-            <EmptyState Title="Chưa có người dùng để hiển thị" Description="Khi hệ thống có thêm thành viên, danh sách kết nối sẽ xuất hiện ở đây." />
+            <EmptyState Title="@T("Chưa có người dùng để hiển thị", "No users to display yet")" Description="@T("Khi hệ thống có thêm thành viên, danh sách kết nối sẽ xuất hiện ở đây.", "When more members join the system, connection suggestions will appear here.")" />
         }
         else
         {
             <div class="card-grid two-up">
-                @foreach (var person in people.OrderBy(person => person.IsFriend ? 0 : 1).ThenBy(person => person.DisplayName))
+                @foreach (var person in people
+                    .OrderBy(person => person.IsFriend ? 0 : person.HasReceivedRequest ? 1 : person.HasSentRequest ? 2 : 3)
+                    .ThenBy(person => person.DisplayName))
                 {
                     <article class="panel friend-card">
                         <div class="friend-head">
@@ -54,29 +58,48 @@
                             <div class="friend-copy">
                                 <div class="friend-title-row">
                                     <h3>@person.DisplayName</h3>
-                                    <span class="friend-state @(person.IsFriend ? "connected" : "discover")">
-                                        @(person.IsFriend ? "Đã kết bạn" : "Gợi ý")
+                                    <span class="friend-state @GetStateClass(person)">
+                                        @GetStateLabel(person)
                                     </span>
                                 </div>
                                 <p class="friend-meta">@person.Email</p>
                             </div>
                         </div>
 
-                        <p class="friend-bio">@(!string.IsNullOrWhiteSpace(person.Bio) ? person.Bio : "Chưa có mô tả cá nhân.")</p>
+                        <p class="friend-bio">@(!string.IsNullOrWhiteSpace(person.Bio) ? person.Bio : T("Chưa có mô tả cá nhân.", "No profile description yet."))</p>
 
                         <div class="friend-actions">
                             @if (person.IsFriend)
                             {
                                 <button class="btn btn-outline-danger" @onclick="() => RemoveFriendAsync(person.UserId)">
                                     <AppIcon Name="delete" />
-                                    <span>Hủy kết bạn</span>
+                                    <span>@T("Hủy kết bạn", "Remove friend")</span>
+                                </button>
+                            }
+                            else if (person.HasReceivedRequest)
+                            {
+                                <button class="btn btn-primary" @onclick="() => AcceptFriendRequestAsync(person.UserId)">
+                                    <AppIcon Name="check" />
+                                    <span>@T("Chấp nhận", "Accept")</span>
+                                </button>
+
+                                <button class="btn btn-outline-dark" @onclick="() => RejectFriendRequestAsync(person.UserId)">
+                                    <AppIcon Name="delete" />
+                                    <span>@T("Từ chối", "Decline")</span>
+                                </button>
+                            }
+                            else if (person.HasSentRequest)
+                            {
+                                <button class="btn btn-outline-dark" @onclick="() => RemoveFriendAsync(person.UserId)">
+                                    <AppIcon Name="delete" />
+                                    <span>@T("Hủy lời mời", "Cancel request")</span>
                                 </button>
                             }
                             else
                             {
                                 <button class="btn btn-primary" @onclick="() => AddFriendAsync(person.UserId)">
                                     <AppIcon Name="friends" />
-                                    <span>Kết bạn</span>
+                                    <span>@T("Gửi lời mời", "Send request")</span>
                                 </button>
                             }
                         </div>
@@ -92,9 +115,15 @@
     private string currentUserId = string.Empty;
     private string? errorMessage;
 
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+
     private int FriendCount => people.Count(person => person.IsFriend);
 
-    private int SuggestionCount => people.Count(person => !person.IsFriend);
+    private int IncomingRequestCount => people.Count(person => person.HasReceivedRequest);
+
+    private int SentRequestCount => people.Count(person => person.HasSentRequest);
+
+    private int SuggestionCount => people.Count(person => !person.IsFriend && !person.HasPendingRequest);
 
     protected override async Task OnInitializedAsync()
     {
@@ -127,11 +156,46 @@
                 currentUserId,
                 otherUserId,
                 NotificationType.FriendAdded,
-                "Bạn mới",
-                "đã thêm bạn vào danh sách kết nối.",
+                T("Lời mời kết bạn", "Friend request"),
+                T("đã gửi cho bạn một lời mời kết bạn.", "sent you a friend request."),
                 "/friends");
 
             await NotificationBroadcastService.BroadcastNotificationsAsync(notifications);
+            await LoadAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task AcceptFriendRequestAsync(string otherUserId)
+    {
+        try
+        {
+            await FriendshipService.AcceptFriendRequestAsync(currentUserId, otherUserId);
+            var notifications = await NotificationService.CreateInteractionNotificationAsync(
+                currentUserId,
+                otherUserId,
+                NotificationType.FriendAdded,
+                T("Lời mời được chấp nhận", "Friend request accepted"),
+                T("đã chấp nhận lời mời kết bạn của bạn.", "accepted your friend request."),
+                "/friends");
+
+            await NotificationBroadcastService.BroadcastNotificationsAsync(notifications);
+            await LoadAsync();
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+        }
+    }
+
+    private async Task RejectFriendRequestAsync(string otherUserId)
+    {
+        try
+        {
+            await FriendshipService.RejectFriendRequestAsync(currentUserId, otherUserId);
             await LoadAsync();
         }
         catch (Exception exception)
@@ -151,6 +215,46 @@
         {
             errorMessage = exception.Message;
         }
+    }
+
+    private static string GetStateClass(FriendSummaryDto person)
+    {
+        if (person.IsFriend)
+        {
+            return "connected";
+        }
+
+        if (person.HasReceivedRequest)
+        {
+            return "incoming";
+        }
+
+        if (person.HasSentRequest)
+        {
+            return "sent";
+        }
+
+        return "discover";
+    }
+
+    private static string GetStateLabel(FriendSummaryDto person)
+    {
+        if (person.IsFriend)
+        {
+            return T("Đã kết bạn", "Friends");
+        }
+
+        if (person.HasReceivedRequest)
+        {
+            return T("Đang chờ bạn", "Awaiting your response");
+        }
+
+        if (person.HasSentRequest)
+        {
+            return T("Đã gửi lời mời", "Request sent");
+        }
+
+        return T("Gợi ý", "Suggested");
     }
 
     private static string GetInitials(string name)
@@ -175,6 +279,16 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+    }
+
+    .friend-summary .badge-soft.incoming {
+        background: color-mix(in srgb, var(--warning) 18%, var(--bg-shell) 82%);
+        color: color-mix(in srgb, var(--warning) 84%, var(--text-primary) 16%);
+    }
+
+    .friend-summary .badge-soft.sent {
+        background: var(--app-accent-soft);
+        color: var(--accent);
     }
 
     .friend-card {
@@ -225,6 +339,16 @@
         color: var(--success);
     }
 
+    .friend-state.incoming {
+        background: color-mix(in srgb, var(--warning) 18%, var(--bg-shell) 82%);
+        color: color-mix(in srgb, var(--warning) 84%, var(--text-primary) 16%);
+    }
+
+    .friend-state.sent {
+        background: var(--app-accent-soft);
+        color: var(--accent);
+    }
+
     .friend-state.discover {
         background: var(--app-accent-soft);
         color: var(--accent);
@@ -233,6 +357,12 @@
     .friend-bio {
         color: var(--text-secondary);
         line-height: 1.65;
+    }
+
+    .friend-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .friend-actions .btn {

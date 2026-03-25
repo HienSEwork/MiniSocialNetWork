@@ -26,8 +26,8 @@ window.themeInterop = {
         const next = language === "en" ? "en" : "vi";
         localStorage.setItem("mini-social-language", next);
         document.documentElement.lang = next;
-        document.cookie = `.AspNetCore.Culture=c=${next}|uic=${next}; path=/; max-age=31536000; SameSite=Lax`;
-        window.location.reload();
+        const returnUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+        window.location.assign(`/preferences/set-language?culture=${encodeURIComponent(next)}&returnUrl=${encodeURIComponent(returnUrl)}`);
     }
 };
 

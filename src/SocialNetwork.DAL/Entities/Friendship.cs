@@ -1,3 +1,5 @@
+using SocialNetwork.DAL.Enums;
+
 namespace SocialNetwork.DAL.Entities;
 
 public class Friendship
@@ -7,6 +9,8 @@ public class Friendship
     public string RequesterId { get; set; } = string.Empty;
 
     public string AddresseeId { get; set; } = string.Empty;
+
+    public FriendshipStatus Status { get; set; } = FriendshipStatus.Pending;
 
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 

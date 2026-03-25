@@ -199,9 +199,9 @@ public static class DemoDataSeeder
 
     private static async Task EnsureFriendshipsAsync(ApplicationDbContext dbContext, string adminId, string aliceId, string bobId)
     {
-        await EnsureFriendshipAsync(dbContext, AdminAliceFriendshipId, adminId, aliceId);
-        await EnsureFriendshipAsync(dbContext, AdminBobFriendshipId, adminId, bobId);
-        await EnsureFriendshipAsync(dbContext, AliceBobFriendshipId, aliceId, bobId);
+        await EnsureFriendshipAsync(dbContext, AdminAliceFriendshipId, adminId, aliceId, FriendshipStatus.Accepted);
+        await EnsureFriendshipAsync(dbContext, AdminBobFriendshipId, adminId, bobId, FriendshipStatus.Accepted);
+        await EnsureFriendshipAsync(dbContext, AliceBobFriendshipId, aliceId, bobId, FriendshipStatus.Accepted);
     }
 
     private static async Task EnsurePostsAsync(ApplicationDbContext dbContext, string adminId, string aliceId, string bobId, string carolId)
@@ -419,7 +419,12 @@ public static class DemoDataSeeder
         member.Role = role;
     }
 
-    private static async Task EnsureFriendshipAsync(ApplicationDbContext dbContext, Guid friendshipId, string requesterId, string addresseeId)
+    private static async Task EnsureFriendshipAsync(
+        ApplicationDbContext dbContext,
+        Guid friendshipId,
+        string requesterId,
+        string addresseeId,
+        FriendshipStatus status)
     {
         var friendship = await dbContext.Friendships.SingleOrDefaultAsync(existingFriendship => existingFriendship.Id == friendshipId);
         if (friendship is null)
@@ -430,6 +435,7 @@ public static class DemoDataSeeder
 
         friendship.RequesterId = requesterId;
         friendship.AddresseeId = addresseeId;
+        friendship.Status = status;
     }
 
     private static async Task EnsurePostAsync(

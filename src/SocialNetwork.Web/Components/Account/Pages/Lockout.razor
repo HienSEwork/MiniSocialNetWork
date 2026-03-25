@@ -1,18 +1,22 @@
 @page "/Account/Lockout"
 
-<PageTitle>Tài khoản tạm khóa</PageTitle>
+<PageTitle>@T("Tài khoản tạm khóa", "Account locked")</PageTitle>
 
 <section class="auth-panel-page">
     <div class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Bảo mật</p>
-            <h1>Tài khoản tạm khóa</h1>
-            <p class="auth-panel-copy">Hệ thống đã tạm khóa tài khoản sau nhiều lần xác thực không thành công. Hãy thử lại sau hoặc dùng luồng khôi phục nếu cần.</p>
+            <p class="auth-panel-kicker">@T("Bảo mật", "Security")</p>
+            <h1>@T("Tài khoản tạm khóa", "Account locked")</h1>
+            <p class="auth-panel-copy">@T("Hệ thống đã tạm khóa tài khoản sau nhiều lần xác thực không thành công. Hãy thử lại sau hoặc dùng luồng khôi phục nếu cần.", "The account has been temporarily locked after multiple failed authentication attempts. Try again later or use account recovery if needed.")</p>
         </div>
 
         <div class="auth-panel-links">
-            <a href="/Account/ForgotPassword">Quên mật khẩu</a>
-            <a href="/Account/Login">Quay lại đăng nhập</a>
+            <a href="/Account/ForgotPassword">@T("Quên mật khẩu", "Forgot password")</a>
+            <a href="/Account/Login">@T("Quay lại đăng nhập", "Back to sign in")</a>
         </div>
     </div>
 </section>
+
+@code {
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+}

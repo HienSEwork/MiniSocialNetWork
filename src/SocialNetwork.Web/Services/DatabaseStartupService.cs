@@ -9,7 +9,6 @@ namespace SocialNetwork.Web.Services;
 
 public sealed class DatabaseStartupService(
     IServiceProvider serviceProvider,
-    IConfiguration configuration,
     IOptions<DatabaseStartupOptions> options)
 {
     public async Task InitializeAsync()
@@ -20,10 +19,9 @@ public sealed class DatabaseStartupService(
             return;
         }
 
-        await EnsureLocalDbRunningAsync(configuration.GetConnectionString("DefaultConnection"));
-
         await using var scope = serviceProvider.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await EnsureLocalDbRunningAsync(dbContext.Database.GetConnectionString());
 
         if (settings.AutoMigrateOnStartup)
         {

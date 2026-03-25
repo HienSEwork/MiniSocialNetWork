@@ -9,27 +9,29 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Xác nhận đổi email</PageTitle>
+<PageTitle>@T("Xác nhận đổi email", "Confirm email change")</PageTitle>
 
 <section class="auth-panel-page">
     <div class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Xác thực tài khoản</p>
-            <h1>Xác nhận đổi email</h1>
-            <p class="auth-panel-copy">Luồng đổi email chỉ hoàn tất khi liên kết xác nhận còn hợp lệ và người dùng được xác minh thành công.</p>
+            <p class="auth-panel-kicker">@T("Xác thực tài khoản", "Verify account")</p>
+            <h1>@T("Xác nhận đổi email", "Confirm email change")</h1>
+            <p class="auth-panel-copy">@T("Luồng đổi email chỉ hoàn tất khi liên kết xác nhận còn hợp lệ và người dùng được xác minh thành công.", "The email change is completed only when the confirmation link is still valid and the user is verified successfully.")</p>
         </div>
 
         <StatusMessage Message="@message" />
 
         <div class="auth-panel-links">
-            <a href="/Account/Login">Về đăng nhập</a>
-            <a href="/Account/Manage/Email">Quản lý email</a>
+            <a href="/Account/Login">@T("Về đăng nhập", "Go to sign-in")</a>
+            <a href="/Account/Manage/Email">@T("Quản lý email", "Manage email")</a>
         </div>
     </div>
 </section>
 
 @code {
     private string? message;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -49,14 +51,14 @@
         {
             RedirectManager.RedirectToWithStatus(
                 "Account/Login",
-                "Lỗi: liên kết xác nhận đổi email không hợp lệ.",
+                T("Lỗi: liên kết xác nhận đổi email không hợp lệ.", "Error: the email change confirmation link is invalid."),
                 HttpContext);
         }
 
         var user = await UserManager.FindByIdAsync(UserId);
         if (user is null)
         {
-            message = "Không tìm thấy tài khoản cần cập nhật email.";
+            message = T("Không tìm thấy tài khoản cần cập nhật email.", "The account to update could not be found.");
             return;
         }
 
@@ -64,18 +66,18 @@
         var result = await UserManager.ChangeEmailAsync(user, Email, code);
         if (!result.Succeeded)
         {
-            message = "Không thể đổi email. Liên kết có thể đã hết hạn hoặc bị thay đổi.";
+            message = T("Không thể đổi email. Liên kết có thể đã hết hạn hoặc bị thay đổi.", "The email could not be changed. The link may be expired or modified.");
             return;
         }
 
         var setUserNameResult = await UserManager.SetUserNameAsync(user, Email);
         if (!setUserNameResult.Succeeded)
         {
-            message = "Email đã đổi nhưng không thể đồng bộ tên đăng nhập.";
+            message = T("Email đã đổi nhưng không thể đồng bộ tên đăng nhập.", "The email was changed, but the username could not be synchronized.");
             return;
         }
 
         await SignInManager.RefreshSignInAsync(user);
-        message = "Email mới đã được xác nhận thành công.";
+        message = T("Email mới đã được xác nhận thành công.", "The new email address has been confirmed successfully.");
     }
 }

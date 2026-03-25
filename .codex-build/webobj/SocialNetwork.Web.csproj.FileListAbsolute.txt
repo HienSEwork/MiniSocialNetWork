@@ -1,0 +1,8 @@
+D:\Work\MiniSocialNetWork\.codex-build\webobj\SocialNetwork.Web.csproj.AssemblyReference.cache
+D:\Work\MiniSocialNetWork\.codex-build\webobj\rpswa.dswa.cache.json
+D:\Work\MiniSocialNetWork\.codex-build\webobj\SocialNetwork.Web.GeneratedMSBuildEditorConfig.editorconfig
+D:\Work\MiniSocialNetWork\.codex-build\webobj\SocialNetwork.Web.AssemblyInfoInputs.cache
+D:\Work\MiniSocialNetWork\.codex-build\webobj\SocialNetwork.Web.AssemblyInfo.cs
+D:\Work\MiniSocialNetWork\.codex-build\webobj\SocialNetwork.Web.csproj.CoreCompileInputs.cache
+D:\Work\MiniSocialNetWork\.codex-build\webobj\SocialNetwork.Web.MvcApplicationPartsAssemblyInfo.cache
+D:\Work\MiniSocialNetWork\.codex-build\webobj\SocialNetwork.Web.sourcelink.json

@@ -10,21 +10,22 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Đăng nhập</PageTitle>
+<PageTitle>@T("Đăng nhập", "Sign in")</PageTitle>
 
-<div class="login-page">
-    <section class="login-card">
-        <div class="login-card-head">
-            <p class="login-kicker">Chào mừng trở lại</p>
-            <h1>Đăng nhập</h1>
+<div class="auth-panel-page login-page">
+    <section class="auth-panel-card login-card">
+        <div class="auth-panel-head login-card-head">
+            <p class="auth-panel-kicker login-kicker">@T("Chào mừng trở lại", "Welcome back")</p>
+            <h1>@T("Đăng nhập", "Sign in")</h1>
+            <p class="auth-panel-copy">@T("Tiếp tục vào newsfeed, tin nhắn realtime và không gian cộng đồng của bạn.", "Continue to your newsfeed, realtime chat, and community space.")</p>
         </div>
 
         <StatusMessage Message="@errorMessage" />
 
-        <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login" class="login-form">
+        <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login" class="auth-panel-form login-form">
             <DataAnnotationsValidator />
 
-            <div class="login-fields">
+            <div class="auth-panel-fields login-fields">
                 <ValidationSummary class="text-danger" role="alert" />
 
                 <div class="form-floating">
@@ -35,24 +36,24 @@
 
                 <div class="form-floating">
                     <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label>Mật khẩu</label>
+                    <label>@T("Mật khẩu", "Password")</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
 
-                <div class="checkbox">
+                <div class="checkbox login-remember">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Ghi nhớ đăng nhập
+                        @T("Ghi nhớ đăng nhập", "Remember me")
                     </label>
                 </div>
             </div>
 
-            <button type="submit" class="btn login-submit">Đăng nhập</button>
+            <button type="submit" class="btn auth-panel-submit login-submit">@T("Đăng nhập", "Sign in")</button>
 
-            <div class="login-links">
-                <a href="Account/ForgotPassword" data-enhance-nav="false">Quên mật khẩu?</a>
-                <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" data-enhance-nav="false">Tạo tài khoản mới</a>
-                <a href="Account/ResendEmailConfirmation" data-enhance-nav="false">Gửi lại email xác nhận</a>
+            <div class="auth-panel-links login-links">
+                <a href="Account/ForgotPassword" data-enhance-nav="false">@T("Quên mật khẩu?", "Forgot password?")</a>
+                <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" data-enhance-nav="false">@T("Tạo tài khoản mới", "Create a new account")</a>
+                <a href="Account/ResendEmailConfirmation" data-enhance-nav="false">@T("Gửi lại email xác nhận", "Resend confirmation email")</a>
             </div>
         </EditForm>
     </section>
@@ -60,6 +61,9 @@
 
 @code {
     private string? errorMessage;
+    private bool forceLoadTriggered;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
@@ -78,12 +82,30 @@
         }
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender || forceLoadTriggered || HttpContext is not null)
+        {
+            return;
+        }
+
+        forceLoadTriggered = true;
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
     public async Task LoginUser()
     {
+        if (HttpContext is null || HttpContext.Response.HasStarted)
+        {
+            Logger.LogWarning("Login requires a full HTTP request. Reloading current page.");
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            return;
+        }
+
         var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
-            Logger.LogInformation("Người dùng đã đăng nhập.");
+            Logger.LogInformation("User signed in.");
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.RequiresTwoFactor)
@@ -94,12 +116,12 @@
         }
         else if (result.IsLockedOut)
         {
-            Logger.LogWarning("Tài khoản bị khóa.");
+            Logger.LogWarning("User account is locked out.");
             RedirectManager.RedirectTo("Account/Lockout");
         }
         else
         {
-            errorMessage = "Đăng nhập không thành công.";
+            errorMessage = T("Đăng nhập không thành công.", "Sign-in failed.");
         }
     }
 
@@ -113,7 +135,7 @@
         [DataType(DataType.Password)]
         public string Password { get; set; } = "";
 
-        [Display(Name = "Ghi nhớ đăng nhập")]
+        [Display(Name = "Remember me")]
         public bool RememberMe { get; set; }
     }
 }

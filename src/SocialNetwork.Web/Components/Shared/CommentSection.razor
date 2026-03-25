@@ -1,11 +1,21 @@
 <section class="comment-shell">
-    <div class="comment-input-row">
-        <InputText @bind-Value="newComment" class="form-control" placeholder="Viết bình luận..." />
-        <button class="btn btn-outline-dark" @onclick="AddCommentAsync">
-            <AppIcon Name="comment" />
-            <span>Gửi</span>
-        </button>
-    </div>
+    @if (IsReadOnly)
+    {
+        <div class="comment-guest-note">
+            <span>Xem được bình luận công khai.</span>
+            <a href="/Account/Login" data-enhance-nav="false">Đăng nhập để bình luận</a>
+        </div>
+    }
+    else
+    {
+        <div class="comment-input-row">
+            <InputText @bind-Value="newComment" class="form-control" placeholder="Viết bình luận..." />
+            <button class="btn btn-outline-dark" @onclick="AddCommentAsync">
+                <AppIcon Name="comment" />
+                <span>Gửi</span>
+            </button>
+        </div>
+    }
 
     @if (!string.IsNullOrWhiteSpace(errorMessage))
     {
@@ -41,7 +51,7 @@
                             </div>
                         </div>
 
-                        @if (comment.CanEdit)
+                        @if (!IsReadOnly && comment.CanEdit)
                         {
                             <div class="comment-actions">
                                 <button class="btn btn-link btn-sm" @onclick="() => BeginEdit(comment)">
@@ -86,6 +96,9 @@
 
     [Parameter]
     public EventCallback OnChanged { get; set; }
+
+    [Parameter]
+    public bool IsReadOnly { get; set; }
 
     [Inject]
     private IPostService PostService { get; set; } = default!;
@@ -235,6 +248,25 @@
     .comment-list {
         display: grid;
         gap: 10px;
+    }
+
+    .comment-guest-note {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: var(--bg-muted);
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .comment-guest-note a {
+        color: var(--accent);
+        font-weight: 800;
     }
 
     .comment-item {

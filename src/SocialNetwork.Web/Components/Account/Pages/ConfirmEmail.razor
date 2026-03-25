@@ -8,26 +8,28 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Xác nhận email</PageTitle>
+<PageTitle>@T("Xác nhận email", "Confirm email")</PageTitle>
 
 <section class="auth-panel-page">
     <div class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Xác thực tài khoản</p>
-            <h1>Xác nhận email</h1>
-            <p class="auth-panel-copy">Hoàn tất bước xác thực để mở toàn bộ chức năng của Mini Social.</p>
+            <p class="auth-panel-kicker">@T("Xác thực tài khoản", "Verify account")</p>
+            <h1>@T("Xác nhận email", "Confirm email")</h1>
+            <p class="auth-panel-copy">@T("Hoàn tất bước xác thực để mở toàn bộ chức năng của Mini Social.", "Complete this verification step to unlock the full Mini Social experience.")</p>
         </div>
 
         <StatusMessage Message="@statusMessage" />
 
         <div class="auth-panel-links">
-            <a href="/Account/Login">Về màn đăng nhập</a>
+            <a href="/Account/Login">@T("Về màn đăng nhập", "Go to sign-in")</a>
         </div>
     </div>
 </section>
 
 @code {
     private string? statusMessage;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -49,15 +51,15 @@
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = $"Không tìm thấy tài khoản có mã {UserId}.";
+            statusMessage = $"{T("Không tìm thấy tài khoản có mã", "Could not find the account with id")} {UserId}.";
         }
         else
         {
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
             var result = await UserManager.ConfirmEmailAsync(user, code);
             statusMessage = result.Succeeded
-                ? "Email đã được xác nhận thành công. Bạn có thể đăng nhập ngay."
-                : "Không thể xác nhận email. Liên kết có thể đã hết hạn hoặc không hợp lệ.";
+                ? T("Email đã được xác nhận thành công. Bạn có thể đăng nhập ngay.", "Your email has been confirmed successfully. You can sign in now.")
+                : T("Không thể xác nhận email. Liên kết có thể đã hết hạn hoặc không hợp lệ.", "The email could not be confirmed. The link may be expired or invalid.");
         }
     }
 }

@@ -1,13 +1,35 @@
+@inject NavigationManager NavigationManager
 @inherits LayoutComponentBase
 
 <div class="auth-root">
     <section class="auth-layout">
         <aside class="auth-showcase">
             <div class="auth-showcase-media">
-                <img src="/media/demo/auth/cover.jpg" alt="Ảnh giới thiệu Mini Social" />
+                <img src="/media/sociala/auth/login-bg.jpg" alt="@T("Minh họa giao diện Mini Social", "Mini Social interface illustration")" />
+                <div class="auth-showcase-overlay"></div>
+
                 <div class="auth-showcase-copy">
+                    <a class="auth-brand" href="/" aria-label="@T("Mini Social", "Mini Social")">
+                        <span class="auth-brand-mark">MS</span>
+                        <span class="auth-brand-copy">
+                            <strong>Mini Social</strong>
+                            <small>@T("Feed, chat và cộng đồng", "Feed, chat, and community")</small>
+                        </span>
+                    </a>
+
                     <p class="section-kicker">Mini Social Network</p>
-                    <h1>Kết nối bảng tin, nhóm, tin nhắn và thông báo trực tiếp.</h1>
+                    <h1>@T("Feed, nhóm và chat trong một nơi.", "Feed, groups, and chat in one place.")</h1>
+                    <p class="auth-showcase-lead">
+                        @T(
+                            "Từ bảng tin công khai đến nhắn tin realtime, mọi thao tác đều đi trong cùng một layout để không bị đứt mạch trải nghiệm giữa các module.",
+                            "From the public feed to realtime chat, every action stays inside one layout so the experience remains consistent across modules.")
+                    </p>
+
+                    <div class="auth-showcase-points">
+                        <span>@T("Xem feed trước khi đăng nhập", "Preview the feed before signing in")</span>
+                        <span>@T("Đăng nhập và đăng ký gọn hơn", "Cleaner sign-in and sign-up")</span>
+                        <span>@T("Chat, nhóm và thông báo đồng bộ", "Chat, groups, and notifications in sync")</span>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -19,3 +41,23 @@
         </main>
     </section>
 </div>
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private bool forceLoadTriggered;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender || forceLoadTriggered || HttpContext is not null)
+        {
+            return;
+        }
+
+        forceLoadTriggered = true;
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+}

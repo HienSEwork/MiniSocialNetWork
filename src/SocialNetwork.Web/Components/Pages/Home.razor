@@ -11,7 +11,7 @@
 @inject IFriendshipService FriendshipService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Bảng tin</PageTitle>
+<PageTitle>@T("Bảng tin", "Feed")</PageTitle>
 
 <section class="page-section">
     @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -21,126 +21,128 @@
 
     @if (isLoading)
     {
-        <div class="panel">Đang tải bảng tin...</div>
+        <div class="panel">@T("Đang tải newsfeed...", "Loading newsfeed...")</div>
     }
     else
     {
-        <div class="home-shell">
-            <div class="home-main">
-                <section class="panel home-hero">
-                    <div class="home-hero-copy">
-                        <p class="section-kicker">Bảng tin</p>
-                        <h2>@(isAuthenticated ? "Nhịp cập nhật mới nhất của bạn" : "Một giao diện chung cho feed, nhóm và chat")</h2>
-                        <p class="page-lead">
-                            @(isAuthenticated
-                                ? "Tất cả bài viết, nhóm đang theo dõi và gợi ý kết nối được gom về một khung rõ ràng để thao tác nhanh hơn."
-                                : "Xem trước bố cục thật của Mini Social trước khi đăng nhập. Khi xác thực xong, nội dung thật sẽ xuất hiện ngay trong cùng giao diện này.")
-                        </p>
+        <div class="home-sociala-shell">
+            <div class="home-sociala-main">
+                <section class="panel story-panel">
+                    <div class="story-panel-head">
+                        <div>
+                            <p class="section-kicker">Stories</p>
+                            <h2>Newsfeed</h2>
+                        </div>
+
+                        <span class="badge-soft">@T($"{storyPreviews.Count} stories mẫu", $"{storyPreviews.Count} sample stories")</span>
                     </div>
 
-                    <div class="home-hero-metrics">
-                        <span class="home-chip">
-                            <strong>@posts.Count</strong>
-                            <small>@(isAuthenticated ? "bài viết" : "khối preview")</small>
-                        </span>
-                        <span class="home-chip accent">
-                            <strong>@(isAuthenticated ? joinedGroups.Count : guestHighlights.Count)</strong>
-                            <small>@(isAuthenticated ? "nhóm đang theo dõi" : "điểm nhấn chính")</small>
-                        </span>
-                        <span class="home-chip success">
-                            <strong>@(isAuthenticated ? suggestedPeople.Count : guestPreviewPosts.Count)</strong>
-                            <small>@(isAuthenticated ? "gợi ý kết nối" : "bài viết mẫu")</small>
-                        </span>
+                    <div class="story-strip">
+                        @if (isAuthenticated)
+                        {
+                            <a class="story-card create-story-card" href="#composer">
+                                <span class="story-plus">+</span>
+                                <strong>@T("Tạo story", "Create story")</strong>
+                                <small>@T("Đăng ảnh hoặc cập nhật nhanh", "Share a photo or quick update")</small>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="story-card create-story-card" href="/Account/Login" data-enhance-nav="false">
+                                <span class="story-plus">+</span>
+                                <strong>@T("Đăng nhập", "Sign in")</strong>
+                            </a>
+                        }
+
+                        @foreach (var story in storyPreviews)
+                        {
+                            <article class="story-card story-preview" style="background-image:url('@story.BackgroundUrl')">
+                                <div class="story-overlay"></div>
+                                <div class="story-avatar">
+                                    <img src="@story.AvatarUrl" alt="@story.Title" />
+                                </div>
+                                <div class="story-copy">
+                                    <strong>@story.Title</strong>
+                                    <small>@story.Subtitle</small>
+                                </div>
+                            </article>
+                        }
                     </div>
                 </section>
 
                 @if (isAuthenticated)
                 {
-                    <PostComposer CurrentUserId="@currentUserId"
-                                  CurrentUserDisplayName="@currentProfile?.DisplayName"
-                                  CurrentUserAvatarUrl="@currentProfile?.AvatarUrl"
-                                  OnCreated="LoadFeedAsync" />
+                    <div id="composer">
+                        <PostComposer CurrentUserId="@currentUserId"
+                                      CurrentUserDisplayName="@currentProfile?.DisplayName"
+                                      CurrentUserAvatarUrl="@currentProfile?.AvatarUrl"
+                                      OnCreated="LoadFeedAsync" />
+                    </div>
                 }
                 else
                 {
-                    <section class="panel guest-entry-panel">
-                        <div>
-                            <p class="section-kicker">Khách truy cập</p>
-                            <h3>Đăng nhập để đăng bài, bình luận và nhận cập nhật realtime.</h3>
-                            <p class="guest-entry-copy">Bố cục bảng tin, sidebar và luồng điều hướng giữ nguyên trước và sau khi đăng nhập để trải nghiệm không bị gãy.</p>
+                    <section class="panel guest-sociala-entry">
+                        <div class="guest-sociala-entry-copy">
+                            <p class="section-kicker">@T("Khách truy cập", "Guest access")</p>
+                            <h3>@T("Xem feed thật trước khi đăng nhập", "Preview the real feed before signing in")</h3>
+                            <p>@T("Bạn có thể duyệt newsfeed công khai ngay bây giờ. Khi đăng nhập, composer, bình luận, thả cảm xúc và realtime chat sẽ mở trong đúng giao diện này.", "You can browse the public newsfeed right now. After signing in, the composer, comments, reactions, and realtime chat open in this same interface.")</p>
                         </div>
 
-                        <div class="guest-entry-actions">
-                            <a class="btn btn-primary" href="/Account/Login" data-enhance-nav="false">Đăng nhập</a>
-                            <a class="btn btn-outline-dark" href="/Account/Register" data-enhance-nav="false">Tạo tài khoản</a>
+                        <div class="guest-sociala-metrics">
+                            <div class="meta-card">
+                                <span>@T("Bài viết công khai", "Public posts")</span>
+                                <strong>@posts.Count</strong>
+                            </div>
+                            <div class="meta-card">
+                                <span>@T("Điểm nổi bật", "Highlights")</span>
+                                <strong>@guestHighlights.Count</strong>
+                            </div>
+                            <div class="meta-card">
+                                <span>@T("Preview story", "Story preview")</span>
+                                <strong>@storyPreviews.Count</strong>
+                            </div>
+                        </div>
+
+                        <div class="guest-sociala-actions">
+                            <a class="btn btn-outline-dark" href="/Account/Login" data-enhance-nav="false">@T("Đăng nhập", "Sign in")</a>
+                            <a class="btn btn-primary" href="/Account/Register" data-enhance-nav="false">@T("Tạo tài khoản", "Create account")</a>
                         </div>
                     </section>
                 }
 
-                @if (isAuthenticated)
+                @if (posts.Count == 0)
                 {
-                    @if (posts.Count == 0)
-                    {
-                        <EmptyState Title="Chưa có bài viết" Description="Feed chưa có dữ liệu để hiển thị. Hãy tạo bài đầu tiên hoặc tham gia thêm nhóm." />
-                    }
-                    else
-                    {
-                        <section class="section-grid">
-                            @foreach (var post in posts)
-                            {
-                                <PostCard Post="post" ShowDetailLink="false" OnChanged="LoadFeedAsync" />
-                            }
-                        </section>
-                    }
+                    <EmptyState Title="@T("Chưa có bài viết", "No posts yet")" Description="@T("Hiện chưa có bài đăng công khai để hiển thị trên newsfeed.", "There are no public posts to show in the newsfeed yet.")" />
                 }
                 else
                 {
-                    <section class="card-grid two-up">
-                        @foreach (var preview in guestPreviewPosts)
+                    <section class="section-grid">
+                        @foreach (var post in isAuthenticated ? posts : posts.Take(8))
                         {
-                            <article class="panel preview-card">
-                                <div class="preview-card-head">
-                                    <span class="avatar">@preview.Initials</span>
-                                    <div>
-                                        <strong>@preview.Title</strong>
-                                        <small>@preview.Meta</small>
-                                    </div>
-                                </div>
-
-                                <p>@preview.Content</p>
-                            </article>
+                            <PostCard Post="post" ShowDetailLink="false" OnChanged="LoadFeedAsync" IsReadOnly="@(!isAuthenticated)" />
                         }
                     </section>
                 }
             </div>
 
-            <aside class="home-rail">
+            <aside class="home-sociala-rail">
                 @if (isAuthenticated)
                 {
-                    <article class="panel home-profile-card">
+                    <article class="panel home-profile-panel">
                         <div class="rail-head">
                             <div>
-                                <p class="section-kicker">Không gian cá nhân</p>
+                                <p class="section-kicker">@T("Tài khoản", "Account")</p>
                                 <h3>@(currentProfile?.DisplayName ?? "Mini Social")</h3>
                             </div>
-                            <a href="/profile">Mở hồ sơ</a>
+                            <a href="/profile">@T("Mở hồ sơ", "Open profile")</a>
                         </div>
 
-                        <p class="rail-copy">@(!string.IsNullOrWhiteSpace(currentProfile?.Bio) ? currentProfile!.Bio : "Cập nhật bio để hồ sơ của bạn nổi bật hơn trên toàn hệ thống.")</p>
+                        <p class="rail-copy">@(!string.IsNullOrWhiteSpace(currentProfile?.Bio) ? currentProfile!.Bio : T("Cập nhật bio và ảnh đại diện để hồ sơ của bạn nổi bật hơn trong cộng đồng.", "Update your bio and avatar so your profile stands out more in the community."))</p>
 
                         <div class="mini-stat-grid">
-                            <div>
-                                <span>Bài viết</span>
-                                <strong>@(currentProfile?.PostCount ?? posts.Count)</strong>
-                            </div>
-                            <div>
-                                <span>Nhóm</span>
-                                <strong>@(currentProfile?.GroupCount ?? joinedGroups.Count)</strong>
-                            </div>
-                            <div>
-                                <span>Hoạt động mới</span>
-                                <strong>@Math.Min(posts.Count, 4)</strong>
-                            </div>
+                            <div><span>@T("Bài viết", "Posts")</span><strong>@(currentProfile?.PostCount ?? posts.Count)</strong></div>
+                            <div><span>@T("Nhóm", "Groups")</span><strong>@(currentProfile?.GroupCount ?? joinedGroups.Count)</strong></div>
+                            <div><span>@T("Kết nối", "Connections")</span><strong>@connectionCount</strong></div>
                         </div>
                     </article>
                 }
@@ -149,17 +151,17 @@
                     <article class="panel rail-card">
                         <div class="rail-head">
                             <div>
-                                <p class="section-kicker">Tổng quan</p>
+                                <p class="section-kicker">@T("Khám phá", "Discover")</p>
                                 <h3>Mini Social</h3>
                             </div>
                         </div>
 
-                        <div class="highlight-list">
+                        <div class="rail-list">
                             @foreach (var item in guestHighlights)
                             {
-                                <article class="highlight-item">
-                                    <strong>@item.Title</strong>
-                                    <p>@item.Description</p>
+                                <article class="rail-item">
+                                    <span class="rail-icon"><AppIcon Name="@item.Icon" /></span>
+                                    <div><strong>@item.Title</strong></div>
                                 </article>
                             }
                         </div>
@@ -169,17 +171,17 @@
                 <article class="panel rail-card">
                     <div class="rail-head">
                         <div>
-                            <p class="section-kicker">Kết nối</p>
-                            <h3>@(isAuthenticated ? "Gợi ý cho bạn" : "Những gì bạn sẽ thấy")</h3>
+                            <p class="section-kicker">@T("Kết nối", "Connections")</p>
+                            <h3>@(isAuthenticated ? T("Gợi ý cho bạn", "Suggested for you") : T("Bạn sẽ thấy gì", "What you will see"))</h3>
                         </div>
-                        <a href="@(isAuthenticated ? "/friends" : "/Account/Register")" data-enhance-nav="@(isAuthenticated ? null : "false")">@(isAuthenticated ? "Quản lý" : "Bắt đầu")</a>
+                        <a href="@(isAuthenticated ? "/friends" : "/Account/Register")" data-enhance-nav="@(isAuthenticated ? null : "false")">@(isAuthenticated ? T("Quản lý", "Manage") : T("Bắt đầu", "Get started"))</a>
                     </div>
 
                     @if (isAuthenticated)
                     {
                         @if (suggestedPeople.Count == 0)
                         {
-                            <p class="rail-empty">Chưa có gợi ý mới ở thời điểm hiện tại.</p>
+                            <p class="rail-empty">@T("Chưa có gợi ý mới ở thời điểm hiện tại.", "There are no new suggestions right now.")</p>
                         }
                         else
                         {
@@ -197,7 +199,6 @@
                                                 @GetInitials(person.DisplayName)
                                             }
                                         </span>
-
                                         <div>
                                             <strong>@person.DisplayName</strong>
                                             <small>@(!string.IsNullOrWhiteSpace(person.Bio) ? person.Bio : person.Email)</small>
@@ -213,11 +214,8 @@
                             @foreach (var preview in guestPeoplePreviews)
                             {
                                 <article class="rail-item">
-                                    <span class="avatar rail-avatar">@preview.Initials</span>
-                                    <div>
-                                        <strong>@preview.Title</strong>
-                                        <small>@preview.Meta</small>
-                                    </div>
+                                    <span class="rail-icon"><AppIcon Name="@preview.Icon" /></span>
+                                    <div><strong>@preview.Title</strong></div>
                                 </article>
                             }
                         </div>
@@ -227,17 +225,17 @@
                 <article class="panel rail-card">
                     <div class="rail-head">
                         <div>
-                            <p class="section-kicker">Cộng đồng</p>
-                            <h3>@(isAuthenticated ? "Nhóm đang theo dõi" : "Nhóm và chủ đề")</h3>
+                            <p class="section-kicker">@T("Cộng đồng", "Community")</p>
+                            <h3>@(isAuthenticated ? T("Nhóm đang theo dõi", "Groups you follow") : T("Nhóm và chủ đề", "Groups and topics"))</h3>
                         </div>
-                        <a href="@(isAuthenticated ? "/groups" : "/Account/Login")" data-enhance-nav="@(isAuthenticated ? null : "false")">@(isAuthenticated ? "Mở nhóm" : "Đăng nhập")</a>
+                        <a href="@(isAuthenticated ? "/groups" : "/Account/Login")" data-enhance-nav="@(isAuthenticated ? null : "false")">@(isAuthenticated ? T("Mở nhóm", "Open groups") : T("Đăng nhập", "Sign in"))</a>
                     </div>
 
                     @if (isAuthenticated)
                     {
                         @if (joinedGroups.Count == 0)
                         {
-                            <p class="rail-empty">Bạn chưa tham gia nhóm nào.</p>
+                            <p class="rail-empty">@T("Bạn chưa tham gia nhóm nào.", "You have not joined any groups yet.")</p>
                         }
                         else
                         {
@@ -245,13 +243,10 @@
                                 @foreach (var group in joinedGroups)
                                 {
                                     <a class="rail-item rail-link" href="@($"/groups/{group.Id}")">
-                                        <span class="rail-icon">
-                                            <AppIcon Name="groups" />
-                                        </span>
-
+                                        <span class="rail-icon"><AppIcon Name="groups" /></span>
                                         <div>
                                             <strong>@group.Name</strong>
-                                            <small>@group.MemberCount thành viên</small>
+                                            <small>@T($"{group.MemberCount} thành viên", $"{group.MemberCount} members")</small>
                                         </div>
                                     </a>
                                 }
@@ -264,13 +259,8 @@
                             @foreach (var preview in guestGroupPreviews)
                             {
                                 <article class="rail-item">
-                                    <span class="rail-icon">
-                                        <AppIcon Name="groups" />
-                                    </span>
-                                    <div>
-                                        <strong>@preview.Title</strong>
-                                        <small>@preview.Meta</small>
-                                    </div>
+                                    <span class="rail-icon"><AppIcon Name="@preview.Icon" /></span>
+                                    <div><strong>@preview.Title</strong></div>
                                 </article>
                             }
                         </div>
@@ -280,24 +270,39 @@
                 <article class="panel rail-card">
                     <div class="rail-head">
                         <div>
-                            <p class="section-kicker">Dòng hoạt động</p>
-                            <h3>@(isAuthenticated ? "Mốc mới trong feed" : "Cách giao diện vận hành")</h3>
+                            <p class="section-kicker">@T("Hoạt động", "Activity")</p>
+                            <h3>@(isAuthenticated ? T("Nhịp feed mới", "Latest feed rhythm") : T("Cách giao diện vận hành", "How the interface works"))</h3>
                         </div>
                     </div>
 
-                    <div class="activity-list">
-                        @foreach (var item in GetVisibleActivityItems())
-                        {
-                            <article class="activity-item">
-                                <span class="activity-dot"></span>
-                                <div>
-                                    <strong>@item.Title</strong>
-                                    <small>@item.Meta</small>
-                                    <p>@item.Description</p>
-                                </div>
-                            </article>
-                        }
-                    </div>
+                    @if (isAuthenticated)
+                    {
+                        <div class="activity-list">
+                            @foreach (var item in GetVisibleActivityItems())
+                            {
+                                <article class="activity-item">
+                                    <span class="activity-dot"></span>
+                                    <div>
+                                        <strong>@item.Title</strong>
+                                        <small>@item.Meta</small>
+                                        <p>@item.Description</p>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="rail-list">
+                            @foreach (var item in guestActivityItems)
+                            {
+                                <article class="rail-item">
+                                    <span class="rail-icon"><AppIcon Name="@item.Icon" /></span>
+                                    <div><strong>@item.Title</strong></div>
+                                </article>
+                            }
+                        </div>
+                    }
                 </article>
             </aside>
         </div>
@@ -309,36 +314,38 @@
     private readonly List<GroupSummaryDto> joinedGroups = new();
     private readonly List<FriendSummaryDto> suggestedPeople = new();
 
-    private readonly List<PreviewCardViewModel> guestPreviewPosts =
+    private readonly List<StoryPreviewViewModel> storyPreviews =
     [
-        new("BT", "Bảng tin gọn hơn", "Một giao diện duy nhất", "Feed, gợi ý kết nối và nhóm được gom về cùng một nhịp nhìn để không còn cảm giác chuyển trang chắp vá."),
-        new("RT", "Tương tác realtime", "Thông báo và chat", "Ngay khi đăng nhập, luồng chat và thông báo dùng lại đúng khung giao diện hiện có mà không tạo thêm màn trung gian.")
+        new("Victor", T("Khoảnh khắc mới", "New moment"), "/media/sociala/stories/story-1.jpg", "/media/sociala/avatars/user-11.png"),
+        new("Surfiya", T("Mood hôm nay", "Today's mood"), "/media/sociala/stories/story-2.jpg", "/media/sociala/avatars/user-12.png"),
+        new("Goria", T("Video ngắn", "Short video"), "/media/sociala/stories/story-3.jpg", "/media/sociala/avatars/user-9.png"),
+        new("Hurin", "Explore", "/media/sociala/stories/story-4.jpg", "/media/sociala/avatars/user-4.png")
     ];
 
-    private readonly List<PreviewCardViewModel> guestPeoplePreviews =
+    private readonly List<GuestCardViewModel> guestPeoplePreviews =
     [
-        new("KB", "Kết bạn", "Quản lý lời mời và danh sách kết nối"),
-        new("HS", "Hồ sơ", "Trang cá nhân, bio và ảnh đại diện đồng bộ")
+        new("friends", T("Kết bạn", "Friends")),
+        new("profile", T("Hồ sơ", "Profile"))
     ];
 
-    private readonly List<PreviewCardViewModel> guestGroupPreviews =
+    private readonly List<GuestCardViewModel> guestGroupPreviews =
     [
-        new("NH", "Nhóm học tập", "Thành viên, chat nhóm và bài đăng"),
-        new("CD", "Cộng đồng nội bộ", "Theo dõi chủ đề đang hoạt động")
+        new("groups", T("Nhóm học tập", "Study groups")),
+        new("globe", T("Cộng đồng nội bộ", "Internal communities"))
     ];
 
-    private readonly List<HighlightViewModel> guestHighlights =
+    private readonly List<GuestCardViewModel> guestHighlights =
     [
-        new("Feed tập trung", "Các module chính dùng một layout nhất quán thay vì tách thành nhiều màn rời."),
-        new("Realtime rõ ràng", "Thông báo, chat và bài viết được cập nhật ngay trong đúng khu vực thao tác."),
-        new("Sidebar hữu ích", "Nhóm, bạn bè và điều hướng nhanh luôn nằm đúng vị trí trên mọi màn hình chính.")
+        new("feed-solid", T("Feed công khai", "Public feed")),
+        new("dashboard", T("Điều hướng thống nhất", "Unified navigation")),
+        new("notifications-solid", T("Realtime sau xác thực", "Realtime after sign-in"))
     ];
 
-    private readonly List<ActivityItemViewModel> guestActivityItems =
+    private readonly List<GuestCardViewModel> guestActivityItems =
     [
-        new("Bảng tin cá nhân", "Sẵn sàng", "Sau khi đăng nhập, bài viết thật sẽ xuất hiện ngay ở cột chính."),
-        new("Nhóm và chat", "Sẵn sàng", "Không cần đổi layout để vào nhóm hoặc mở hội thoại riêng."),
-        new("Thông báo tập trung", "Sẵn sàng", "Mọi tương tác mới được gom về topbar và trang thông báo riêng.")
+        new("feed-solid", T("Newsfeed công khai", "Public newsfeed")),
+        new("chat-solid", T("Chat và nhóm", "Chat and groups")),
+        new("bolt", T("Tương tác realtime", "Realtime interactions"))
     ];
 
     private string currentUserId = string.Empty;
@@ -347,6 +354,9 @@
     private bool isLoading = true;
     private ProfileDto? currentProfile;
     private HubConnection? notificationHub;
+    private int connectionCount;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
 
     protected override async Task OnInitializedAsync()
     {
@@ -356,7 +366,12 @@
         if (isAuthenticated)
         {
             currentUserId = await CurrentUserService.GetRequiredUserIdAsync(authState.User);
-            await LoadFeedAsync();
+        }
+
+        await LoadFeedAsync();
+
+        if (isAuthenticated)
+        {
             await LoadSidebarDataAsync();
             await InitializeNotificationHubAsync();
         }
@@ -394,19 +409,26 @@
             joinedGroups.Clear();
             joinedGroups.AddRange(groupTask.Result.Where(group => group.IsJoined).Take(4));
 
+            connectionCount = peopleTask.Result.Count(person => person.IsFriend);
+
             suggestedPeople.Clear();
-            suggestedPeople.AddRange(peopleTask.Result.Where(person => !person.IsFriend).Take(4));
+            suggestedPeople.AddRange(peopleTask.Result.Where(person => !person.IsFriend && !person.HasPendingRequest).Take(4));
 
             if (suggestedPeople.Count == 0)
             {
-                suggestedPeople.AddRange(peopleTask.Result.Take(4));
+                suggestedPeople.AddRange(peopleTask.Result.Where(person => person.HasReceivedRequest).Take(4));
+            }
+
+            if (suggestedPeople.Count == 0)
+            {
+                suggestedPeople.AddRange(peopleTask.Result.Where(person => person.HasSentRequest).Take(4));
             }
         }
         catch
         {
             if (string.IsNullOrWhiteSpace(errorMessage))
             {
-                errorMessage = "Một phần dữ liệu phụ chưa tải được, nhưng bảng tin vẫn hoạt động.";
+                errorMessage = T("Một phần dữ liệu phụ chưa tải được, nhưng newsfeed vẫn hoạt động.", "Some secondary data could not be loaded, but the newsfeed is still available.");
             }
         }
     }
@@ -441,28 +463,17 @@
 
     private IReadOnlyList<ActivityItemViewModel> GetVisibleActivityItems()
     {
-        if (!isAuthenticated)
-        {
-            return guestActivityItems;
-        }
-
-        var items = posts
-            .Take(4)
-            .Select(post => new ActivityItemViewModel(
-                post.AuthorName,
-                GetRelativeTime(post.CreatedDate),
-                string.IsNullOrWhiteSpace(post.GroupName)
-                    ? Truncate(post.Content, 96)
-                    : $"{post.GroupName}: {Truncate(post.Content, 72)}"))
-            .ToList();
+        var items = posts.Take(4).Select(post => new ActivityItemViewModel(
+            post.AuthorName,
+            GetRelativeTime(post.CreatedDate),
+            string.IsNullOrWhiteSpace(post.GroupName) ? Truncate(post.Content, 96) : $"{post.GroupName}: {Truncate(post.Content, 72)}")).ToList();
 
         return items.Count == 0
-            ? [new ActivityItemViewModel("Feed trống", "Hiện tại", "Chưa có bài mới để hiển thị trong bảng hoạt động.")]
+            ? [new ActivityItemViewModel(T("Feed trống", "Feed is quiet"), T("Hiện tại", "Right now"), T("Chưa có bài mới để hiển thị trong bảng hoạt động.", "There are no new posts to show in the activity panel."))]
             : items;
     }
 
-    private static string Truncate(string value, int maxLength) =>
-        value.Length <= maxLength ? value : $"{value[..(maxLength - 3)]}...";
+    private static string Truncate(string value, int maxLength) => value.Length <= maxLength ? value : $"{value[..(maxLength - 3)]}...";
 
     private static string GetInitials(string? name)
     {
@@ -491,260 +502,59 @@
 
         if (delta.TotalMinutes < 1)
         {
-            return "Vừa xong";
+            return T("Vừa xong", "Just now");
         }
 
         if (delta.TotalHours < 1)
         {
-            return $"{Math.Max(1, (int)delta.TotalMinutes)} phút trước";
+            return T($"{Math.Max(1, (int)delta.TotalMinutes)} phút trước", $"{Math.Max(1, (int)delta.TotalMinutes)} minutes ago");
         }
 
         if (delta.TotalDays < 1)
         {
-            return $"{Math.Max(1, (int)delta.TotalHours)} giờ trước";
+            return T($"{Math.Max(1, (int)delta.TotalHours)} giờ trước", $"{Math.Max(1, (int)delta.TotalHours)} hours ago");
         }
 
-        return $"{Math.Max(1, (int)delta.TotalDays)} ngày trước";
+        return T($"{Math.Max(1, (int)delta.TotalDays)} ngày trước", $"{Math.Max(1, (int)delta.TotalDays)} days ago");
     }
 
-    private sealed record PreviewCardViewModel(
-        string Initials,
-        string Title,
-        string Meta,
-        string Content = "");
-
-    private sealed record HighlightViewModel(
-        string Title,
-        string Description);
-
-    private sealed record ActivityItemViewModel(
-        string Title,
-        string Meta,
-        string Description);
+    private sealed record StoryPreviewViewModel(string Title, string Subtitle, string BackgroundUrl, string AvatarUrl);
+    private sealed record GuestCardViewModel(string Icon, string Title);
+    private sealed record ActivityItemViewModel(string Title, string Meta, string Description);
 }
 
 <style>
-    .home-shell {
-        display: grid;
-        gap: 24px;
-        align-items: start;
-    }
-
-    .home-main,
-    .home-rail {
-        display: grid;
-        gap: 18px;
-        min-width: 0;
-    }
-
-    .home-hero {
-        display: grid;
-        gap: 18px;
-        padding: 22px;
-        background: linear-gradient(135deg, #fff7f9 0%, #ffffff 72%);
-        border: 1px solid #f4dce3;
-        box-shadow: 0 18px 34px rgba(228, 91, 120, 0.08);
-    }
-
-    .home-hero-copy {
-        display: grid;
-        gap: 8px;
-    }
-
-    .home-hero-copy h2 {
-        max-width: 18ch;
-    }
-
-    .home-hero-metrics {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .home-chip {
-        display: grid;
-        gap: 4px;
-        padding: 16px;
-        border-radius: 18px;
-        background: var(--bg-muted);
-        border: 1px solid var(--border);
-    }
-
-    .home-chip strong {
-        font-size: 1.25rem;
-    }
-
-    .home-chip small {
-        color: var(--text-muted);
-    }
-
-    .home-chip.accent {
-        background: color-mix(in srgb, var(--app-accent-soft) 80%, #fff 20%);
-    }
-
-    .home-chip.success {
-        background: color-mix(in srgb, var(--app-highlight-soft) 82%, #fff 18%);
-    }
-
-    .guest-entry-panel,
-    .rail-head {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 12px;
-        align-items: start;
-    }
-
-    .guest-entry-panel {
-        padding: 20px 22px;
-        border: 1px solid var(--border);
-    }
-
-    .guest-entry-copy,
-    .rail-copy,
-    .rail-empty,
-    .activity-item p,
-    .highlight-item p,
-    .preview-card p {
-        margin: 0;
-        color: var(--text-secondary);
-        line-height: 1.65;
-    }
-
-    .guest-entry-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .preview-card,
-    .highlight-list,
-    .highlight-item {
-        display: grid;
-        gap: 12px;
-    }
-
-    .preview-card {
-        border-radius: 22px;
-    }
-
-    .preview-card-head,
-    .rail-item {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 12px;
-        align-items: center;
-    }
-
-    .preview-card small,
-    .rail-item small,
-    .activity-item small {
-        color: var(--text-muted);
-    }
-
-    .home-profile-card {
-        background: linear-gradient(180deg, #fff8fa 0%, #ffffff 100%);
-        border-color: #f1d7de;
-    }
-
-    .mini-stat-grid {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        margin-top: 16px;
-    }
-
-    .mini-stat-grid div {
-        padding: 14px;
-        border-radius: 18px;
-        background: var(--bg-muted);
-        border: 1px solid var(--border);
-    }
-
-    .mini-stat-grid span {
-        display: block;
-        color: var(--text-muted);
-        font-size: 0.8rem;
-    }
-
-    .mini-stat-grid strong {
-        display: block;
-        margin-top: 4px;
-        font-size: 1.06rem;
-    }
-
-    .highlight-list,
-    .rail-list,
-    .activity-list {
-        display: grid;
-        gap: 14px;
-        margin-top: 14px;
-    }
-
-    .highlight-item,
-    .rail-item {
-        padding: 14px;
-        border-radius: 18px;
-        background: var(--bg-muted);
-        border: 1px solid var(--border);
-    }
-
-    .rail-link {
-        color: inherit;
-    }
-
-    .rail-avatar,
-    .rail-icon {
-        width: 42px;
-        height: 42px;
-    }
-
-    .rail-icon {
-        display: grid;
-        place-items: center;
-        border-radius: 14px;
-        background: var(--app-accent-soft);
-        color: var(--accent);
-    }
-
-    .activity-item {
-        display: grid;
-        grid-template-columns: 10px minmax(0, 1fr);
-        gap: 12px;
-        align-items: start;
-    }
-
-    .activity-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        margin-top: 8px;
-        background: var(--accent);
-        box-shadow: 0 0 0 6px rgba(228, 91, 120, 0.12);
-    }
-
-    @@media (min-width: 1200px) {
-        .home-shell {
-            grid-template-columns: minmax(0, 1fr) 320px;
-        }
-
-        .home-rail {
-            align-content: start;
-        }
-    }
-
-    @@media (max-width: 767.98px) {
-        .home-hero-metrics,
-        .mini-stat-grid {
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-        }
-
-        .guest-entry-panel {
-            flex-direction: column;
-        }
-
-        .home-hero-copy h2 {
-            max-width: none;
-        }
-    }
+    .home-sociala-shell { display: grid; gap: 20px; }
+    .home-sociala-main, .home-sociala-rail, .story-panel, .rail-list, .activity-list { display: grid; gap: 20px; min-width: 0; }
+    .story-panel-head, .guest-sociala-actions, .guest-sociala-entry, .rail-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; }
+    .story-panel-head { align-items: end; }
+    .story-strip { display: grid; grid-auto-flow: column; grid-auto-columns: 148px; gap: 14px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .story-strip::-webkit-scrollbar { display: none; }
+    .story-card { position: relative; min-height: 218px; display: grid; align-content: end; padding: 16px; border-radius: 28px; overflow: hidden; background: #0f172a; color: #fff; }
+    .create-story-card { align-content: center; justify-items: center; gap: 10px; text-align: center; background: linear-gradient(180deg, color-mix(in srgb, var(--bg-shell) 92%, var(--bg-muted) 8%), var(--bg-muted)); border: 1px dashed color-mix(in srgb, var(--border) 76%, var(--accent) 24%); color: var(--text-primary); }
+    .create-story-card small { color: var(--text-muted); }
+    .story-plus { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 999px; background: var(--accent); color: #fff; font-size: 1.8rem; line-height: 1; }
+    .story-preview { background-size: cover; background-position: center; }
+    .story-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15, 23, 42, 0.04), rgba(15, 23, 42, 0.75)); }
+    .story-avatar, .story-copy { position: relative; z-index: 1; }
+    .story-avatar { width: 44px; height: 44px; overflow: hidden; border-radius: 999px; border: 2px solid rgba(255, 255, 255, 0.92); margin-bottom: auto; }
+    .story-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .story-copy { display: grid; gap: 2px; }
+    .story-copy small { color: rgba(255, 255, 255, 0.74); }
+    .guest-sociala-entry { display: grid; gap: 18px; align-items: stretch; }
+    .guest-sociala-entry-copy { max-width: 38rem; display: grid; gap: 8px; }
+    .guest-sociala-entry-copy p, .rail-copy, .rail-empty, .activity-item p { margin: 0; color: var(--text-secondary); line-height: 1.65; }
+    .guest-sociala-metrics, .mini-stat-grid { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+    .guest-sociala-actions { width: 100%; justify-content: flex-start; }
+    .home-profile-panel { background: linear-gradient(180deg, color-mix(in srgb, var(--app-accent-soft) 38%, var(--bg-shell) 62%), var(--bg-shell)); }
+    .rail-card { gap: 16px; }
+    .rail-head a, .rail-link { color: var(--accent); font-weight: 700; }
+    .rail-item { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; padding: 14px; border-radius: 18px; background: var(--bg-muted); border: 1px solid var(--border); }
+    .rail-avatar, .rail-icon { width: 42px; height: 42px; }
+    .rail-icon { display: grid; place-items: center; border-radius: 14px; background: var(--app-accent-soft); color: var(--accent); }
+    .activity-item { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 12px; align-items: start; }
+    .activity-item small { color: var(--text-muted); }
+    .activity-dot { width: 10px; height: 10px; border-radius: 999px; margin-top: 8px; background: var(--accent); box-shadow: 0 0 0 6px rgba(233, 76, 114, 0.12); }
+    @@media (min-width: 960px) { .home-sociala-shell { grid-template-columns: minmax(0, 1fr) 320px; } .guest-sociala-entry { grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr); } .guest-sociala-actions { grid-column: 1 / -1; } }
+    @@media (max-width: 767.98px) { .guest-sociala-metrics, .mini-stat-grid { grid-template-columns: 1fr; } .story-strip { grid-auto-columns: 118px; gap: 12px; } .story-card { min-height: 190px; padding: 14px; border-radius: 24px; } }
 </style>

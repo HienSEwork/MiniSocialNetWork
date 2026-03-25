@@ -1,41 +1,35 @@
-using Microsoft.EntityFrameworkCore;
 using SocialNetwork.BLL.Contracts;
 using SocialNetwork.BLL.Interfaces;
-using SocialNetwork.DAL;
+using SocialNetwork.DAL.Repositories;
 
 namespace SocialNetwork.BLL.Services;
 
-public class ProfileService(IDbContextFactory<ApplicationDbContext> dbContextFactory) : IProfileService
+public class ProfileService(IProfileRepository profileRepository) : IProfileService
 {
     public async Task<IReadOnlyList<UserSummaryDto>> GetUsersAsync(string? excludeUserId = null)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+        var users = await profileRepository.GetUsersAsync(excludeUserId);
 
-        return await dbContext.Users
-            .AsNoTracking()
-            .Where(user => excludeUserId == null || user.Id != excludeUserId)
-            .OrderBy(user => user.DisplayName)
+        return users
             .Select(user => new UserSummaryDto(
                 user.Id,
                 string.IsNullOrWhiteSpace(user.DisplayName) ? user.Email ?? user.UserName ?? "Người dùng" : user.DisplayName,
                 user.Email ?? string.Empty,
                 user.AvatarUrl,
                 user.Bio))
-            .ToListAsync();
+            .ToList();
     }
 
     public async Task<ProfileDto?> GetProfileAsync(string userId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var user = await dbContext.Users.AsNoTracking().FirstOrDefaultAsync(item => item.Id == userId);
+        var user = await profileRepository.GetUserAsync(userId);
         if (user is null)
         {
             return null;
         }
 
-        var postCount = await dbContext.Posts.CountAsync(post => post.UserId == userId);
-        var groupCount = await dbContext.GroupMembers.CountAsync(member => member.UserId == userId);
+        var postCount = await profileRepository.CountPostsByUserAsync(userId);
+        var groupCount = await profileRepository.CountGroupMembershipsByUserAsync(userId);
 
         return new ProfileDto(
             user.Id,
@@ -50,19 +44,18 @@ public class ProfileService(IDbContextFactory<ApplicationDbContext> dbContextFac
 
     public async Task UpdateProfileAsync(string userId, UpdateProfileRequest request)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         if (string.IsNullOrWhiteSpace(request.DisplayName))
         {
             throw new InvalidOperationException("Tên hiển thị là bắt buộc.");
         }
 
-        var user = await dbContext.Users.FirstOrDefaultAsync(item => item.Id == userId)
+        var user = await profileRepository.GetUserAsync(userId)
             ?? throw new InvalidOperationException("Không tìm thấy người dùng.");
 
-        user.DisplayName = request.DisplayName.Trim();
-        user.AvatarUrl = string.IsNullOrWhiteSpace(request.AvatarUrl) ? null : request.AvatarUrl.Trim();
-        user.Bio = string.IsNullOrWhiteSpace(request.Bio) ? null : request.Bio.Trim();
-        await dbContext.SaveChangesAsync();
+        await profileRepository.UpdateProfileAsync(
+            userId,
+            request.DisplayName.Trim(),
+            string.IsNullOrWhiteSpace(request.AvatarUrl) ? null : request.AvatarUrl.Trim(),
+            string.IsNullOrWhiteSpace(request.Bio) ? null : request.Bio.Trim());
     }
 }

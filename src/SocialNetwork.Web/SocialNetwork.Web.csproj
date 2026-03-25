@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SocialNetwork.BLL\SocialNetwork.BLL.csproj" />
-    <ProjectReference Include="..\SocialNetwork.DAL\SocialNetwork.DAL.csproj" />
   </ItemGroup>
 
 </Project>

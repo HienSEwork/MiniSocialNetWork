@@ -8,15 +8,16 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<LoginWith2fa> Logger
+@inject NavigationManager NavigationManager
 
-<PageTitle>Xác thực hai lớp</PageTitle>
+<PageTitle>@T("Xác thực hai lớp", "Two-factor authentication")</PageTitle>
 
 <section class="auth-panel-page">
     <div class="auth-panel-card">
         <div class="auth-panel-head">
-            <p class="auth-panel-kicker">Bảo mật</p>
-            <h1>Xác thực hai lớp</h1>
-            <p class="auth-panel-copy">Nhập mã từ ứng dụng xác thực để hoàn tất đăng nhập cho tài khoản hiện tại.</p>
+            <p class="auth-panel-kicker">@T("Bảo mật", "Security")</p>
+            <h1>@T("Xác thực hai lớp", "Two-factor authentication")</h1>
+            <p class="auth-panel-copy">@T("Nhập mã từ ứng dụng xác thực để hoàn tất đăng nhập cho tài khoản hiện tại.", "Enter the code from your authenticator app to complete sign-in for this account.")</p>
         </div>
 
         <StatusMessage Message="@message" />
@@ -31,21 +32,21 @@
             <div class="auth-panel-fields">
                 <div class="form-floating">
                     <InputText @bind-Value="Input.TwoFactorCode" class="form-control" autocomplete="off" />
-                    <label for="two-factor-code" class="form-label">Mã xác thực</label>
+                    <label for="two-factor-code" class="form-label">@T("Mã xác thực", "Authentication code")</label>
                     <ValidationMessage For="() => Input.TwoFactorCode" class="text-danger" />
                 </div>
 
                 <label class="form-check-label auth-remember-option">
                     <InputCheckbox @bind-Value="Input.RememberMachine" class="form-check-input" />
-                    <span>Ghi nhớ thiết bị này</span>
+                    <span>@T("Ghi nhớ thiết bị này", "Remember this device")</span>
                 </label>
             </div>
 
-            <button type="submit" class="auth-panel-submit">Đăng nhập</button>
+            <button type="submit" class="auth-panel-submit">@T("Đăng nhập", "Sign in")</button>
         </EditForm>
 
         <div class="auth-panel-links">
-            <a href="Account/LoginWithRecoveryCode?ReturnUrl=@ReturnUrl">Dùng mã khôi phục</a>
+            <a href="Account/LoginWithRecoveryCode?ReturnUrl=@ReturnUrl">@T("Dùng mã khôi phục", "Use a recovery code")</a>
         </div>
     </div>
 </section>
@@ -53,6 +54,12 @@
 @code {
     private string? message;
     private ApplicationUser user = default!;
+    private bool forceLoadTriggered;
+
+    private static string T(string vietnamese, string english) => UiText.T(vietnamese, english);
+
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -69,8 +76,25 @@
             throw new InvalidOperationException("Unable to load two-factor authentication user.");
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender || forceLoadTriggered || HttpContext is not null)
+        {
+            return;
+        }
+
+        forceLoadTriggered = true;
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
     private async Task OnValidSubmitAsync()
     {
+        if (HttpContext is null || HttpContext.Response.HasStarted)
+        {
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            return;
+        }
+
         var authenticatorCode = Input.TwoFactorCode!.Replace(" ", string.Empty).Replace("-", string.Empty);
         var result = await SignInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, RememberMe, Input.RememberMachine);
         var userId = await UserManager.GetUserIdAsync(user);
@@ -88,19 +112,19 @@
         else
         {
             Logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", userId);
-            message = "Lỗi: mã xác thực không hợp lệ.";
+            message = T("Lỗi: mã xác thực không hợp lệ.", "Error: invalid authentication code.");
         }
     }
 
     private sealed class InputModel
     {
         [Required]
-        [StringLength(7, ErrorMessage = "{0} phải có từ {2} đến {1} ký tự.", MinimumLength = 6)]
+        [StringLength(7, MinimumLength = 6)]
         [DataType(DataType.Text)]
-        [Display(Name = "Mã xác thực")]
+        [Display(Name = "Authentication code")]
         public string? TwoFactorCode { get; set; }
 
-        [Display(Name = "Ghi nhớ thiết bị này")]
+        [Display(Name = "Remember this device")]
         public bool RememberMachine { get; set; }
     }
 }

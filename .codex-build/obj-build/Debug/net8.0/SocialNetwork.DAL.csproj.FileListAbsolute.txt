@@ -1,0 +1,6 @@
+D:\Work\MiniSocialNetWork\.codex-build\obj-build\Debug\net8.0\SocialNetwork.DAL.csproj.AssemblyReference.cache
+D:\Work\MiniSocialNetWork\.codex-build\obj-build\Debug\net8.0\SocialNetwork.DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Work\MiniSocialNetWork\.codex-build\obj-build\Debug\net8.0\SocialNetwork.DAL.AssemblyInfoInputs.cache
+D:\Work\MiniSocialNetWork\.codex-build\obj-build\Debug\net8.0\SocialNetwork.DAL.AssemblyInfo.cs
+D:\Work\MiniSocialNetWork\.codex-build\obj-build\Debug\net8.0\SocialNetwork.DAL.csproj.CoreCompileInputs.cache
+D:\Work\MiniSocialNetWork\.codex-build\obj-build\Debug\net8.0\SocialNetwork.DAL.sourcelink.json

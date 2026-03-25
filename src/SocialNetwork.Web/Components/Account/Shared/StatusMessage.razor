@@ -1,3 +1,6 @@
+@using System.Globalization
+@using System.Text
+
 @if (!string.IsNullOrEmpty(DisplayMessage))
 {
     var statusMessageClass = IsErrorMessage(DisplayMessage) ? "danger" : "success";
@@ -32,8 +35,39 @@
         }
     }
 
-    private static bool IsErrorMessage(string message) =>
-        message.StartsWith("Error", StringComparison.OrdinalIgnoreCase) ||
-        message.StartsWith("Lỗi", StringComparison.OrdinalIgnoreCase) ||
-        message.StartsWith("Không thể", StringComparison.OrdinalIgnoreCase);
+    private static bool IsErrorMessage(string message)
+    {
+        var normalized = RemoveDiacritics(message).Trim().ToLowerInvariant();
+
+        return normalized.StartsWith("error", StringComparison.Ordinal)
+            || normalized.StartsWith("loi", StringComparison.Ordinal)
+            || normalized.StartsWith("khong", StringComparison.Ordinal)
+            || normalized.Contains("khong thanh cong", StringComparison.Ordinal)
+            || normalized.Contains("that bai", StringComparison.Ordinal)
+            || normalized.Contains("invalid", StringComparison.Ordinal)
+            || normalized.Contains("failed", StringComparison.Ordinal);
+    }
+
+    private static string RemoveDiacritics(string value)
+    {
+        var normalized = value.Normalize(NormalizationForm.FormD);
+        var builder = new StringBuilder(normalized.Length);
+
+        foreach (var character in normalized)
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(character) == UnicodeCategory.NonSpacingMark)
+            {
+                continue;
+            }
+
+            builder.Append(character switch
+            {
+                '\u0111' => 'd',
+                '\u0110' => 'D',
+                _ => character
+            });
+        }
+
+        return builder.ToString().Normalize(NormalizationForm.FormC);
+    }
 }

@@ -1,136 +1,123 @@
-.app-shell {
+.sociala-shell {
     min-height: 100vh;
-    background: transparent;
+    background:
+        radial-gradient(circle at top left, rgba(233, 76, 114, 0.08), transparent 24%),
+        radial-gradient(circle at top right, rgba(71, 163, 255, 0.08), transparent 22%),
+        var(--bg-app);
 }
 
-.top-row {
+.sociala-header {
     position: sticky;
     top: 0;
-    z-index: 40;
-    width: 100%;
-    background: color-mix(in srgb, var(--bg-shell) 94%, transparent);
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
-    backdrop-filter: blur(14px);
+    z-index: 50;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    box-shadow: var(--header-shadow);
+    backdrop-filter: blur(18px);
 }
 
-.topbar-shell {
-    max-width: 1380px;
-    min-height: 72px;
+.sociala-header-inner {
+    max-width: calc(var(--layout-content-width) + 320px);
+    min-height: 76px;
     display: grid;
-    grid-template-columns: minmax(190px, 228px) minmax(0, 1fr) auto;
-    gap: 18px;
+    grid-template-columns: minmax(170px, 220px) minmax(220px, 280px) minmax(0, 1fr) auto;
+    gap: 14px;
     align-items: center;
-    padding: 0 18px;
+    padding: 0 var(--page-gutter);
     margin: 0 auto;
 }
 
-.topbar-left,
-.topbar-right,
-.topbar-tools,
-.topbar-auth {
-    display: flex;
-    align-items: center;
-}
-
-.topbar-right,
-.topbar-tools,
-.topbar-auth {
-    gap: 10px;
-}
-
-.topbar-center {
-    min-width: 0;
-    display: grid;
-    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-    gap: 16px;
-    align-items: center;
-}
-
-.topbar-brand {
+.sociala-brand {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     color: var(--text-primary);
+    min-width: 0;
 }
 
-.topbar-brand-copy {
-    display: grid;
-    gap: 1px;
-}
-
-.topbar-brand-copy strong {
-    font-family: "Sora", "Manrope", sans-serif;
-    font-size: 1rem;
-    line-height: 1.05;
-}
-
-.topbar-brand-copy small {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-.topbar-brand-badge,
-.topbar-avatar {
-    width: var(--header-control-size);
-    height: var(--header-control-size);
+.sociala-brand-mark,
+.sociala-user-avatar {
+    width: 44px;
+    height: 44px;
     display: grid;
     place-items: center;
     border-radius: 999px;
-    font-weight: 800;
-}
-
-.topbar-brand-badge {
-    background: linear-gradient(135deg, #ff8ea6 0%, #e45b78 100%);
-    color: #fff;
-    box-shadow: 0 10px 20px rgba(228, 91, 120, 0.24);
-}
-
-.topbar-avatar {
-    background: var(--bg-muted);
-    color: var(--text-primary);
-    border: 1px solid var(--border);
     overflow: hidden;
 }
 
-.topbar-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.sociala-brand-mark {
+    background: linear-gradient(135deg, #41d38a 0%, #0aa45d 100%);
+    color: #fff;
+    box-shadow: 0 12px 22px rgba(16, 163, 94, 0.22);
 }
 
-.topbar-search {
-    width: 100%;
-    min-height: 44px;
-    display: flex;
+.sociala-brand-mark :deep(.app-icon) {
+    width: 20px;
+    height: 20px;
+}
+
+.sociala-brand-copy {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
+}
+
+.sociala-brand-copy strong {
+    font-family: "Fredoka", "Manrope", sans-serif;
+    font-size: 1.18rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+}
+
+.sociala-brand-copy small,
+.sociala-user-copy small {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sociala-search {
+    min-height: 46px;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 0 16px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: var(--bg-muted);
+    padding: 0 14px;
+    border: 1px solid var(--header-control-border);
+    border-radius: 16px;
+    background: var(--header-surface);
     color: var(--text-secondary);
-    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+    justify-self: stretch;
+    width: 100%;
+    min-width: 0;
+    cursor: text;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
-.topbar-search:hover {
-    background: var(--bg-hover);
-    border-color: var(--border);
+.sociala-search:hover {
+    background: var(--header-surface-hover);
+    color: var(--text-primary);
+    border-color: var(--header-control-border-strong);
+    box-shadow: 0 10px 18px rgba(15, 23, 42, 0.04);
 }
 
-.topbar-search-icon {
+.sociala-search :deep(.app-icon) {
     width: 16px;
     height: 16px;
 }
 
-.topbar-search span {
-    font-size: 0.9rem;
+.sociala-search span {
+    font-size: 0.88rem;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.topbar-modules {
-    width: 100%;
+.sociala-topnav {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -139,93 +126,95 @@
     scrollbar-width: none;
 }
 
-.topbar-modules::-webkit-scrollbar {
+.sociala-topnav::-webkit-scrollbar {
     display: none;
 }
 
-.topbar-module {
-    flex: 0 0 auto;
-    min-width: 90px;
-    min-height: 58px;
+.sociala-topnav-link {
+    min-width: auto;
+    min-height: 76px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 0 10px;
+    padding: 0 14px;
     border-bottom: 3px solid transparent;
     color: var(--text-secondary);
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     font-weight: 700;
-    transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+    white-space: nowrap;
+    transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
-.topbar-module:hover,
-.topbar-module.active {
+.sociala-topnav-link:hover,
+.sociala-topnav-link.active {
     color: var(--accent);
     border-color: var(--accent);
-    background: linear-gradient(180deg, transparent 0%, rgba(228, 91, 120, 0.06) 100%);
+    background: linear-gradient(180deg, transparent 0%, var(--header-active-bg) 100%);
 }
 
-.topbar-module :deep(.app-icon),
-.topbar-module :deep(.topbar-nav-icon) {
-    width: var(--header-nav-size);
-    height: var(--header-nav-size);
+.sociala-topnav-link:hover {
+    transform: translateY(-1px);
+}
+
+.sociala-topnav-link :deep(.app-icon),
+.sociala-topnav-icon {
+    width: 18px;
+    height: 18px;
     flex: 0 0 auto;
 }
 
-.topbar-module-label {
-    white-space: nowrap;
+.sociala-header-actions,
+.sociala-auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.topbar-tool-menu,
-.topbar-user-menu {
+.sociala-action-menu,
+.sociala-user-menu {
     position: relative;
 }
 
-.topbar-tool-menu summary,
-.topbar-user-menu summary {
+.sociala-action-menu summary,
+.sociala-user-menu summary {
     list-style: none;
 }
 
-.topbar-tool-menu summary::-webkit-details-marker,
-.topbar-user-menu summary::-webkit-details-marker {
+.sociala-action-menu summary::-webkit-details-marker,
+.sociala-user-menu summary::-webkit-details-marker {
     display: none;
 }
 
-.topbar-tool-menu-toggle,
-.topbar-user-menu-toggle {
+.sociala-action-button {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--header-control-border);
+    border-radius: 999px;
+    background: var(--header-surface);
+    color: var(--text-secondary);
     cursor: pointer;
 }
 
-.topbar-tool {
-    position: relative;
-    width: var(--header-control-size);
-    height: var(--header-control-size);
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--bg-muted);
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-}
-
-.topbar-tool:hover,
-.topbar-tool-menu[open] .topbar-tool,
-.topbar-user-menu[open] .topbar-avatar,
-.topbar-user-menu-toggle:hover .topbar-avatar {
+.sociala-action-button:hover,
+.sociala-action-menu[open] .sociala-action-button {
     color: var(--text-primary);
-    background: var(--bg-hover);
+    background: var(--header-surface-hover);
+    border-color: var(--header-control-border-strong);
 }
 
-.topbar-tool :deep(.app-icon) {
-    width: 20px;
-    height: 20px;
+.sociala-action-button :deep(.app-icon) {
+    width: 18px;
+    height: 18px;
 }
 
-.tool-count {
+.sociala-action-count {
     position: absolute;
-    top: -3px;
-    right: -3px;
+    top: -4px;
+    right: -2px;
     min-width: 19px;
     min-height: 19px;
     display: grid;
@@ -238,38 +227,214 @@
     font-weight: 800;
 }
 
-.tool-count.alt {
-    background: #7a89ff;
+.sociala-action-count.alt {
+    background: #4f7cff;
 }
 
-.topbar-dropdown {
+.sociala-user-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px;
+    border-radius: 999px;
+    border: 1px solid var(--header-control-border);
+    background: var(--header-pill-bg);
+    cursor: pointer;
+}
+
+.sociala-user-toggle:hover,
+.sociala-user-menu[open] .sociala-user-toggle {
+    background: var(--header-pill-hover);
+    border-color: var(--header-control-border-strong);
+}
+
+.sociala-user-avatar {
+    background: linear-gradient(135deg, #ff9bb0 0%, #e94c72 100%);
+    color: #fff;
+    font-weight: 800;
+}
+
+.sociala-user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sociala-user-copy {
+    display: grid;
+    gap: 1px;
+    padding-right: 8px;
+}
+
+.sociala-user-copy strong {
+    font-size: 0.9rem;
+}
+
+.sociala-auth-button {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    border: 1px solid transparent;
+}
+
+.sociala-auth-button.dark {
+    background: var(--header-dark-button-bg);
+    border-color: var(--header-dark-button-border);
+    color: var(--header-dark-button-text);
+}
+
+.sociala-auth-button.dark:hover {
+    color: var(--header-dark-button-text);
+    background: var(--header-dark-button-hover);
+    border-color: var(--header-dark-button-hover);
+}
+
+.sociala-auth-button.accent {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.sociala-auth-button.accent:hover {
+    color: #fff;
+    background: var(--accent-hover);
+}
+
+.sociala-dropdown {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 12px);
     right: 0;
-    width: 320px;
+    width: 330px;
     padding: 12px;
-    border-radius: 22px;
+    border-radius: 24px;
     background: var(--menu-bg);
     border: 1px solid var(--menu-border);
     box-shadow: var(--shadow-md);
     color: var(--menu-text);
     z-index: 60;
+    max-height: min(560px, calc(100vh - 120px));
+    overflow: auto;
 }
 
-.topbar-dropdown::before {
+.sociala-dropdown::before {
     content: "";
     position: absolute;
-    top: -6px;
-    right: 18px;
-    width: 12px;
-    height: 12px;
+    top: -7px;
+    right: 22px;
+    width: 14px;
+    height: 14px;
     background: var(--menu-bg);
     border-top: 1px solid var(--menu-border);
     border-left: 1px solid var(--menu-border);
     transform: rotate(45deg);
 }
 
-.topbar-dropdown-profile {
+.sociala-dropdown-wide {
+    width: 360px;
+}
+
+.sociala-dropdown-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 4px 10px;
+}
+
+.sociala-dropdown-link {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.sociala-dropdown-stack,
+.sociala-dropdown-list {
+    display: grid;
+    gap: 6px;
+}
+
+.sociala-dropdown-empty {
+    margin: 0;
+    padding: 10px 4px 2px;
+    color: var(--menu-muted);
+    font-size: 13px;
+}
+
+.sociala-dropdown-card,
+.sociala-dropdown-item {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border-radius: 16px;
+    color: var(--menu-text);
+}
+
+.sociala-dropdown-card:hover,
+.sociala-dropdown-item:hover {
+    color: var(--menu-text);
+    background: var(--menu-surface);
+}
+
+.sociala-dropdown-card.is-unread {
+    background: color-mix(in srgb, var(--accent) 10%, var(--menu-bg) 90%);
+}
+
+.sociala-dropdown-card-icon,
+.sociala-dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--menu-surface);
+    overflow: hidden;
+}
+
+.sociala-dropdown-avatar.small {
+    width: 42px;
+    height: 42px;
+}
+
+.sociala-dropdown-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sociala-dropdown-card-copy,
+.sociala-dropdown-profile-text {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+}
+
+.sociala-dropdown-card-copy small,
+.sociala-dropdown-card-copy em,
+.sociala-dropdown-profile-text small {
+    color: var(--menu-muted);
+}
+
+.sociala-dropdown-card-copy small {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.sociala-dropdown-card-copy em {
+    font-style: normal;
+    font-size: 12px;
+}
+
+.sociala-dropdown-profile {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     gap: 12px;
@@ -281,126 +446,26 @@
     color: var(--menu-text);
 }
 
-.topbar-dropdown-profile:hover {
+.sociala-dropdown-profile:hover {
     color: var(--menu-text);
-    background: color-mix(in srgb, var(--menu-surface) 88%, var(--app-accent-soft) 12%);
 }
 
-.topbar-dropdown-avatar {
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--menu-surface) 72%, var(--app-accent-soft) 28%);
-    color: var(--menu-text);
-    font-size: 16px;
-    font-weight: 800;
-    overflow: hidden;
-}
-
-.topbar-dropdown-avatar.small {
-    width: 42px;
-    height: 42px;
-}
-
-.topbar-dropdown-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.topbar-dropdown-profile-text {
-    display: grid;
-    gap: 2px;
-}
-
-.topbar-dropdown-profile-text small {
-    font-size: 12px;
-    color: var(--menu-muted);
-}
-
-.topbar-dropdown-list,
-.topbar-dropdown-stack {
-    display: grid;
-    gap: 6px;
-}
-
-.topbar-dropdown-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 4px 4px 10px;
-}
-
-.topbar-dropdown-link {
-    padding: 0;
-    border: 0;
+.sociala-dropdown-item {
     background: transparent;
-    color: var(--accent);
-    font-size: 13px;
+    border: 0;
+    text-align: left;
     font-weight: 800;
 }
 
-.topbar-dropdown-card {
-    display: grid;
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 10px;
-    align-items: start;
-    padding: 10px;
-    border-radius: 16px;
-    color: var(--menu-text);
-}
-
-.topbar-dropdown-card:hover {
-    color: var(--menu-text);
-    background: var(--menu-surface);
-}
-
-.topbar-dropdown-card.is-unread {
-    background: color-mix(in srgb, var(--accent) 10%, var(--menu-bg) 90%);
-}
-
-.topbar-dropdown-card-icon,
-.topbar-dropdown-icon {
-    width: 36px;
-    height: 36px;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    background: var(--menu-surface);
-}
-
-.topbar-dropdown-card-copy {
-    min-width: 0;
-    display: grid;
-    gap: 2px;
-}
-
-.topbar-dropdown-card-copy small,
-.topbar-dropdown-card-copy em,
-.topbar-dropdown-empty {
-    color: var(--menu-muted);
-}
-
-.topbar-dropdown-card-copy small {
-    font-size: 13px;
-    line-height: 1.4;
-}
-
-.topbar-dropdown-card-copy em {
-    font-style: normal;
-    font-size: 12px;
-}
-
-.topbar-dropdown-empty {
+.sociala-dropdown-logout {
     margin: 0;
-    padding: 10px 4px 2px;
-    font-size: 13px;
 }
 
-.topbar-dropdown-footer {
+.sociala-dropdown-button {
+    width: 100%;
+}
+
+.sociala-dropdown-footer {
     display: block;
     margin-top: 10px;
     padding: 10px 12px;
@@ -411,169 +476,128 @@
     font-weight: 800;
 }
 
-.topbar-dropdown-footer:hover,
-.topbar-dropdown-item:hover {
-    color: var(--menu-text);
-    background: color-mix(in srgb, var(--menu-surface) 86%, var(--app-accent-soft) 14%);
-}
-
-.topbar-dropdown-item {
-    min-height: 48px;
-    display: grid;
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 12px;
-    align-items: center;
-    padding: 0 10px;
-    border-radius: 14px;
-    color: var(--menu-text);
-    background: transparent;
-    border: 0;
-    text-align: left;
-    font-weight: 800;
-}
-
-.topbar-dropdown-icon :deep(.app-icon) {
-    width: 18px;
-    height: 18px;
-}
-
-.topbar-dropdown-logout {
-    margin: 0;
-}
-
-.topbar-dropdown-button {
-    width: 100%;
-}
-
-.topbar-tool-dropdown {
-    width: 360px;
-}
-
-.chat-card {
+.sociala-chat-card {
     grid-template-columns: 44px minmax(0, 1fr);
 }
 
-.page {
-    max-width: 1380px;
+.sociala-body {
+    max-width: calc(var(--layout-content-width) + 320px);
     display: grid;
-    grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr);
-    gap: 20px;
+    grid-template-columns: minmax(250px, 288px) minmax(0, 1fr);
+    gap: 24px;
     align-items: start;
-    padding: 20px 18px 40px;
+    padding: 24px var(--page-gutter) 40px;
     margin: 0 auto;
 }
 
-.sidebar,
-.main-stage {
+.sociala-sidebar,
+.sociala-main {
     min-width: 0;
 }
 
-.sidebar {
-    position: static;
-    max-height: none;
-    overflow: visible;
-    padding-right: 0;
+.sociala-sidebar {
+    position: sticky;
+    top: 106px;
 }
 
-.main-stage {
+.sociala-main {
     display: grid;
-    justify-items: start;
 }
 
-.content-shell {
+.sociala-main-inner {
     width: 100%;
-    max-width: var(--layout-content-width);
     min-width: 0;
 }
 
-@media (max-width: 1399.98px) {
-    .topbar-center {
-        grid-template-columns: minmax(200px, 248px) minmax(0, 1fr);
+@media (max-width: 1279.98px) {
+    .sociala-header-inner {
+        grid-template-columns: minmax(150px, 190px) minmax(170px, 220px) minmax(0, 1fr) auto;
         gap: 12px;
+        padding-inline: 18px;
     }
 
-    .topbar-brand-copy small {
+    .sociala-brand-copy small,
+    .sociala-user-copy {
         display: none;
     }
-}
 
-@media (max-width: 1199.98px) {
-    .topbar-shell {
-        gap: 14px;
-    }
-
-    .topbar-module {
-        min-width: 82px;
-        padding-inline: 10px;
-    }
-
-    .topbar-tool-dropdown {
-        width: 320px;
+    .sociala-body {
+        grid-template-columns: 280px minmax(0, 1fr);
+        gap: 20px;
+        padding-inline: 18px;
     }
 }
 
 @media (max-width: 1023.98px) {
-    .page {
-        grid-template-columns: 1fr;
-    }
-
-    .sidebar {
-        position: static;
-        max-height: none;
-        overflow: visible;
-    }
-
-    .topbar-shell {
+    .sociala-header-inner {
         grid-template-columns: auto minmax(0, 1fr) auto;
-    }
-
-    .topbar-center {
-        grid-template-columns: 1fr;
+        grid-template-areas:
+            "brand actions actions"
+            "search search search"
+            "nav nav nav";
         gap: 12px;
+        padding: 14px 16px 0;
     }
 
-    .topbar-modules {
+    .sociala-brand {
+        grid-area: brand;
+    }
+
+    .sociala-search {
+        grid-area: search;
+    }
+
+    .sociala-topnav {
+        grid-area: nav;
         justify-content: flex-start;
+    }
+
+    .sociala-header-actions {
+        grid-area: actions;
+        justify-content: flex-end;
+    }
+
+    .sociala-body {
+        grid-template-columns: 1fr;
+        padding: 18px 16px 32px;
+    }
+
+    .sociala-main {
+        order: 1;
+    }
+
+    .sociala-sidebar {
+        order: 2;
+        position: static;
     }
 }
 
 @media (max-width: 767.98px) {
-    .topbar-shell {
-        gap: 10px;
-        padding-inline: 12px;
-    }
-
-    .topbar-brand-copy,
-    .topbar-auth {
+    .sociala-brand-copy small,
+    .sociala-search span,
+    .sociala-topnav-link span {
         display: none;
     }
 
-    .topbar-search span,
-    .topbar-module-label {
-        display: none;
-    }
-
-    .topbar-module {
-        min-width: 52px;
-        min-height: 52px;
+    .sociala-topnav-link {
+        min-width: 54px;
+        min-height: 58px;
         padding-inline: 0;
-        justify-content: center;
     }
 
-    .topbar-tool,
-    .topbar-avatar,
-    .topbar-brand-badge {
-        width: 38px;
-        height: 38px;
+    .sociala-auth-buttons {
+        gap: 8px;
     }
 
-    .topbar-dropdown,
-    .topbar-tool-dropdown {
-        width: 286px;
+    .sociala-auth-button {
+        min-height: 38px;
+        padding-inline: 12px;
+        border-radius: 12px;
     }
 
-    .page {
-        padding: 14px 12px 32px;
+    .sociala-dropdown,
+    .sociala-dropdown-wide {
+        width: min(290px, calc(100vw - 32px));
     }
 }
 

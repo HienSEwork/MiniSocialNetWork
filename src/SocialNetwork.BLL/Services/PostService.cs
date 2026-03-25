@@ -1,82 +1,32 @@
-using Microsoft.EntityFrameworkCore;
 using SocialNetwork.BLL.Contracts;
 using SocialNetwork.BLL.Interfaces;
-using SocialNetwork.DAL;
 using SocialNetwork.DAL.Entities;
 using SocialNetwork.DAL.Enums;
+using SocialNetwork.DAL.Repositories;
 
 namespace SocialNetwork.BLL.Services;
 
-public class PostService(IDbContextFactory<ApplicationDbContext> dbContextFactory) : IPostService
+public class PostService(IPostRepository postRepository) : IPostService
 {
     public async Task<IReadOnlyList<PostFeedItemDto>> GetFeedAsync(string currentUserId, Guid? groupId = null)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        if (groupId.HasValue)
+        if (groupId.HasValue && !await postRepository.IsUserMemberOfGroupAsync(currentUserId, groupId.Value))
         {
-            var isMember = await dbContext.GroupMembers.AnyAsync(member => member.GroupId == groupId && member.UserId == currentUserId);
-            if (!isMember)
-            {
-                throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi xem bảng tin của nhóm.");
-            }
+            throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi xem bảng tin của nhóm.");
         }
 
-        var joinedGroupIds = groupId.HasValue
-            ? []
-            : await dbContext.GroupMembers
-                .AsNoTracking()
-                .Where(member => member.UserId == currentUserId)
-                .Select(member => member.GroupId)
-                .ToListAsync();
+        var posts = await postRepository.GetFeedPostsAsync(currentUserId, groupId);
+        var savedPostIds = await postRepository.GetSavedPostIdsAsync(currentUserId);
+        var savedLookup = savedPostIds.ToHashSet();
 
-        var posts = await dbContext.Posts
-            .AsNoTracking()
-            .Include(post => post.User)
-            .Include(post => post.Group)
-            .Include(post => post.Comments.Where(comment => !comment.IsDeleted))
-                .ThenInclude(comment => comment.User)
-            .Include(post => post.Reactions)
-            .Where(post => groupId.HasValue
-                ? post.GroupId == groupId
-                : post.GroupId == null || (post.GroupId.HasValue && joinedGroupIds.Contains(post.GroupId.Value)))
-            .OrderByDescending(post => post.CreatedDate)
-            .ToListAsync();
-
-        var savedPostIds = await dbContext.SavedPosts
-            .AsNoTracking()
-            .Where(savedPost => savedPost.UserId == currentUserId)
-            .Select(savedPost => savedPost.PostId)
-            .ToListAsync();
-
-        return posts.Select(post => MapPost(post, currentUserId, savedPostIds.Contains(post.Id))).ToList();
+        return posts
+            .Select(post => MapPost(post, currentUserId, savedLookup.Contains(post.Id)))
+            .ToList();
     }
 
     public async Task<IReadOnlyList<PostFeedItemDto>> GetSavedPostsAsync(string currentUserId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var joinedGroupIds = await dbContext.GroupMembers
-            .AsNoTracking()
-            .Where(member => member.UserId == currentUserId)
-            .Select(member => member.GroupId)
-            .ToListAsync();
-
-        var savedPosts = await dbContext.SavedPosts
-            .AsNoTracking()
-            .Where(savedPost => savedPost.UserId == currentUserId)
-            .Include(savedPost => savedPost.Post)
-                .ThenInclude(post => post.User)
-            .Include(savedPost => savedPost.Post)
-                .ThenInclude(post => post.Group)
-            .Include(savedPost => savedPost.Post)
-                .ThenInclude(post => post.Comments.Where(comment => !comment.IsDeleted))
-                    .ThenInclude(comment => comment.User)
-            .Include(savedPost => savedPost.Post)
-                .ThenInclude(post => post.Reactions)
-            .Where(savedPost => savedPost.Post.GroupId == null || joinedGroupIds.Contains(savedPost.Post.GroupId.Value))
-            .OrderByDescending(savedPost => savedPost.CreatedDate)
-            .ToListAsync();
+        var savedPosts = await postRepository.GetSavedPostsAsync(currentUserId);
 
         return savedPosts
             .Select(savedPost => MapPost(savedPost.Post, currentUserId, true))
@@ -85,51 +35,28 @@ public class PostService(IDbContextFactory<ApplicationDbContext> dbContextFactor
 
     public async Task<PostFeedItemDto?> GetPostAsync(Guid postId, string currentUserId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var post = await dbContext.Posts
-            .AsNoTracking()
-            .Include(item => item.User)
-            .Include(item => item.Group)
-            .Include(item => item.Comments.Where(comment => !comment.IsDeleted))
-                .ThenInclude(comment => comment.User)
-            .Include(item => item.Reactions)
-            .FirstOrDefaultAsync(item => item.Id == postId);
-
+        var post = await postRepository.GetPostWithDetailsAsync(postId);
         if (post is null)
         {
             return null;
         }
 
-        if (post.GroupId.HasValue)
+        if (post.GroupId.HasValue && !await postRepository.IsUserMemberOfGroupAsync(currentUserId, post.GroupId.Value))
         {
-            var isMember = await dbContext.GroupMembers.AnyAsync(member => member.GroupId == post.GroupId && member.UserId == currentUserId);
-            if (!isMember)
-            {
-                throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi xem bài viết này.");
-            }
+            throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi xem bài viết này.");
         }
 
-        var isSaved = await dbContext.SavedPosts
-            .AsNoTracking()
-            .AnyAsync(savedPost => savedPost.UserId == currentUserId && savedPost.PostId == post.Id);
-
+        var isSaved = await postRepository.IsPostSavedByUserAsync(currentUserId, post.Id);
         return MapPost(post, currentUserId, isSaved);
     }
 
     public async Task<PostFeedItemDto> CreatePostAsync(string currentUserId, CreatePostRequest request)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         ValidatePostContent(request.Content, request.MediaUrl, request.MediaType);
 
-        if (request.GroupId.HasValue)
+        if (request.GroupId.HasValue && !await postRepository.IsUserMemberOfGroupAsync(currentUserId, request.GroupId.Value))
         {
-            var isMember = await dbContext.GroupMembers.AnyAsync(member => member.GroupId == request.GroupId && member.UserId == currentUserId);
-            if (!isMember)
-            {
-                throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi đăng bài trong nhóm.");
-            }
+            throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi đăng bài trong nhóm.");
         }
 
         var post = new Post
@@ -141,19 +68,16 @@ public class PostService(IDbContextFactory<ApplicationDbContext> dbContextFactor
             MediaType = request.MediaType
         };
 
-        dbContext.Posts.Add(post);
-        await dbContext.SaveChangesAsync();
+        await postRepository.AddPostAsync(post);
 
         return (await GetPostAsync(post.Id, currentUserId))!;
     }
 
     public async Task<PostFeedItemDto> UpdatePostAsync(string currentUserId, Guid postId, UpdatePostRequest request)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         ValidatePostContent(request.Content, request.MediaUrl, request.MediaType);
 
-        var post = await dbContext.Posts.FirstOrDefaultAsync(item => item.Id == postId)
+        var post = await postRepository.GetPostSummaryAsync(postId)
             ?? throw new InvalidOperationException("Không tìm thấy bài viết.");
 
         if (post.UserId != currentUserId)
@@ -161,21 +85,19 @@ public class PostService(IDbContextFactory<ApplicationDbContext> dbContextFactor
             throw new InvalidOperationException("Chỉ chủ bài viết mới được chỉnh sửa.");
         }
 
-        post.Content = request.Content.Trim();
-        post.MediaUrl = NormalizeOptional(request.MediaUrl);
-        post.MediaType = request.MediaType;
-        post.UpdatedDate = DateTime.UtcNow;
-
-        await dbContext.SaveChangesAsync();
+        await postRepository.UpdatePostAsync(
+            postId,
+            request.Content.Trim(),
+            NormalizeOptional(request.MediaUrl),
+            request.MediaType,
+            DateTime.UtcNow);
 
         return (await GetPostAsync(post.Id, currentUserId))!;
     }
 
     public async Task DeletePostAsync(string currentUserId, Guid postId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var post = await dbContext.Posts.FirstOrDefaultAsync(item => item.Id == postId)
+        var post = await postRepository.GetPostSummaryAsync(postId)
             ?? throw new InvalidOperationException("Không tìm thấy bài viết.");
 
         if (post.UserId != currentUserId)
@@ -183,30 +105,22 @@ public class PostService(IDbContextFactory<ApplicationDbContext> dbContextFactor
             throw new InvalidOperationException("Chỉ chủ bài viết mới được xóa.");
         }
 
-        post.IsDeleted = true;
-        post.UpdatedDate = DateTime.UtcNow;
-        await dbContext.SaveChangesAsync();
+        await postRepository.SoftDeletePostAsync(postId, DateTime.UtcNow);
     }
 
     public async Task<CommentDto> AddCommentAsync(string currentUserId, CreateCommentRequest request)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         if (string.IsNullOrWhiteSpace(request.Content))
         {
             throw new InvalidOperationException("Nội dung bình luận là bắt buộc.");
         }
 
-        var post = await dbContext.Posts.FirstOrDefaultAsync(item => item.Id == request.PostId)
+        var post = await postRepository.GetPostSummaryAsync(request.PostId)
             ?? throw new InvalidOperationException("Không tìm thấy bài viết.");
 
-        if (post.GroupId.HasValue)
+        if (post.GroupId.HasValue && !await postRepository.IsUserMemberOfGroupAsync(currentUserId, post.GroupId.Value))
         {
-            var isMember = await dbContext.GroupMembers.AnyAsync(member => member.GroupId == post.GroupId && member.UserId == currentUserId);
-            if (!isMember)
-            {
-                throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi bình luận.");
-            }
+            throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi bình luận.");
         }
 
         var comment = new Comment
@@ -216,23 +130,20 @@ public class PostService(IDbContextFactory<ApplicationDbContext> dbContextFactor
             Content = request.Content.Trim()
         };
 
-        dbContext.Comments.Add(comment);
-        await dbContext.SaveChangesAsync();
+        await postRepository.AddCommentAsync(comment);
 
-        var author = await dbContext.Users.FirstAsync(user => user.Id == currentUserId);
+        var author = await postRepository.GetRequiredUserAsync(currentUserId);
         return MapComment(comment, author, currentUserId);
     }
 
     public async Task<CommentDto> UpdateCommentAsync(string currentUserId, Guid commentId, string content)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         if (string.IsNullOrWhiteSpace(content))
         {
             throw new InvalidOperationException("Nội dung bình luận là bắt buộc.");
         }
 
-        var comment = await dbContext.Comments.Include(item => item.User).FirstOrDefaultAsync(item => item.Id == commentId)
+        var comment = await postRepository.GetCommentWithUserAsync(commentId)
             ?? throw new InvalidOperationException("Không tìm thấy bình luận.");
 
         if (comment.UserId != currentUserId)
@@ -240,18 +151,18 @@ public class PostService(IDbContextFactory<ApplicationDbContext> dbContextFactor
             throw new InvalidOperationException("Chỉ chủ bình luận mới được chỉnh sửa.");
         }
 
-        comment.Content = content.Trim();
-        comment.UpdatedDate = DateTime.UtcNow;
-        await dbContext.SaveChangesAsync();
+        var updatedContent = content.Trim();
+        var updatedDate = DateTime.UtcNow;
+        await postRepository.UpdateCommentAsync(commentId, updatedContent, updatedDate);
 
+        comment.Content = updatedContent;
+        comment.UpdatedDate = updatedDate;
         return MapComment(comment, comment.User, currentUserId);
     }
 
     public async Task DeleteCommentAsync(string currentUserId, Guid commentId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var comment = await dbContext.Comments.FirstOrDefaultAsync(item => item.Id == commentId)
+        var comment = await postRepository.GetCommentWithUserAsync(commentId)
             ?? throw new InvalidOperationException("Không tìm thấy bình luận.");
 
         if (comment.UserId != currentUserId)
@@ -259,90 +170,33 @@ public class PostService(IDbContextFactory<ApplicationDbContext> dbContextFactor
             throw new InvalidOperationException("Chỉ chủ bình luận mới được xóa.");
         }
 
-        comment.IsDeleted = true;
-        comment.UpdatedDate = DateTime.UtcNow;
-        await dbContext.SaveChangesAsync();
+        await postRepository.SoftDeleteCommentAsync(commentId, DateTime.UtcNow);
     }
 
     public async Task SetReactionAsync(string currentUserId, Guid postId, ReactionType? reactionType)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var post = await dbContext.Posts.FirstOrDefaultAsync(item => item.Id == postId)
+        var post = await postRepository.GetPostSummaryAsync(postId)
             ?? throw new InvalidOperationException("Không tìm thấy bài viết.");
 
-        if (post.GroupId.HasValue)
+        if (post.GroupId.HasValue && !await postRepository.IsUserMemberOfGroupAsync(currentUserId, post.GroupId.Value))
         {
-            var isMember = await dbContext.GroupMembers.AnyAsync(member => member.GroupId == post.GroupId && member.UserId == currentUserId);
-            if (!isMember)
-            {
-                throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi tương tác.");
-            }
+            throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi tương tác.");
         }
 
-        var reaction = await dbContext.Reactions.FirstOrDefaultAsync(item => item.PostId == postId && item.UserId == currentUserId);
-
-        if (!reactionType.HasValue)
-        {
-            if (reaction is not null)
-            {
-                dbContext.Reactions.Remove(reaction);
-                await dbContext.SaveChangesAsync();
-            }
-
-            return;
-        }
-
-        if (reaction is null)
-        {
-            dbContext.Reactions.Add(new Reaction
-            {
-                PostId = postId,
-                UserId = currentUserId,
-                Type = reactionType.Value
-            });
-        }
-        else
-        {
-            reaction.Type = reactionType.Value;
-        }
-
-        await dbContext.SaveChangesAsync();
+        await postRepository.SetReactionAsync(postId, currentUserId, reactionType);
     }
 
     public async Task ToggleSavedPostAsync(string currentUserId, Guid postId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var post = await dbContext.Posts.FirstOrDefaultAsync(item => item.Id == postId)
+        var post = await postRepository.GetPostSummaryAsync(postId)
             ?? throw new InvalidOperationException("Không tìm thấy bài viết.");
 
-        if (post.GroupId.HasValue)
+        if (post.GroupId.HasValue && !await postRepository.IsUserMemberOfGroupAsync(currentUserId, post.GroupId.Value))
         {
-            var isMember = await dbContext.GroupMembers.AnyAsync(member => member.GroupId == post.GroupId && member.UserId == currentUserId);
-            if (!isMember)
-            {
-                throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi lưu bài viết.");
-            }
+            throw new InvalidOperationException("Bạn phải tham gia nhóm trước khi lưu bài viết.");
         }
 
-        var savedPost = await dbContext.SavedPosts
-            .FirstOrDefaultAsync(item => item.UserId == currentUserId && item.PostId == postId);
-
-        if (savedPost is null)
-        {
-            dbContext.SavedPosts.Add(new SavedPost
-            {
-                UserId = currentUserId,
-                PostId = postId
-            });
-        }
-        else
-        {
-            dbContext.SavedPosts.Remove(savedPost);
-        }
-
-        await dbContext.SaveChangesAsync();
+        await postRepository.ToggleSavedPostAsync(currentUserId, postId);
     }
 
     private static void ValidatePostContent(string content, string? mediaUrl, MediaType mediaType)

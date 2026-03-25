@@ -1,28 +1,18 @@
-using Microsoft.EntityFrameworkCore;
 using SocialNetwork.BLL.Contracts;
 using SocialNetwork.BLL.Interfaces;
-using SocialNetwork.DAL;
+using SocialNetwork.DAL.Repositories;
 
 namespace SocialNetwork.BLL.Services;
 
-public class DashboardService(IDbContextFactory<ApplicationDbContext> dbContextFactory) : IDashboardService
+public class DashboardService(IDashboardRepository dashboardRepository) : IDashboardService
 {
     public async Task<DashboardStatsDto> GetStatsAsync()
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var totalUsers = await dbContext.Users.CountAsync();
-        var totalPosts = await dbContext.Posts.CountAsync();
-        var totalComments = await dbContext.Comments.CountAsync();
-        var totalGroups = await dbContext.Groups.CountAsync();
-
         var cutoff = DateTime.UtcNow.Date.AddDays(-6);
-        var postsPerDayRaw = await dbContext.Posts
-            .Where(post => post.CreatedDate >= cutoff)
-            .ToListAsync();
+        var snapshot = await dashboardRepository.GetSnapshotAsync(cutoff);
 
-        var postsPerDayLookup = postsPerDayRaw
-            .GroupBy(post => DateOnly.FromDateTime(post.CreatedDate))
+        var postsPerDayLookup = snapshot.RecentPostDates
+            .GroupBy(createdDate => DateOnly.FromDateTime(createdDate))
             .ToDictionary(group => group.Key, group => group.Count());
 
         var normalized = Enumerable.Range(0, 7)
@@ -30,6 +20,11 @@ public class DashboardService(IDbContextFactory<ApplicationDbContext> dbContextF
             .Select(day => new DailyPostPoint(day, postsPerDayLookup.GetValueOrDefault(day)))
             .ToList();
 
-        return new DashboardStatsDto(totalUsers, totalPosts, totalComments, totalGroups, normalized);
+        return new DashboardStatsDto(
+            snapshot.TotalUsers,
+            snapshot.TotalPosts,
+            snapshot.TotalComments,
+            snapshot.TotalGroups,
+            normalized);
     }
 }

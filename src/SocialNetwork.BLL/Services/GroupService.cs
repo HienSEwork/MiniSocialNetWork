@@ -1,39 +1,22 @@
-using Microsoft.EntityFrameworkCore;
 using SocialNetwork.BLL.Contracts;
 using SocialNetwork.BLL.Interfaces;
-using SocialNetwork.DAL;
 using SocialNetwork.DAL.Entities;
 using SocialNetwork.DAL.Enums;
+using SocialNetwork.DAL.Repositories;
 
 namespace SocialNetwork.BLL.Services;
 
-public class GroupService(IDbContextFactory<ApplicationDbContext> dbContextFactory, IPostService postService) : IGroupService
+public class GroupService(IGroupRepository groupRepository, IPostService postService) : IGroupService
 {
     public async Task<IReadOnlyList<GroupSummaryDto>> GetGroupsAsync(string currentUserId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var groups = await dbContext.Groups
-            .AsNoTracking()
-            .Include(group => group.Owner)
-            .Include(group => group.Members)
-            .OrderByDescending(group => group.CreatedDate)
-            .ToListAsync();
-
+        var groups = await groupRepository.GetGroupsWithOwnerAndMembersAsync();
         return groups.Select(group => MapSummary(group, currentUserId)).ToList();
     }
 
     public async Task<GroupDetailDto?> GetGroupDetailAsync(Guid groupId, string currentUserId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var group = await dbContext.Groups
-            .AsNoTracking()
-            .Include(item => item.Owner)
-            .Include(item => item.Members)
-                .ThenInclude(member => member.User)
-            .FirstOrDefaultAsync(item => item.Id == groupId);
-
+        var group = await groupRepository.GetGroupWithOwnerAndMembersAsync(groupId);
         if (group is null)
         {
             return null;
@@ -63,8 +46,6 @@ public class GroupService(IDbContextFactory<ApplicationDbContext> dbContextFacto
 
     public async Task<GroupSummaryDto> CreateGroupAsync(string currentUserId, CreateGroupRequest request)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         ValidateGroup(request.Name, request.Description);
 
         var group = new Group
@@ -74,80 +55,66 @@ public class GroupService(IDbContextFactory<ApplicationDbContext> dbContextFacto
             OwnerId = currentUserId
         };
 
-        dbContext.Groups.Add(group);
-        dbContext.GroupMembers.Add(new GroupMember
-        {
-            GroupId = group.Id,
-            UserId = currentUserId,
-            Role = GroupRole.Owner
-        });
-
-        await dbContext.SaveChangesAsync();
+        await groupRepository.AddGroupAsync(
+            group,
+            new GroupMember
+            {
+                GroupId = group.Id,
+                UserId = currentUserId,
+                Role = GroupRole.Owner
+            });
 
         return (await GetGroupsAsync(currentUserId)).First(item => item.Id == group.Id);
     }
 
     public async Task<GroupSummaryDto> UpdateGroupAsync(string currentUserId, Guid groupId, UpdateGroupRequest request)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
         ValidateGroup(request.Name, request.Description);
 
-        var group = await dbContext.Groups
-            .Include(item => item.Owner)
-            .Include(item => item.Members)
-            .FirstOrDefaultAsync(item => item.Id == groupId)
+        var group = await groupRepository.GetGroupSummaryAsync(groupId)
             ?? throw new InvalidOperationException("Không tìm thấy nhóm.");
 
         EnsureCanManage(group, currentUserId);
 
-        group.Name = request.Name.Trim();
-        group.Description = request.Description.Trim();
-        await dbContext.SaveChangesAsync();
+        await groupRepository.UpdateGroupAsync(groupId, request.Name.Trim(), request.Description.Trim());
 
-        return MapSummary(group, currentUserId);
+        var updatedGroup = await groupRepository.GetGroupSummaryAsync(groupId)
+            ?? throw new InvalidOperationException("Không tìm thấy nhóm.");
+
+        return MapSummary(updatedGroup, currentUserId);
     }
 
     public async Task DeleteGroupAsync(string currentUserId, Guid groupId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var group = await dbContext.Groups.FirstOrDefaultAsync(item => item.Id == groupId)
+        var group = await groupRepository.GetGroupSummaryAsync(groupId)
             ?? throw new InvalidOperationException("Không tìm thấy nhóm.");
 
         EnsureCanManage(group, currentUserId);
-        group.IsDeleted = true;
-        await dbContext.SaveChangesAsync();
+        await groupRepository.SoftDeleteGroupAsync(groupId);
     }
 
     public async Task JoinGroupAsync(string currentUserId, Guid groupId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var group = await dbContext.Groups.FirstOrDefaultAsync(item => item.Id == groupId)
+        var group = await groupRepository.GetGroupSummaryAsync(groupId)
             ?? throw new InvalidOperationException("Không tìm thấy nhóm.");
 
-        var existingMembership = await dbContext.GroupMembers.FindAsync(group.Id, currentUserId);
+        var existingMembership = await groupRepository.GetMembershipAsync(group.Id, currentUserId);
         if (existingMembership is not null)
         {
             return;
         }
 
-        dbContext.GroupMembers.Add(new GroupMember
+        await groupRepository.AddMembershipAsync(new GroupMember
         {
             GroupId = groupId,
             UserId = currentUserId,
             Role = GroupRole.Member
         });
-
-        await dbContext.SaveChangesAsync();
     }
 
     public async Task LeaveGroupAsync(string currentUserId, Guid groupId)
     {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        var membership = await dbContext.GroupMembers.FindAsync(groupId, currentUserId)
+        var membership = await groupRepository.GetMembershipAsync(groupId, currentUserId)
             ?? throw new InvalidOperationException("Không tìm thấy thông tin thành viên trong nhóm.");
 
         if (membership.Role == GroupRole.Owner)
@@ -155,8 +122,7 @@ public class GroupService(IDbContextFactory<ApplicationDbContext> dbContextFacto
             throw new InvalidOperationException("Chủ nhóm không thể rời nhóm. Hãy chuyển quyền hoặc xóa nhóm.");
         }
 
-        dbContext.GroupMembers.Remove(membership);
-        await dbContext.SaveChangesAsync();
+        await groupRepository.RemoveMembershipAsync(groupId, currentUserId);
     }
 
     private static void ValidateGroup(string name, string description)

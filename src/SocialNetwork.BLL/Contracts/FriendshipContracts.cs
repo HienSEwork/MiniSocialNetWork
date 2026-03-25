@@ -6,4 +6,9 @@ public sealed record FriendSummaryDto(
     string Email,
     string? AvatarUrl,
     string? Bio,
-    bool IsFriend);
+    bool IsFriend,
+    bool HasSentRequest,
+    bool HasReceivedRequest)
+{
+    public bool HasPendingRequest => HasSentRequest || HasReceivedRequest;
+}
