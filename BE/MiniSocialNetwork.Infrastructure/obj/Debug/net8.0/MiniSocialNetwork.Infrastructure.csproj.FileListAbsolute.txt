@@ -1,0 +1,17 @@
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.csproj.AssemblyReference.cache
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.AssemblyInfoInputs.cache
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.AssemblyInfo.cs
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.csproj.CoreCompileInputs.cache
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Infrastructure.deps.json
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Infrastructure.dll
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Infrastructure.pdb
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Application.dll
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Application.pdb
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSoci.B7F0354D.Up2Date
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.dll
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\refint\MiniSocialNetwork.Infrastructure.dll
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.pdb
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\ref\MiniSocialNetwork.Infrastructure.dll

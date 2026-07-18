@@ -1,0 +1,245 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj": {}
+  },
+  "projects": {
+    "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
+        "projectName": "MiniSocialNetwork.Application",
+        "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
+        "packagesPath": "C:\\Users\\huakh\\.nuget\\packages\\",
+        "outputPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\huakh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj": {
+                "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[16.2.0, )"
+            },
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[12.1.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
+        "projectName": "MiniSocialNetwork.Domain",
+        "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
+        "packagesPath": "C:\\Users\\huakh\\.nuget\\packages\\",
+        "outputPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\huakh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj",
+        "projectName": "MiniSocialNetwork.Infrastructure",
+        "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\huakh\\.nuget\\packages\\",
+        "outputPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\huakh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj": {
+                "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj"
+              },
+              "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj": {
+                "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Microsoft.Extensions.Configuration.FileExtensions": {
+              "target": "Package",
+              "version": "[10.0.10, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[10.0.10, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

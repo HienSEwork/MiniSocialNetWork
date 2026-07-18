@@ -1,0 +1,44 @@
+[
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.GroupsController",
+    "Method": "GetAll",
+    "RelativePath": "api/groups",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.GroupsController",
+    "Method": "Create",
+    "RelativePath": "api/groups",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Group.CreateGroupRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.GroupsController",
+    "Method": "Join",
+    "RelativePath": "api/groups/{id}/join",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

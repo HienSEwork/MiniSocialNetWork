@@ -1,0 +1,11 @@
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.deps.json
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.AssemblyInfoInputs.cache
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.AssemblyInfo.cs
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.csproj.CoreCompileInputs.cache
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\refint\MiniSocialNetwork.Domain.dll
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\ref\MiniSocialNetwork.Domain.dll

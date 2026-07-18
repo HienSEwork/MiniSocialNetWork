@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "lkuvYj03m6+pNYonmsWmJtzHfoS995jpVIgzFVsGqSw=",
+  "Source": "MiniSocialNetwork.API",
+  "BasePath": "_content/MiniSocialNetwork.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
