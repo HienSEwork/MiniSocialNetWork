@@ -33,11 +33,37 @@ public class AppDbContext : IdentityDbContext<AppUser>
             .HasForeignKey(g => g.OwnerId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // GroupMember
+        // GroupMember → User
         builder.Entity<GroupMember>()
             .HasOne(gm => gm.User)
             .WithMany(u => u.GroupMembers)
             .HasForeignKey(gm => gm.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // 🔥 FIX CASCADE (QUAN TRỌNG NHẤT)
+        builder.Entity<Comment>()
+            .HasOne(c => c.Post)
+            .WithMany(p => p.Comments)
+            .HasForeignKey(c => c.PostId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<Comment>()
+            .HasOne(c => c.User)
+            .WithMany()
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // (optional nhưng nên thêm để tránh lỗi sau này)
+        builder.Entity<Reaction>()
+            .HasOne(r => r.Post)
+            .WithMany(p => p.Reactions)
+            .HasForeignKey(r => r.PostId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<Reaction>()
+            .HasOne(r => r.User)
+            .WithMany()
+            .HasForeignKey(r => r.UserId)
             .OnDelete(DeleteBehavior.NoAction);
 
         // Message check constraint

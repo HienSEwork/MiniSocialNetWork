@@ -63,9 +63,13 @@ public class GroupRepository : IGroupRepository
         };
     }
     public async Task<List<Group>> GetAllAsync()
-        => await _context.Groups.ToListAsync();
+        => await _context.Groups
+            .Where(x => !x.IsDeleted)
+            .Include(x => x.Members)
+            .OrderByDescending(x => x.CreatedDate)
+            .ToListAsync();
 
-    public async Task<Group> GetByIdAsync(Guid id)
+    public async Task<Group?> GetByIdAsync(Guid id)
         => await _context.Groups
             .Include(g => g.Members)
             .FirstOrDefaultAsync(x => x.Id == id);

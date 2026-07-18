@@ -12,6 +12,6 @@ public class Group
     public DateTime CreatedDate { get; set; }
     public bool IsDeleted { get; set; }
 
-    public ICollection<GroupMember> Members { get; set; }
-    public ICollection<Post> Posts { get; set; }
+    public ICollection<GroupMember> Members { get; set; } = new List<GroupMember>();
+    public ICollection<Post> Posts { get; set; } = new List<Post>();
 }

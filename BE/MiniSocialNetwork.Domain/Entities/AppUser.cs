@@ -8,6 +8,7 @@ public class AppUser : IdentityUser
     public string? AvatarUrl { get; set; }
     public string? Bio { get; set; }
     public DateTime CreatedDate { get; set; }
+    public bool IsDeleted { get; set; }
 
     public ICollection<Group> OwnedGroups { get; set; }
     public ICollection<GroupMember> GroupMembers { get; set; }
