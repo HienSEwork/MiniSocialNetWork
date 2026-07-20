@@ -20,6 +20,16 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout> {
   int _index = 0;
+  int _reloadVersion = 0;
+
+  void _selectDestination(int value) {
+    if (value == _index) {
+      context.read<CommunityProvider>().loadDashboard(force: true);
+      setState(() => _reloadVersion++);
+      return;
+    }
+    setState(() => _index = value);
+  }
 
   @override
   void initState() {
@@ -35,11 +45,11 @@ class _MainLayoutState extends State<MainLayout> {
       builder: (context, constraints) {
         final copy = AppCopy.of(context);
         final pages = [
-          const HomeScreen(),
-          const GroupsScreen(),
-          const ChatScreen(),
-          const NotificationsScreen(),
-          const ProfileScreen(),
+          HomeScreen(key: ValueKey('home-$_reloadVersion')),
+          GroupsScreen(key: ValueKey('groups-$_reloadVersion')),
+          ChatScreen(key: ValueKey('chat-$_reloadVersion')),
+          NotificationsScreen(key: ValueKey('activity-$_reloadVersion')),
+          ProfileScreen(key: ValueKey('profile-$_reloadVersion')),
         ];
         final destinations = [
           NavigationDestination(
@@ -124,8 +134,7 @@ class _MainLayoutState extends State<MainLayout> {
                               ),
                               labelType: NavigationRailLabelType.all,
                               selectedIndex: _index,
-                              onDestinationSelected: (value) =>
-                                  setState(() => _index = value),
+                              onDestinationSelected: _selectDestination,
                               destinations: destinations
                                   .map(
                                     (item) => NavigationRailDestination(
@@ -180,8 +189,7 @@ class _MainLayoutState extends State<MainLayout> {
                   child: NavigationBar(
                     backgroundColor: Colors.transparent,
                     selectedIndex: _index,
-                    onDestinationSelected: (value) =>
-                        setState(() => _index = value),
+                    onDestinationSelected: _selectDestination,
                     destinations: destinations,
                   ),
                 ),

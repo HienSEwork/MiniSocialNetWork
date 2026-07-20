@@ -11,10 +11,16 @@ import '../../data/providers/community_provider.dart';
 import 'common.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({super.key, required this.post, this.highlightQuery});
+  const PostCard({
+    super.key,
+    required this.post,
+    this.highlightQuery,
+    this.onChanged,
+  });
 
   final SocialPost post;
   final String? highlightQuery;
+  final VoidCallback? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -235,12 +241,63 @@ class PostCard extends StatelessWidget {
               title: Text(copy.editPost),
               onTap: canEdit ? () => Navigator.pop(context, 'edit') : null,
             ),
+            ListTile(
+              enabled: canEdit,
+              leading: const Icon(Icons.delete_outline_rounded),
+              title: Text(copy.isEnglish ? 'Delete post' : 'Xóa bài viết'),
+              textColor: Theme.of(context).colorScheme.error,
+              iconColor: Theme.of(context).colorScheme.error,
+              onTap: canEdit ? () => Navigator.pop(context, 'delete') : null,
+            ),
           ],
         ),
       ),
     );
     if (action == 'edit' && context.mounted) {
       await _showEditPostSheet(context);
+    }
+    if (action == 'delete' && context.mounted) {
+      await _deletePost(context);
+    }
+  }
+
+  Future<void> _deletePost(BuildContext context) async {
+    final copy = AppCopy.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(copy.isEnglish ? 'Delete this post?' : 'Xóa bài viết này?'),
+        content: Text(
+          copy.isEnglish
+              ? 'This action cannot be undone.'
+              : 'Thao tác này không thể hoàn tác.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(copy.isEnglish ? 'Cancel' : 'Hủy'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(copy.isEnglish ? 'Delete' : 'Xóa'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    final error = await context.read<CommunityProvider>().deletePost(post);
+    if (!context.mounted) return;
+    if (error == null) {
+      onChanged?.call();
+      showResultMessage(
+        context,
+        copy.isEnglish ? 'Post deleted.' : 'Đã xóa bài viết.',
+      );
+    } else {
+      showResultMessage(context, error, error: true);
     }
   }
 
@@ -357,6 +414,7 @@ class PostCard extends StatelessWidget {
                           if (!sheetContext.mounted) return;
                           if (error == null) {
                             Navigator.pop(sheetContext);
+                            onChanged?.call();
                             showResultMessage(context, copy.postUpdated);
                           } else {
                             setSheetState(() => submitting = false);
@@ -381,8 +439,6 @@ class PostCard extends StatelessWidget {
         ),
       ),
     );
-    content.dispose();
-    media.dispose();
   }
 
   Future<void> _showComments(BuildContext context) async {

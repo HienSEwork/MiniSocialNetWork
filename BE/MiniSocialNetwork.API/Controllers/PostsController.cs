@@ -14,10 +14,9 @@ public sealed class PostsController : ControllerBase
 
     public PostsController(IPostService postService) => _postService = postService;
 
-    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Feed([FromQuery] PostQuery query)
-        => Ok(await _postService.GetFeedAsync(query));
+        => Ok(await _postService.GetFeedAsync(query, CurrentUserId));
 
     [AllowAnonymous]
     [HttpGet("{id:guid}")]

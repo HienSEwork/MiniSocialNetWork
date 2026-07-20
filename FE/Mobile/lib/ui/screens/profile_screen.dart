@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/app_copy.dart';
 import '../../data/providers/auth_provider.dart';
+import '../../data/providers/community_provider.dart';
 import '../../data/providers/settings_provider.dart';
 import '../widgets/common.dart';
 
@@ -154,6 +155,8 @@ class ProfileScreen extends StatelessWidget {
   Future<void> _editProfile(BuildContext context) async {
     final auth = context.read<AuthProvider>();
     final copy = AppCopy.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final community = context.read<CommunityProvider>();
     if (auth.session?.isGuest == true) {
       showResultMessage(context, copy.loginToEdit, error: true);
       return;
@@ -210,14 +213,20 @@ class ProfileScreen extends StatelessWidget {
                           );
                           if (image == null) return;
                           setSheetState(() => uploading = true);
-                          final result = await auth.uploadAvatar(
-                            fileName: image.name,
-                            filePath: image.path,
-                            bytes: await image.readAsBytes(),
-                          );
+                          String? result;
+                          try {
+                            result = await auth.uploadAvatar(
+                              fileName: image.name,
+                              filePath: image.path,
+                              bytes: await image.readAsBytes(),
+                            );
+                          } catch (error) {
+                            result = '$error';
+                          }
                           if (!sheetContext.mounted) return;
                           setSheetState(() => uploading = false);
-                          if (result == null || result.isEmpty) {
+                          final uploadedUrl = result;
+                          if (uploadedUrl == null || uploadedUrl.isEmpty) {
                             showResultMessage(
                               sheetContext,
                               copy.uploadFailed,
@@ -225,7 +234,7 @@ class ProfileScreen extends StatelessWidget {
                             );
                           } else {
                             setSheetState(() {
-                              avatarUrl = result;
+                              avatarUrl = uploadedUrl;
                               avatarName = image.name;
                             });
                           }
@@ -260,6 +269,7 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: saving || uploading
                       ? null
                       : () async {
+                          final navigator = Navigator.of(sheetContext);
                           setSheetState(() => saving = true);
                           final error = await auth.updateProfile(
                             displayName: name.text,
@@ -268,8 +278,18 @@ class ProfileScreen extends StatelessWidget {
                           );
                           if (!sheetContext.mounted) return;
                           if (error == null) {
-                            Navigator.pop(sheetContext);
-                            showResultMessage(context, copy.profileUpdated);
+                            await community.loadDashboard(force: true);
+                            if (!sheetContext.mounted) return;
+                            navigator.pop();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              auth.notifyProfileChanged();
+                              messenger.showSnackBar(
+                                SnackBar(
+                                  backgroundColor: AppColors.ink,
+                                  content: Text(copy.profileUpdated),
+                                ),
+                              );
+                            });
                           } else {
                             setSheetState(() => saving = false);
                             showResultMessage(sheetContext, error, error: true);
@@ -293,8 +313,6 @@ class ProfileScreen extends StatelessWidget {
         ),
       ),
     );
-    name.dispose();
-    bio.dispose();
   }
 
   Future<void> _chooseLanguage(

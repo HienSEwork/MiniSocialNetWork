@@ -8,14 +8,32 @@ import '../../core/constants.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/group_model.dart';
 import '../../data/models/post_model.dart';
+import '../../data/models/story_model.dart';
 import '../../data/providers/auth_provider.dart';
 import '../../data/providers/community_provider.dart';
 import '../widgets/common.dart';
 import '../widgets/post_card.dart';
-import 'groups_screen.dart' show GroupDetailScreen;
+import 'groups_screen.dart' show GroupDetailScreen, GroupsScreen;
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedSegment = 0;
+
+  void _selectSegment(int index) {
+    if (index == 2) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const GroupsScreen()));
+      return;
+    }
+    setState(() => _selectedSegment = index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +43,13 @@ class HomeScreen extends StatelessWidget {
     final bottomPadding = MediaQuery.paddingOf(context).bottom + 102;
     final feedPosts = [...community.posts]
       ..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+    if (_selectedSegment == 1) {
+      feedPosts.sort(
+        (a, b) => (b.reactionCount + b.commentCount).compareTo(
+          a.reactionCount + a.commentCount,
+        ),
+      );
+    }
     final featuredPost = feedPosts.isEmpty ? null : feedPosts.first;
     final topGroups = _rankGroups(community.groups, community.posts);
 
@@ -40,12 +65,27 @@ class HomeScreen extends StatelessWidget {
                 connected: community.isConnected,
                 post: featuredPost,
                 topGroups: topGroups,
+                selectedSegment: _selectedSegment,
+                onSegmentSelected: _selectSegment,
               ),
             ),
             SliverToBoxAdapter(
               child: ResponsivePage(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
+                  padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
+                  child: _StoryRail(
+                    stories: community.stories,
+                    currentUserId: auth.session?.userId,
+                    displayName: auth.displayName,
+                    avatarUrl: auth.session?.avatarUrl,
+                  ),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: ResponsivePage(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 18),
                   child: _Composer(
                     displayName: auth.displayName,
                     enabled: community.joinedGroups.isNotEmpty,
@@ -120,18 +160,433 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+class _StoryRail extends StatelessWidget {
+  const _StoryRail({
+    required this.stories,
+    required this.currentUserId,
+    required this.displayName,
+    required this.avatarUrl,
+  });
+
+  final List<SocialStory> stories;
+  final String? currentUserId;
+  final String displayName;
+  final String? avatarUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    final activeStories = stories
+        .where((story) => story.expiresAt.isAfter(DateTime.now()))
+        .toList();
+    return SizedBox(
+      height: 102,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: activeStories.length + 1,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return _CreateStoryTile(
+              displayName: displayName,
+              avatarUrl: avatarUrl,
+              onTap: () => showStorySheet(context),
+            );
+          }
+          final story = activeStories[index - 1];
+          return _StoryTile(
+            story: story,
+            owned: story.userId == currentUserId,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => _StoryViewer(
+                  stories: activeStories,
+                  initialIndex: index - 1,
+                  currentUserId: currentUserId,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CreateStoryTile extends StatelessWidget {
+  const _CreateStoryTile({
+    required this.displayName,
+    required this.avatarUrl,
+    required this.onTap,
+  });
+
+  final String displayName;
+  final String? avatarUrl;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: onTap,
+      child: SizedBox(
+        width: 74,
+        child: Column(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                UserAvatar(
+                  label: displayName,
+                  imageUrl: avatarUrl,
+                  radius: 31,
+                  accent: AppColors.indigo,
+                ),
+                Positioned(
+                  right: -2,
+                  bottom: -2,
+                  child: Container(
+                    width: 23,
+                    height: 23,
+                    decoration: const BoxDecoration(
+                      color: AppColors.electric,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.add_rounded,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Tạo story',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryTile extends StatelessWidget {
+  const _StoryTile({
+    required this.story,
+    required this.owned,
+    required this.onTap,
+  });
+
+  final SocialStory story;
+  final bool owned;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: onTap,
+      child: SizedBox(
+        width: 74,
+        child: Column(
+          children: [
+            Container(
+              width: 66,
+              height: 66,
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [
+                    AppColors.electric,
+                    AppColors.grape,
+                    Color(0xFFFFB000),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.grape.withValues(alpha: .18),
+                    blurRadius: 12,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: UserAvatar(
+                  label: story.authorLabel,
+                  imageUrl: story.authorAvatarUrl,
+                  radius: 28,
+                  accent: owned ? AppColors.electric : AppColors.grape,
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              owned ? 'Story của bạn' : story.authorLabel,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryViewer extends StatefulWidget {
+  const _StoryViewer({
+    required this.stories,
+    required this.initialIndex,
+    required this.currentUserId,
+  });
+
+  final List<SocialStory> stories;
+  final int initialIndex;
+  final String? currentUserId;
+
+  @override
+  State<_StoryViewer> createState() => _StoryViewerState();
+}
+
+class _StoryViewerState extends State<_StoryViewer> {
+  late final PageController _controller;
+  late int _index;
+
+  @override
+  void initState() {
+    super.initState();
+    _index = widget.initialIndex;
+    _controller = PageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final stories = widget.stories;
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            PageView.builder(
+              controller: _controller,
+              itemCount: stories.length,
+              onPageChanged: (value) => setState(() => _index = value),
+              itemBuilder: (_, index) => _StoryPage(story: stories[index]),
+            ),
+            Positioned(
+              top: 12,
+              left: 12,
+              right: 12,
+              child: Row(
+                children: [
+                  UserAvatar(
+                    label: stories[_index].authorLabel,
+                    imageUrl: stories[_index].authorAvatarUrl,
+                    radius: 18,
+                    accent: Colors.white,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      stories[_index].authorLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  if (stories[_index].userId == widget.currentUserId)
+                    PopupMenuButton<String>(
+                      icon: const Icon(
+                        Icons.more_horiz_rounded,
+                        color: Colors.white,
+                      ),
+                      color: Colors.white,
+                      onSelected: (value) async {
+                        final story = stories[_index];
+                        if (value == 'edit') {
+                          await showStorySheet(context, story: story);
+                        } else if (value == 'delete') {
+                          if (!context.mounted) return;
+                          final error = await context
+                              .read<CommunityProvider>()
+                              .deleteStory(story);
+                          if (!context.mounted) return;
+                          if (error == null) {
+                            Navigator.pop(context);
+                            showResultMessage(context, 'Đã xóa story.');
+                          } else {
+                            showResultMessage(context, error, error: true);
+                          }
+                        }
+                      },
+                      itemBuilder: (_) => const [
+                        PopupMenuItem(value: 'edit', child: Text('Sửa story')),
+                        PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Xóa story'),
+                        ),
+                      ],
+                    ),
+                  IconButton(
+                    tooltip: 'Đóng',
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryPage extends StatelessWidget {
+  const _StoryPage({required this.story});
+
+  final SocialStory story;
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaUrl = story.mediaUrl;
+    return GestureDetector(
+      onTapUp: (details) {
+        final width = MediaQuery.sizeOf(context).width;
+        final page = context.findAncestorStateOfType<_StoryViewerState>();
+        if (page == null) return;
+        final next = details.localPosition.dx > width / 2
+            ? page._index + 1
+            : page._index - 1;
+        if (next >= 0 && next < page.widget.stories.length) {
+          page._controller.animateToPage(
+            next,
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOut,
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(18, 64, 18, 24),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (story.isVideo)
+                Container(
+                  color: AppColors.ink,
+                  child: const Icon(
+                    Icons.play_circle_fill_rounded,
+                    color: Colors.white,
+                    size: 86,
+                  ),
+                )
+              else if (mediaUrl?.isNotEmpty == true)
+                Image.network(
+                  mediaUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: AppColors.ink,
+                    child: const Icon(
+                      Icons.broken_image_outlined,
+                      color: Colors.white,
+                      size: 64,
+                    ),
+                  ),
+                )
+              else
+                const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.violet,
+                        AppColors.grape,
+                        AppColors.electric,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                ),
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.black.withValues(alpha: .08),
+                        Colors.black.withValues(alpha: .52),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+              ),
+              if (story.content.trim().isNotEmpty)
+                Positioned(
+                  left: 20,
+                  right: 20,
+                  bottom: 22,
+                  child: Text(
+                    story.content,
+                    maxLines: 6,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      height: 1.14,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _HomeHeroPanel extends StatelessWidget {
   const _HomeHeroPanel({
     required this.name,
     required this.connected,
     required this.post,
     required this.topGroups,
+    required this.selectedSegment,
+    required this.onSegmentSelected,
   });
 
   final String name;
   final bool connected;
   final SocialPost? post;
   final List<_RankedGroup> topGroups;
+  final int selectedSegment;
+  final ValueChanged<int> onSegmentSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +651,11 @@ class _HomeHeroPanel extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    _SegmentedPills(copy: copy),
+                    _SegmentedPills(
+                      copy: copy,
+                      selectedIndex: selectedSegment,
+                      onSelected: onSegmentSelected,
+                    ),
                     const SizedBox(height: 18),
                     if (topGroups.isNotEmpty)
                       SizedBox(
@@ -227,9 +686,15 @@ class _HomeHeroPanel extends StatelessWidget {
 }
 
 class _SegmentedPills extends StatelessWidget {
-  const _SegmentedPills({required this.copy});
+  const _SegmentedPills({
+    required this.copy,
+    required this.selectedIndex,
+    required this.onSelected,
+  });
 
   final AppCopy copy;
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -241,9 +706,17 @@ class _SegmentedPills extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _Segment(text: copy.feed, selected: true),
-          _Segment(text: copy.trendingNow),
-          _Segment(text: copy.groups),
+          _Segment(
+            text: copy.feed,
+            selected: selectedIndex == 0,
+            onTap: () => onSelected(0),
+          ),
+          _Segment(
+            text: copy.trendingNow,
+            selected: selectedIndex == 1,
+            onTap: () => onSelected(1),
+          ),
+          _Segment(text: copy.groups, onTap: () => onSelected(2)),
         ],
       ),
     );
@@ -251,30 +724,35 @@ class _SegmentedPills extends StatelessWidget {
 }
 
 class _Segment extends StatelessWidget {
-  const _Segment({required this.text, this.selected = false});
+  const _Segment({required this.text, this.selected = false, this.onTap});
 
   final String text;
   final bool selected;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        margin: const EdgeInsets.all(3),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: selected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Text(
-          text,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: selected ? AppColors.grape : Colors.white70,
-            fontSize: 12,
-            fontWeight: FontWeight.w800,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          margin: const EdgeInsets.all(3),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: selected ? AppColors.grape : Colors.white70,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
       ),
@@ -592,6 +1070,186 @@ List<_RankedGroup> _rankGroups(
               : byScore;
         });
   return ranked.take(12).toList();
+}
+
+Future<void> showStorySheet(BuildContext context, {SocialStory? story}) async {
+  final provider = context.read<CommunityProvider>();
+  final editing = story != null;
+  final content = TextEditingController(text: story?.content ?? '');
+  final media = TextEditingController(text: story?.mediaUrl ?? '');
+  String? mediaUrl = story?.mediaUrl;
+  var mediaType = story?.mediaType ?? 0;
+  String? mediaName;
+  var submitting = false;
+  var uploading = false;
+
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+    ),
+    builder: (sheetContext) => StatefulBuilder(
+      builder: (context, setSheetState) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          22,
+          12,
+          22,
+          MediaQuery.viewInsetsOf(context).bottom + 22,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 42,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).dividerColor,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                editing ? 'Sửa story' : 'Tạo story mới',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Story sẽ hiện trong 24 giờ trên đầu bảng tin.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 18),
+              TextField(
+                controller: content,
+                enabled: !submitting,
+                maxLength: 320,
+                minLines: 3,
+                maxLines: 5,
+                autofocus: !editing,
+                decoration: const InputDecoration(
+                  hintText: 'Bạn muốn chia sẻ gì?',
+                  alignLabelWithHint: true,
+                ),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: submitting || uploading
+                    ? null
+                    : () async {
+                        final picked = await ImagePicker().pickImage(
+                          source: ImageSource.gallery,
+                          imageQuality: 88,
+                        );
+                        if (picked == null) return;
+                        setSheetState(() => uploading = true);
+                        try {
+                          final uploaded = await provider.uploadMedia(
+                            fileName: picked.name,
+                            filePath: picked.path,
+                            bytes: await picked.readAsBytes(),
+                          );
+                          if (!sheetContext.mounted) return;
+                          setSheetState(() {
+                            mediaUrl = uploaded.url;
+                            mediaType = uploaded.mediaType;
+                            mediaName = picked.name;
+                            media.text = uploaded.url;
+                            uploading = false;
+                          });
+                        } catch (error) {
+                          if (!sheetContext.mounted) return;
+                          setSheetState(() => uploading = false);
+                          showResultMessage(
+                            sheetContext,
+                            '$error',
+                            error: true,
+                          );
+                        }
+                      },
+                icon: uploading
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.add_photo_alternate_rounded),
+                label: Text(mediaName ?? 'Chọn ảnh story'),
+              ),
+              if (media.text.trim().isNotEmpty) ...[
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: SizedBox(
+                    height: 180,
+                    child: Image.network(
+                      media.text,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        color: AppColors.indigo.withValues(alpha: .1),
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.image_not_supported_rounded),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 18),
+              FilledButton.icon(
+                onPressed: submitting
+                    ? null
+                    : () async {
+                        setSheetState(() => submitting = true);
+                        final error = editing
+                            ? await provider.updateStory(
+                                story,
+                                content: content.text,
+                                mediaUrl: mediaUrl ?? media.text,
+                                mediaType: mediaType,
+                              )
+                            : await provider.createStory(
+                                content: content.text,
+                                mediaUrl: mediaUrl ?? media.text,
+                                mediaType: mediaType,
+                              );
+                        if (!sheetContext.mounted) return;
+                        if (error == null) {
+                          Navigator.pop(sheetContext);
+                          showResultMessage(
+                            context,
+                            editing ? 'Đã cập nhật story.' : 'Đã đăng story.',
+                          );
+                        } else {
+                          setSheetState(() => submitting = false);
+                          showResultMessage(sheetContext, error, error: true);
+                        }
+                      },
+                icon: submitting
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.auto_awesome_rounded),
+                label: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  child: Text(editing ? 'Lưu story' : 'Đăng story'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+  content.dispose();
+  media.dispose();
 }
 
 class _Composer extends StatelessWidget {

@@ -30,8 +30,8 @@ public sealed class PostService : IPostService
         return post.Id;
     }
 
-    public async Task<PagedResult<PostResponse>> GetFeedAsync(PostQuery query)
-        => MapPage(await _postRepository.GetFeedAsync(query));
+    public async Task<PagedResult<PostResponse>> GetFeedAsync(PostQuery query, string userId)
+        => MapPage(await _postRepository.GetFeedAsync(query, userId));
 
     public async Task<PostResponse> GetByIdAsync(Guid postId)
     {
@@ -72,9 +72,11 @@ public sealed class PostService : IPostService
         return post.Id;
     }
 
-    public async Task<PagedResult<PostResponse>> GetGroupFeedAsync(Guid groupId, PostQuery query)
+    public async Task<PagedResult<PostResponse>> GetGroupFeedAsync(Guid groupId, PostQuery query, string userId)
     {
-        await GetActiveGroupAsync(groupId);
+        var group = await GetActiveGroupAsync(groupId);
+        if (!group.Members.Any(member => member.UserId == userId))
+            throw new UnauthorizedAccessException("Only group members can view this group's posts");
         return MapPage(await _postRepository.GetGroupFeedAsync(groupId, query));
     }
 

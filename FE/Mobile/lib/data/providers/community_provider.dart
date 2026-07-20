@@ -4,6 +4,7 @@ import '../models/comment_model.dart';
 import '../models/group_model.dart';
 import '../models/post_model.dart';
 import '../models/session.dart';
+import '../models/story_model.dart';
 import '../services/api_service.dart';
 
 class UploadedMedia {
@@ -19,6 +20,7 @@ class CommunityProvider extends ChangeNotifier {
   List<SocialGroup> _groups = const [];
   List<SocialGroup> _joinedGroups = const [];
   List<SocialPost> _posts = const [];
+  List<SocialStory> _stories = const [];
   UserSession? _session;
   bool _isLoading = false;
   bool _hasLoaded = false;
@@ -28,6 +30,7 @@ class CommunityProvider extends ChangeNotifier {
   List<SocialGroup> get groups => _groups;
   List<SocialGroup> get joinedGroups => _joinedGroups;
   List<SocialPost> get posts => _posts;
+  List<SocialStory> get stories => _stories;
   bool get isLoading => _isLoading;
   bool get hasLoaded => _hasLoaded;
   bool get isConnected => _hasLoaded && _error == null;
@@ -51,6 +54,7 @@ class CommunityProvider extends ChangeNotifier {
     try {
       _groups = await _fetchGroups();
       _joinedGroups = await fetchJoinedGroups();
+      _stories = await fetchStories();
       final rawFeed = await _api.get(
         '/posts',
         queryParameters: {'page': 1, 'pageSize': 30},
@@ -204,6 +208,108 @@ class CommunityProvider extends ChangeNotifier {
         },
       );
       await loadDashboard(force: true);
+      return null;
+    } on ApiFailure catch (error) {
+      return error.message;
+    }
+  }
+
+  Future<String?> deletePost(SocialPost post) async {
+    try {
+      await _api.delete('/posts/${post.id}');
+      await loadDashboard(force: true);
+      return null;
+    } on ApiFailure catch (error) {
+      return error.message;
+    }
+  }
+
+  Future<List<SocialStory>> fetchStories() async {
+    if (_session?.token?.isNotEmpty != true) {
+      _stories = const [];
+      notifyListeners();
+      return const [];
+    }
+    try {
+      final raw = await _api.get('/stories');
+      final stories = _extractList(raw).map(SocialStory.fromJson).where((
+        story,
+      ) {
+        return story.expiresAt.isAfter(DateTime.now());
+      }).toList()..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+      _stories = stories;
+      notifyListeners();
+      return stories;
+    } on ApiFailure {
+      _stories = const [];
+      notifyListeners();
+      return const [];
+    }
+  }
+
+  Future<String?> createStory({
+    required String content,
+    String? mediaUrl,
+    int mediaType = 0,
+  }) async {
+    if (content.trim().isEmpty && (mediaUrl == null || mediaUrl.isEmpty)) {
+      return _t(
+        'Write something or add an image.',
+        'Hãy thêm nội dung hoặc ảnh.',
+      );
+    }
+    try {
+      await _api.post(
+        '/stories',
+        data: {
+          'content': content.trim(),
+          'mediaUrl': mediaUrl?.trim().isEmpty == true
+              ? null
+              : mediaUrl?.trim(),
+          'mediaType': mediaUrl?.trim().isNotEmpty == true ? mediaType : 0,
+        },
+      );
+      await fetchStories();
+      return null;
+    } on ApiFailure catch (error) {
+      return error.message;
+    }
+  }
+
+  Future<String?> updateStory(
+    SocialStory story, {
+    required String content,
+    String? mediaUrl,
+    int mediaType = 0,
+  }) async {
+    if (content.trim().isEmpty && (mediaUrl == null || mediaUrl.isEmpty)) {
+      return _t(
+        'Write something or add an image.',
+        'Hãy thêm nội dung hoặc ảnh.',
+      );
+    }
+    try {
+      await _api.put(
+        '/stories/${story.id}',
+        data: {
+          'content': content.trim(),
+          'mediaUrl': mediaUrl?.trim().isEmpty == true
+              ? null
+              : mediaUrl?.trim(),
+          'mediaType': mediaUrl?.trim().isNotEmpty == true ? mediaType : 0,
+        },
+      );
+      await fetchStories();
+      return null;
+    } on ApiFailure catch (error) {
+      return error.message;
+    }
+  }
+
+  Future<String?> deleteStory(SocialStory story) async {
+    try {
+      await _api.delete('/stories/${story.id}');
+      await fetchStories();
       return null;
     } on ApiFailure catch (error) {
       return error.message;

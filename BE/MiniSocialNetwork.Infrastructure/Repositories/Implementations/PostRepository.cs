@@ -15,8 +15,13 @@ public class PostRepository : IPostRepository
         _context = context;
     }
 
-    public Task<PagedResult<Post>> GetFeedAsync(PostQuery query)
-        => PageAsync(_context.Posts.Where(p => !p.IsDeleted), query);
+    public Task<PagedResult<Post>> GetFeedAsync(PostQuery query, string userId)
+        => PageAsync(
+            _context.Posts.Where(post =>
+                !post.IsDeleted &&
+                post.GroupId.HasValue &&
+                post.Group!.Members.Any(member => member.UserId == userId)),
+            query);
 
     public async Task<PagedResult<Post>> GetGroupFeedAsync(Guid groupId, PostQuery query)
     {

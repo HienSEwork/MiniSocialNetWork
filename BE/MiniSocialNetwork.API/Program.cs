@@ -82,6 +82,8 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IReactionService, ReactionService>();
 builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
+builder.Services.AddScoped<IStoryService, StoryService>();
+builder.Services.AddScoped<IStoryRepository, StoryRepository>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<ISearchService, SearchService>();

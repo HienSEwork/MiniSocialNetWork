@@ -684,7 +684,10 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                 itemBuilder: (_, index) => ResponsivePage(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: PostCard(post: snapshot.data![index]),
+                    child: PostCard(
+                      post: snapshot.data![index],
+                      onChanged: _reload,
+                    ),
                   ),
                 ),
               ),
@@ -712,64 +715,121 @@ class _GroupHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final copy = AppCopy.of(context);
+    final community = context.watch<CommunityProvider>();
+    final userId = context.watch<AuthProvider>().session?.userId;
+    final isOwner = userId == group.ownerId;
+    final isJoined = community.joinedGroups.any((item) => item.id == group.id);
     return ResponsivePage(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 22),
         child: Card(
+          color: Colors.transparent,
+          clipBehavior: Clip.antiAlias,
           child: Padding(
-            padding: const EdgeInsets.all(22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    UserAvatar(
-                      label: group.name,
-                      imageUrl: group.avatarUrl,
-                      radius: 30,
-                      accent: AppColors.indigo,
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Text(
-                        group.name,
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                    ),
+            padding: EdgeInsets.zero,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF2D0879),
+                    Color(0xFF6247EA),
+                    Color(0xFF1A9CB0),
                   ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  group.description.isEmpty
-                      ? copy.newCommunityOnTechNet
-                      : group.description,
-                ),
-                const SizedBox(height: 18),
-                Row(
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(22),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        UserAvatar(
+                          label: group.name,
+                          imageUrl: group.avatarUrl,
+                          radius: 30,
+                          accent: Colors.white,
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Text(
+                            group.name,
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
                     Text(
-                      copy.memberCount(group.memberCount),
-                      style: Theme.of(context).textTheme.labelLarge,
+                      group.description.isEmpty
+                          ? copy.newCommunityOnTechNet
+                          : group.description,
+                      style: const TextStyle(color: Colors.white70),
                     ),
-                    const Spacer(),
-                    OutlinedButton(
-                      onPressed: () async {
-                        final error = await context
-                            .read<CommunityProvider>()
-                            .joinGroup(group);
-                        if (!context.mounted) return;
-                        showResultMessage(
-                          context,
-                          error ?? copy.joinedGroup(group.name),
-                          error: error != null,
-                        );
-                        if (error == null) reload();
-                      },
-                      child: Text(copy.join),
+                    const SizedBox(height: 18),
+                    Row(
+                      children: [
+                        Text(
+                          copy.memberCount(group.memberCount),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const Spacer(),
+                        if (isJoined && !isOwner)
+                          OutlinedButton.icon(
+                            onPressed: () async {
+                              final error = await community.leaveGroup(group);
+                              if (!context.mounted) return;
+                              showResultMessage(
+                                context,
+                                error ??
+                                    (copy.isEnglish
+                                        ? 'Left group.'
+                                        : 'Đã rời nhóm.'),
+                                error: error != null,
+                              );
+                              if (error == null) Navigator.of(context).pop();
+                            },
+                            icon: const Icon(Icons.logout_rounded, size: 18),
+                            label: Text(
+                              copy.isEnglish ? 'Leave group' : 'Rời nhóm',
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.white70),
+                            ),
+                          )
+                        else if (!isJoined)
+                          OutlinedButton(
+                            onPressed: () async {
+                              final error = await community.joinGroup(group);
+                              if (!context.mounted) return;
+                              showResultMessage(
+                                context,
+                                error ?? copy.joinedGroup(group.name),
+                                error: error != null,
+                              );
+                              if (error == null) reload();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.white70),
+                            ),
+                            child: Text(copy.join),
+                          ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

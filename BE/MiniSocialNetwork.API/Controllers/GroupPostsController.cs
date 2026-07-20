@@ -15,9 +15,9 @@ public sealed class GroupPostsController : ControllerBase
     public GroupPostsController(IPostService service) => _service = service;
     private string CurrentUserId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-    [AllowAnonymous, HttpGet]
+    [HttpGet]
     public async Task<IActionResult> GetFeed(Guid groupId, [FromQuery] PostQuery query)
-        => Ok(await _service.GetGroupFeedAsync(groupId, query));
+        => Ok(await _service.GetGroupFeedAsync(groupId, query, CurrentUserId));
 
     [HttpPost]
     public async Task<IActionResult> Create(Guid groupId, CreatePostRequest request)

@@ -12,6 +12,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Story> Stories { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -76,5 +77,11 @@ public class AppDbContext : IdentityDbContext<AppUser>
         builder.Entity<Reaction>()
             .HasIndex(r => new { r.PostId, r.UserId })
             .IsUnique();
+
+        builder.Entity<Story>()
+            .HasOne(story => story.User)
+            .WithMany()
+            .HasForeignKey(story => story.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

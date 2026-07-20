@@ -166,7 +166,6 @@ class AuthProvider extends ChangeNotifier {
         'Hãy đăng nhập để chỉnh sửa hồ sơ.',
       );
     }
-    _setLoading(true);
     try {
       final raw = await _api.put(
         '/profiles/me',
@@ -186,12 +185,11 @@ class AuthProvider extends ChangeNotifier {
           avatarUrl: _absoluteMediaUrl(data['avatarUrl']?.toString()),
           bio: data['bio']?.toString(),
         ),
+        notify: false,
       );
       return null;
     } on ApiFailure catch (error) {
       return error.message;
-    } finally {
-      _setLoading(false);
     }
   }
 
@@ -243,7 +241,9 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _saveSession(UserSession value) async {
+  void notifyProfileChanged() => notifyListeners();
+
+  Future<void> _saveSession(UserSession value, {bool notify = true}) async {
     final normalized = UserSession(
       userId: value.userId,
       displayName: value.displayName,
@@ -262,7 +262,7 @@ class AuthProvider extends ChangeNotifier {
     await _storage.write(key: 'avatar_url', value: normalized.avatarUrl);
     await _storage.write(key: 'bio', value: normalized.bio);
     _api.setSession(token: normalized.token, userId: normalized.userId);
-    notifyListeners();
+    if (notify) notifyListeners();
   }
 
   void _setLoading(bool value) {
