@@ -1,0 +1,53 @@
+@model GroupsIndexViewModel
+@{
+    ViewData["Title"] = Context.L("groups.title");
+    var myIds = Model.MyGroups.Select(g => g.Id).ToHashSet();
+}
+<div class="flex" style="margin-bottom:16px">
+    <h2 style="margin:0">@Context.L("groups.title")</h2>
+    <span class="spacer"></span>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a class="btn btn-primary" asp-action="Create"><i class="bi bi-plus-lg"></i> @Context.L("groups.create")</a>
+    }
+</div>
+
+@if (Model.MyGroups.Any())
+{
+    <div class="card card-pad">
+        <div class="card-title">@Context.L("groups.mine")</div>
+        <div class="grid-cards">
+            @foreach (var g in Model.MyGroups)
+            {
+                @await Html.PartialAsync("_GroupTile", g)
+            }
+        </div>
+    </div>
+}
+
+<div class="card card-pad">
+    <div class="card-title">@Context.L("groups.discover")</div>
+    @if (!Model.AllGroups.Any())
+    {
+        <div class="empty">@Context.L("search.empty")</div>
+    }
+    else
+    {
+        <div class="grid-cards">
+            @foreach (var g in Model.AllGroups)
+            {
+                @await Html.PartialAsync("_GroupTile", g)
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+    .gtile { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface-2); }
+    .gtile .cover { height: 90px; background: linear-gradient(120deg, var(--primary), #a855f7); display:flex; align-items:center; justify-content:center; }
+    .gtile .cover img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; }
+    .gtile .body { padding: 12px; }
+    .gtile .gname { font-weight: 700; }
+    .gtile .gsub { color: var(--text-muted); font-size: 13px; margin: 2px 0 10px; }
+</style>

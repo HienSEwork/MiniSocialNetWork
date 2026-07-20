@@ -1,0 +1,41 @@
+@model CreateGroupRequest
+@{
+    ViewData["Title"] = Context.L("groups.edit");
+    var id = Context.Request.RouteValues["id"];
+}
+<div style="max-width:560px;margin:0 auto">
+    <div class="card card-pad">
+        <h2 style="margin-top:0">@Context.L("groups.edit")</h2>
+        <form asp-action="Edit" asp-route-id="@id" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="field">
+                <label>@Context.L("groups.name")</label>
+                <input class="input" name="Name" value="@Model?.Name" required />
+            </div>
+            <div class="field">
+                <label>@Context.L("groups.description")</label>
+                <textarea class="input" name="Description" rows="4">@Model?.Description</textarea>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model?.AvatarUrl) && (Model.AvatarUrl.StartsWith("http://") || Model.AvatarUrl.StartsWith("https://")))
+            {
+                <div class="field">
+                    <img src="@Model.AvatarUrl" alt="avatar" style="width:72px;height:72px;border-radius:12px;object-fit:cover" />
+                </div>
+            }
+            <div class="field">
+                <label>@Context.L("groups.avatarUpload")</label>
+                <input class="input" type="file" name="avatar" accept="image/*" />
+            </div>
+            <div class="field">
+                <label>@Context.L("groups.avatarUrlOptional")</label>
+                <input class="input" name="AvatarUrl" value="@Model?.AvatarUrl" placeholder="https://..." />
+            </div>
+            <div class="flex">
+                <a class="btn btn-ghost" asp-action="Details" asp-route-id="@id">@Context.L("post.cancel")</a>
+                <span class="spacer"></span>
+                <button type="submit" class="btn btn-primary">@Context.L("post.save")</button>
+            </div>
+        </form>
+    </div>
+</div>

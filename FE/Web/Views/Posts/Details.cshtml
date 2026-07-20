@@ -1,0 +1,16 @@
+@model PostDetailsViewModel
+@{
+    ViewData["Title"] = Model.Post.AuthorName;
+}
+<div style="max-width:640px;margin:0 auto">
+    @await Html.PartialAsync("_PostCard", Model.Post)
+</div>
+@section Scripts {
+    <script>
+        // Auto-open the comment thread on the post details page.
+        document.addEventListener("DOMContentLoaded", function () {
+            var btn = document.querySelector(".comment-toggle");
+            if (btn) btn.click();
+        });
+    </script>
+}

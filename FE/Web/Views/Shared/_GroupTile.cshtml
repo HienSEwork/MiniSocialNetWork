@@ -1,0 +1,25 @@
+@model GroupResponse
+@{
+    var uid = User.UserId();
+    var isMember = uid != null && Model.Members.Any(m => m.UserId == uid);
+}
+<div class="gtile">
+    <a class="cover" asp-controller="Groups" asp-action="Details" asp-route-id="@Model.Id">
+        <img src="@UiHelpers.Avatar(Model.AvatarUrl, Model.Name)" alt="@Model.Name" />
+    </a>
+    <div class="body">
+        <a class="gname" asp-controller="Groups" asp-action="Details" asp-route-id="@Model.Id">@Model.Name</a>
+        <div class="gsub">@Model.MemberCount @Context.L("groups.members")</div>
+        @if (User.Identity?.IsAuthenticated == true && !isMember)
+        {
+            <form asp-controller="Groups" asp-action="Join" asp-route-id="@Model.Id" method="post">
+                @Html.AntiForgeryToken()
+                <button class="btn btn-primary btn-sm btn-block">@Context.L("groups.join")</button>
+            </form>
+        }
+        else
+        {
+            <a class="btn btn-ghost btn-sm btn-block" asp-controller="Groups" asp-action="Details" asp-route-id="@Model.Id">@(Context.EN() ? "View" : "Xem")</a>
+        }
+    </div>
+</div>

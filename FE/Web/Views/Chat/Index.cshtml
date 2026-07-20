@@ -1,0 +1,134 @@
+@model ChatViewModel
+@{
+    ViewData["Title"] = Context.L("chat.title");
+    var myId = User.UserId();
+}
+<div class="chat-wrap">
+    <div class="chat-list">
+        <div class="chat-tabs">
+            <div class="chat-tab active" data-tab="people">@Context.L("chat.people")</div>
+            <div class="chat-tab" data-tab="groups">@Context.L("chat.groups")</div>
+        </div>
+        <div id="tab-people">
+            @foreach (var u in Model.Users)
+            {
+                <div class="chat-user" data-kind="private" data-id="@u.Id" data-name="@u.DisplayName" data-avatar="@UiHelpers.Avatar(u.AvatarUrl, u.DisplayName)">
+                    <img src="@UiHelpers.Avatar(u.AvatarUrl, u.DisplayName)" />
+                    <div><div class="name">@u.DisplayName</div></div>
+                    <span class="presence" data-uid="@u.Id"></span>
+                </div>
+            }
+            @if (!Model.Users.Any())
+            {
+                <div class="empty">@Context.L("search.empty")</div>
+            }
+        </div>
+        <div id="tab-groups" style="display:none">
+            @foreach (var g in Model.Groups)
+            {
+                <div class="chat-user" data-kind="group" data-id="@g.Id" data-name="@g.Name" data-avatar="@UiHelpers.Avatar(g.AvatarUrl, g.Name)">
+                    <img src="@UiHelpers.Avatar(g.AvatarUrl, g.Name)" />
+                    <div><div class="name">@g.Name</div></div>
+                </div>
+            }
+            @if (!Model.Groups.Any())
+            {
+                <div class="empty">@Context.L("groups.empty")</div>
+            }
+        </div>
+    </div>
+    <div class="chat-main">
+        <div class="chat-header" id="chatHeader"><span class="muted">@Context.L("chat.pick")</span></div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-empty">@Context.L("chat.pick")</div>
+        </div>
+        <form class="chat-compose" id="chatForm" style="display:none">
+            <input type="text" id="chatInput" placeholder="@Context.L("chat.placeholder")" autocomplete="off" />
+            <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i></button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const MY_ID = "@myId";
+        const HUB_URL = "@Model.HubUrl";
+        const TOKEN = "@Model.Token";
+        let current = null; // { kind, id, name }
+
+        // Tabs
+        document.querySelectorAll(".chat-tab").forEach(t => t.addEventListener("click", () => {
+            document.querySelectorAll(".chat-tab").forEach(x => x.classList.remove("active"));
+            t.classList.add("active");
+            document.getElementById("tab-people").style.display = t.dataset.tab === "people" ? "block" : "none";
+            document.getElementById("tab-groups").style.display = t.dataset.tab === "groups" ? "block" : "none";
+        }));
+
+        const messagesEl = document.getElementById("chatMessages");
+        const headerEl = document.getElementById("chatHeader");
+        const formEl = document.getElementById("chatForm");
+        const inputEl = document.getElementById("chatInput");
+
+        function escapeHtml(s){const d=document.createElement("div");d.textContent=s||"";return d.innerHTML;}
+        function addMessage(m){
+            const mine = m.senderId === MY_ID;
+            const el = document.createElement("div");
+            el.className = "msg" + (mine ? " mine" : "");
+            const who = (current && current.kind === "group" && !mine) ? `<div class="who">${escapeHtml(m.senderName)}</div>` : "";
+            el.innerHTML = who + escapeHtml(m.content);
+            messagesEl.appendChild(el);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        async function openConversation(el){
+            document.querySelectorAll(".chat-user").forEach(x => x.classList.remove("active"));
+            el.classList.add("active");
+            current = { kind: el.dataset.kind, id: el.dataset.id, name: el.dataset.name };
+            headerEl.innerHTML = `<img class="avatar-sm" src="${el.dataset.avatar}"> ${escapeHtml(current.name)}`;
+            formEl.style.display = "flex";
+            messagesEl.innerHTML = "<div class='chat-empty'>…</div>";
+            const url = current.kind === "group" ? `/Chat/GroupHistory?groupId=${current.id}` : `/Chat/PrivateHistory?otherUserId=${current.id}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            messagesEl.innerHTML = "";
+            if (Array.isArray(data)) data.forEach(addMessage);
+            if (current.kind === "group" && conn) { try { await conn.invoke("JoinGroup", current.id); } catch(e){} }
+        }
+        document.querySelectorAll(".chat-user").forEach(el => el.addEventListener("click", () => openConversation(el)));
+
+        formEl.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const content = inputEl.value.trim();
+            if (!content || !current) return;
+            inputEl.value = "";
+            const payload = { content };
+            if (current.kind === "group") payload.groupId = current.id; else payload.receiverId = current.id;
+            if (conn && conn.state === "Connected") {
+                try { await conn.invoke("SendMessage", payload); return; } catch (e) { }
+            }
+            // Fallback to REST if hub is unavailable
+            const r = await MiniSocial.postForm("/Chat/Send", payload);
+            if (r.ok) addMessage(r.message); else alert(r.error);
+        });
+
+        // SignalR realtime
+        let conn = null;
+        try {
+            conn = new signalR.HubConnectionBuilder()
+                .withUrl(HUB_URL, { accessTokenFactory: () => TOKEN })
+                .withAutomaticReconnect()
+                .build();
+            conn.on("ReceiveMessage", (m) => {
+                if (!current) return;
+                const relevant = current.kind === "group"
+                    ? (m.groupId && m.groupId.toString() === current.id.toString())
+                    : (!m.isGroupMessage && (m.senderId === current.id || m.receiverId === current.id));
+                if (relevant) addMessage(m);
+            });
+            conn.on("UserPresenceChanged", (p) => {
+                document.querySelectorAll(`.presence[data-uid="${p.userId}"]`).forEach(d => d.classList.toggle("online", p.isOnline));
+            });
+            conn.start().catch(err => console.warn("Hub connect failed", err));
+        } catch (e) { console.warn(e); }
+    </script>
+}

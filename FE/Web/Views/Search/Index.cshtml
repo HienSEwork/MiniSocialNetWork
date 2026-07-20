@@ -1,0 +1,66 @@
+@model SearchResponse
+@{
+    ViewData["Title"] = Context.L("search.results");
+    var hasResults = Model.Users.Any() || Model.Groups.Any() || Model.Posts.Any();
+}
+<h2 style="margin-top:0">@Context.L("search.results")@(string.IsNullOrWhiteSpace(Model.Query) ? "" : $": \"{Model.Query}\"")</h2>
+
+@if (string.IsNullOrWhiteSpace(Model.Query))
+{
+    <div class="card card-pad empty">@Context.L("search.placeholder")</div>
+}
+else if (!hasResults)
+{
+    <div class="card card-pad empty">@Context.L("search.empty")</div>
+}
+else
+{
+    <div class="grid-2">
+        <section>
+            @if (Model.Posts.Any())
+            {
+                <div class="side-title">@Context.L("search.posts") · @Model.PostTotal</div>
+                foreach (var post in Model.Posts)
+                {
+                    @await Html.PartialAsync("_PostCard", post)
+                }
+            }
+        </section>
+        <aside class="side-right">
+            <div class="sticky">
+                @if (Model.Users.Any())
+                {
+                    <div class="card card-pad">
+                        <div class="card-title">@Context.L("search.people") · @Model.UserTotal</div>
+                        @foreach (var u in Model.Users)
+                        {
+                            <a class="side-item" asp-controller="Profile" asp-action="Index" asp-route-id="@u.Id">
+                                <img src="@UiHelpers.Avatar(u.AvatarUrl, u.DisplayName)" />
+                                <div>
+                                    <div class="name">@u.DisplayName</div>
+                                    @if (!string.IsNullOrWhiteSpace(u.Bio)) { <div class="sub">@u.Bio</div> }
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+                @if (Model.Groups.Any())
+                {
+                    <div class="card card-pad">
+                        <div class="card-title">@Context.L("search.groups") · @Model.GroupTotal</div>
+                        @foreach (var gr in Model.Groups)
+                        {
+                            <a class="side-item" asp-controller="Groups" asp-action="Details" asp-route-id="@gr.Id">
+                                <img src="@UiHelpers.Avatar(gr.AvatarUrl, gr.Name)" />
+                                <div>
+                                    <div class="name">@gr.Name</div>
+                                    <div class="sub">@gr.MemberCount @Context.L("groups.members")</div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </aside>
+    </div>
+}

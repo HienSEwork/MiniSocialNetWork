@@ -1,0 +1,75 @@
+@model AdminViewModel
+@{
+    ViewData["Title"] = Context.L("admin.dashboard");
+    var maxCount = Model.PostsPerDay.Any() ? Model.PostsPerDay.Max(x => x.Count) : 1;
+    if (maxCount == 0) maxCount = 1;
+    var totalPages = (int)Math.Ceiling((double)Model.Users.Total / Math.Max(1, Model.Users.PageSize));
+}
+<h2 style="margin-top:0">@Context.L("admin.dashboard")</h2>
+
+<div class="stat-grid" style="margin-bottom:16px">
+    <div class="stat"><div class="num">@Model.Stats.TotalUsers</div><div class="lbl">@Context.L("admin.users")</div></div>
+    <div class="stat"><div class="num">@Model.Stats.TotalPosts</div><div class="lbl">@Context.L("admin.posts")</div></div>
+    <div class="stat"><div class="num">@Model.Stats.TotalComments</div><div class="lbl">@Context.L("admin.comments")</div></div>
+    <div class="stat"><div class="num">@Model.Stats.TotalGroups</div><div class="lbl">@Context.L("admin.groups")</div></div>
+</div>
+
+<div class="card card-pad">
+    <div class="card-title">@Context.L("admin.postsPerDay")</div>
+    <div class="chart">
+        @foreach (var d in Model.PostsPerDay)
+        {
+            <div class="bar" style="height:@(Math.Max(2, (int)(d.Count * 140.0 / maxCount)))px" title="@d.Date.ToString("dd/MM"): @d.Count">
+                <span>@d.Date.ToString("dd/MM")</span>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card card-pad" style="margin-top:26px">
+    <div class="flex">
+        <div class="card-title" style="margin:0">@Context.L("admin.manageUsers")</div>
+        <span class="spacer"></span>
+        <form asp-action="Index" method="get" class="topsearch" style="max-width:260px">
+            <i class="bi bi-search"></i>
+            <input type="text" name="keyword" value="@Model.Keyword" placeholder="@Context.L("nav.search")" />
+        </form>
+    </div>
+    <table class="table" style="margin-top:12px">
+        <thead>
+            <tr><th></th><th>@Context.L("profile.displayName")</th><th>@Context.L("auth.email")</th><th>@Context.L("profile.member_since")</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model.Users.Items)
+            {
+                <tr>
+                    <td><img class="avatar-sm" src="@UiHelpers.Avatar(u.AvatarUrl, u.DisplayName)" /></td>
+                    <td><a asp-controller="Profile" asp-action="Index" asp-route-id="@u.Id">@u.DisplayName</a></td>
+                    <td class="muted">@u.Email</td>
+                    <td class="muted">@u.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <form asp-action="DeleteUser" method="post" onsubmit="return confirm('@Context.L("admin.deleteUser")')">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@u.Id" />
+                            <input type="hidden" name="keyword" value="@Model.Keyword" />
+                            <button class="btn btn-danger btn-sm" type="submit"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (!Model.Users.Items.Any())
+    {
+        <div class="empty">@Context.L("search.empty")</div>
+    }
+    @if (totalPages > 1)
+    {
+        <div class="flex" style="justify-content:center;gap:8px;margin-top:12px">
+            @for (var i = 1; i <= totalPages; i++)
+            {
+                <a class="btn @(i == Model.Users.Page ? "btn-primary" : "btn-ghost") btn-sm" asp-action="Index" asp-route-page="@i" asp-route-keyword="@Model.Keyword">@i</a>
+            }
+        </div>
+    }
+</div>

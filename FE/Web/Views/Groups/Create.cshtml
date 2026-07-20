@@ -1,0 +1,34 @@
+@model CreateGroupRequest
+@{
+    ViewData["Title"] = Context.L("groups.create");
+}
+<div style="max-width:560px;margin:0 auto">
+    <div class="card card-pad">
+        <h2 style="margin-top:0">@Context.L("groups.create")</h2>
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="field">
+                <label>@Context.L("groups.name")</label>
+                <input class="input" name="Name" value="@Model?.Name" required />
+            </div>
+            <div class="field">
+                <label>@Context.L("groups.description")</label>
+                <textarea class="input" name="Description" rows="4">@Model?.Description</textarea>
+            </div>
+            <div class="field">
+                <label>@Context.L("groups.avatarUpload")</label>
+                <input class="input" type="file" name="avatar" accept="image/*" />
+            </div>
+            <div class="field">
+                <label>@Context.L("groups.avatarUrlOptional")</label>
+                <input class="input" name="AvatarUrl" value="@Model?.AvatarUrl" placeholder="https://..." />
+            </div>
+            <div class="flex">
+                <a class="btn btn-ghost" asp-action="Index">@Context.L("post.cancel")</a>
+                <span class="spacer"></span>
+                <button type="submit" class="btn btn-primary">@Context.L("groups.create")</button>
+            </div>
+        </form>
+    </div>
+</div>

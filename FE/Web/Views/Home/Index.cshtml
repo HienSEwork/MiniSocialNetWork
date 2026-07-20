@@ -1,0 +1,89 @@
+@model FeedViewModel
+@{
+    ViewData["Title"] = Context.L("nav.home");
+    var totalPages = (int)Math.Ceiling((double)Model.Feed.Total / Math.Max(1, Model.Feed.PageSize));
+}
+<div class="grid-3">
+    <aside class="side-left">
+        <div class="sticky">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a class="side-item" asp-controller="Profile" asp-action="Index">
+                    <img src="@UiHelpers.Avatar(User.AvatarUrl(), User.DisplayName())" />
+                    <span class="name">@User.DisplayName()</span>
+                </a>
+            }
+            <a class="side-item" asp-controller="Home" asp-action="Index"><span style="font-size:22px;width:40px;text-align:center"><i class="bi bi-house-door-fill" style="color:var(--primary)"></i></span><span class="name">@Context.L("nav.home")</span></a>
+            <a class="side-item" asp-controller="Groups" asp-action="Index"><span style="font-size:22px;width:40px;text-align:center"><i class="bi bi-people-fill" style="color:var(--primary)"></i></span><span class="name">@Context.L("nav.groups")</span></a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a class="side-item" asp-controller="Chat" asp-action="Index"><span style="font-size:22px;width:40px;text-align:center"><i class="bi bi-chat-dots-fill" style="color:var(--primary)"></i></span><span class="name">@Context.L("nav.chat")</span></a>
+            }
+            @if (User.IsAdmin())
+            {
+                <a class="side-item" asp-controller="Admin" asp-action="Index"><span style="font-size:22px;width:40px;text-align:center"><i class="bi bi-speedometer2" style="color:var(--primary)"></i></span><span class="name">@Context.L("nav.admin")</span></a>
+            }
+
+            @if (Model.MyGroups.Any())
+            {
+                <div class="side-title" style="margin-top:16px">@Context.L("groups.mine")</div>
+                @foreach (var g in Model.MyGroups.Take(6))
+                {
+                    <a class="side-item" asp-controller="Groups" asp-action="Details" asp-route-id="@g.Id">
+                        <img src="@UiHelpers.Avatar(g.AvatarUrl, g.Name)" />
+                        <span class="name">@g.Name</span>
+                    </a>
+                }
+            }
+        </div>
+    </aside>
+
+    <section>
+        @await Html.PartialAsync("_Composer", new ComposerModel { Groups = Model.MyGroups, ReturnUrl = "/" })
+
+        @if (!Model.Feed.Items.Any())
+        {
+            <div class="card card-pad empty">@Context.L("post.noPosts")</div>
+        }
+        else
+        {
+            foreach (var post in Model.Feed.Items)
+            {
+                @await Html.PartialAsync("_PostCard", post)
+            }
+
+            <div class="flex" style="justify-content:center; gap:12px; margin:10px 0 30px">
+                @if (Model.Page > 1)
+                {
+                    <a class="btn btn-ghost" asp-action="Index" asp-route-page="@(Model.Page - 1)">&larr; @(Context.EN() ? "Newer" : "Mới hơn")</a>
+                }
+                @if (Model.Page < totalPages)
+                {
+                    <a class="btn btn-ghost" asp-action="Index" asp-route-page="@(Model.Page + 1)">@Context.L("post.loadMore") &rarr;</a>
+                }
+            </div>
+        }
+    </section>
+
+    <aside class="side-right">
+        <div class="sticky">
+            @if (Model.SuggestedGroups.Any())
+            {
+                <div class="card card-pad">
+                    <div class="card-title">@Context.L("groups.suggested")</div>
+                    @foreach (var g in Model.SuggestedGroups)
+                    {
+                        <a class="side-item" asp-controller="Groups" asp-action="Details" asp-route-id="@g.Id">
+                            <img src="@UiHelpers.Avatar(g.AvatarUrl, g.Name)" />
+                            <div>
+                                <div class="name">@g.Name</div>
+                                <div class="sub">@g.MemberCount @Context.L("groups.members")</div>
+                            </div>
+                        </a>
+                    }
+                    <a class="btn btn-ghost btn-block" style="margin-top:8px" asp-controller="Groups" asp-action="Index">@Context.L("groups.discover")</a>
+                </div>
+            }
+        </div>
+    </aside>
+</div>

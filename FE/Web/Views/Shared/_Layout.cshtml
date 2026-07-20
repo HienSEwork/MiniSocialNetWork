@@ -1,0 +1,89 @@
+@{
+    var uid = User.UserId();
+    var avatar = UiHelpers.Avatar(User.AvatarUrl(), User.DisplayName());
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+    var en = Context.EN();
+}
+<!DOCTYPE html>
+<html lang="@Loc.Current(Context)">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · @Context.L("app.name")</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" asp-controller="Home" asp-action="Index">
+            <span class="brand-logo"><i class="bi bi-hexagon-fill"></i></span>
+            <span class="brand-name">@Context.L("app.name")</span>
+        </a>
+        <form class="topsearch" asp-controller="Search" asp-action="Index" method="get">
+            <i class="bi bi-search"></i>
+            <input type="text" name="q" value="@(Context.Request.Query["q"])" placeholder="@Context.L("search.placeholder")" autocomplete="off" />
+        </form>
+        <nav class="topnav">
+            <a class="topnav-item" asp-controller="Home" asp-action="Index" title="@Context.L("nav.home")"><i class="bi bi-house-door-fill"></i></a>
+            <a class="topnav-item" asp-controller="Groups" asp-action="Index" title="@Context.L("nav.groups")"><i class="bi bi-people-fill"></i></a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a class="topnav-item" asp-controller="Chat" asp-action="Index" title="@Context.L("nav.chat")"><i class="bi bi-chat-dots-fill"></i></a>
+            }
+            @if (User.IsAdmin())
+            {
+                <a class="topnav-item" asp-controller="Admin" asp-action="Index" title="@Context.L("nav.admin")"><i class="bi bi-speedometer2"></i></a>
+            }
+        </nav>
+        <div class="topright">
+            <div class="lang-toggle">
+                <a class="@(!en ? "active" : "")" asp-controller="Lang" asp-action="Set" asp-route-culture="vi" asp-route-returnUrl="@returnUrl">VI</a>
+                <a class="@(en ? "active" : "")" asp-controller="Lang" asp-action="Set" asp-route-culture="en" asp-route-returnUrl="@returnUrl">EN</a>
+            </div>
+            <button id="themeToggle" class="icon-btn" title="Theme"><i class="bi bi-moon-stars"></i></button>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="usermenu">
+                    <button class="usermenu-btn" onclick="document.getElementById('userDropdown').classList.toggle('open')">
+                        <img src="@avatar" alt="me" />
+                        <span>@User.DisplayName()</span>
+                        <i class="bi bi-caret-down-fill"></i>
+                    </button>
+                    <div id="userDropdown" class="dropdown">
+                        <a asp-controller="Profile" asp-action="Index"><i class="bi bi-person"></i> @Context.L("nav.profile")</a>
+                        <a asp-controller="Profile" asp-action="Edit"><i class="bi bi-gear"></i> @Context.L("profile.edit")</a>
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit"><i class="bi bi-box-arrow-right"></i> @Context.L("nav.logout")</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <a class="btn btn-ghost" asp-controller="Account" asp-action="Login">@Context.L("nav.login")</a>
+                <a class="btn btn-primary" asp-controller="Account" asp-action="Register">@Context.L("nav.register")</a>
+            }
+        </div>
+    </div>
+</header>
+
+@Html.AntiForgeryToken()
+<main class="page">
+    @if (TempData["Info"] is string info)
+    {
+        <div class="toast toast-info">@info</div>
+    }
+    @if (TempData["Error"] is string err)
+    {
+        <div class="toast toast-error">@err</div>
+    }
+    @RenderBody()
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,45 @@
+@model ComposerModel
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="card card-pad">
+        <form asp-controller="Posts" asp-action="Create" method="post" enctype="multipart/form-data" data-composer>
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+            <div class="composer-top">
+                <img src="@UiHelpers.Avatar(User.AvatarUrl(), User.DisplayName())" alt="me" />
+                <textarea name="content" class="composer-input" rows="2" placeholder="@Context.L("composer.placeholder")"></textarea>
+            </div>
+            <div class="composer-preview"></div>
+            <div class="composer-actions">
+                <label class="composer-media-btn">
+                    <i class="bi bi-image" style="color:#45bd62"></i> @Context.L("composer.photo")
+                    <input type="file" name="media" accept="image/*,video/*" hidden />
+                </label>
+                @if (Model.LockGroup)
+                {
+                    <input type="hidden" name="groupId" value="@Model.GroupId" />
+                }
+                else if (Model.Groups.Any())
+                {
+                    <select name="groupId" class="input" style="max-width:220px">
+                        <option value="">@Context.L("composer.mywall")</option>
+                        @foreach (var g in Model.Groups)
+                        {
+                            <option value="@g.Id">@Context.L("composer.togroup") @g.Name</option>
+                        }
+                    </select>
+                }
+                <button type="submit" class="btn btn-primary">@Context.L("composer.post")</button>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    <div class="card card-pad flex">
+        <i class="bi bi-info-circle" style="font-size:22px;color:var(--primary)"></i>
+        <div>@(Context.EN() ? "Log in to share something." : "Đăng nhập để chia sẻ bài viết.")</div>
+        <span class="spacer"></span>
+        <a class="btn btn-primary" asp-controller="Account" asp-action="Login">@Context.L("nav.login")</a>
+    </div>
+}

@@ -1,0 +1,106 @@
+@model GroupDetailsViewModel
+@{
+    ViewData["Title"] = Model.Group.Name;
+    var g = Model.Group;
+    var returnUrl = $"/Groups/Details/{g.Id}";
+}
+<div class="card">
+    <div class="profile-cover" style="height:150px"></div>
+    <div class="card-pad">
+        <div class="flex" style="margin-top:-60px; align-items:flex-end">
+            <img src="@UiHelpers.Avatar(g.AvatarUrl, g.Name)" style="width:100px;height:100px;border-radius:16px;border:4px solid var(--surface);object-fit:cover" />
+            <div style="padding-bottom:6px">
+                <div style="font-size:24px;font-weight:800">@g.Name</div>
+                <div class="muted">@g.MemberCount @Context.L("groups.members")</div>
+            </div>
+            <span class="spacer"></span>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                if (Model.IsOwner)
+                {
+                    <a class="btn btn-ghost" asp-action="Edit" asp-route-id="@g.Id"><i class="bi bi-pencil"></i> @Context.L("groups.edit")</a>
+                    <form asp-action="Delete" asp-route-id="@g.Id" method="post" onsubmit="return confirm('@Context.L("groups.delete")?')">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-danger">@Context.L("groups.delete")</button>
+                    </form>
+                }
+                else if (Model.IsMember)
+                {
+                    <form asp-action="Leave" asp-route-id="@g.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-ghost">@Context.L("groups.leave")</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Join" asp-route-id="@g.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-primary"><i class="bi bi-plus-lg"></i> @Context.L("groups.join")</button>
+                    </form>
+                }
+            }
+        </div>
+        @if (!string.IsNullOrWhiteSpace(g.Description))
+        {
+            <p style="margin:14px 0 0">@g.Description</p>
+        }
+    </div>
+</div>
+
+<div class="grid-2">
+    <section>
+        @if (Model.IsMember || Model.IsOwner)
+        {
+            @await Html.PartialAsync("_Composer", new ComposerModel { GroupId = g.Id, LockGroup = true, ReturnUrl = returnUrl })
+        }
+        @if (!Model.Feed.Items.Any())
+        {
+            <div class="card card-pad empty">@Context.L("post.noPosts")</div>
+        }
+        else
+        {
+            foreach (var post in Model.Feed.Items)
+            {
+                @await Html.PartialAsync("_PostCard", post)
+            }
+        }
+    </section>
+
+    <aside class="side-right">
+        <div class="sticky">
+            <div class="card card-pad">
+                <div class="card-title">@Context.L("groups.membersTitle") · @g.MemberCount</div>
+                @foreach (var m in g.Members.OrderByDescending(x => x.Role))
+                {
+                    <div class="side-item">
+                        <img src="@UiHelpers.Avatar(m.AvatarUrl, m.DisplayName)" />
+                        <div>
+                            <a class="name" asp-controller="Profile" asp-action="Index" asp-route-id="@m.UserId">@m.DisplayName</a>
+                            <div class="sub">@UiHelpers.RoleName(m.Role)</div>
+                        </div>
+                        @if (Model.IsOwner && m.UserId != g.OwnerId)
+                        {
+                            <span class="spacer"></span>
+                            <div class="post-menu">
+                                <button class="menu-toggle"><i class="bi bi-three-dots"></i></button>
+                                <div class="mini-menu">
+                                    <form asp-action="ChangeRole" asp-route-id="@g.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@m.UserId" />
+                                        <input type="hidden" name="role" value="@(m.Role == 1 ? 0 : 1)" />
+                                        <button type="submit"><i class="bi bi-shield"></i> @(m.Role == 1 ? Context.L("groups.setMember") : Context.L("groups.setAdmin"))</button>
+                                    </form>
+                                    <form asp-action="Kick" asp-route-id="@g.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@m.UserId" />
+                                        <button type="submit"><i class="bi bi-person-x"></i> @Context.L("groups.kick")</button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </aside>
+</div>

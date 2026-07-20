@@ -1,0 +1,144 @@
+@model PostResponse
+@{
+    var uid = User.UserId();
+    var isOwner = uid != null && uid == Model.UserId;
+    var authorAvatar = UiHelpers.Avatar(Model.AuthorAvatarUrl, Model.AuthorName);
+    var media = UiHelpers.Media(Model.MediaUrl);
+    var cur = Model.CurrentUserReaction;
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+<div class="card card-pad" data-post-card="@Model.Id">
+    <div class="post-head">
+        <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.UserId">
+            <img src="@authorAvatar" alt="@Model.AuthorName" />
+        </a>
+        <div>
+            <a class="post-author" asp-controller="Profile" asp-action="Index" asp-route-id="@Model.UserId">@Model.AuthorName</a>
+            <div class="post-meta">
+                @UiHelpers.TimeAgo(Model.CreatedDate, Context.EN())
+                @if (!string.IsNullOrEmpty(Model.GroupName))
+                {
+                    <text>· <i class="bi bi-people-fill"></i> </text>
+                    <a asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId">@Model.GroupName</a>
+                }
+                @if (Model.UpdatedDate != null) { <text>· @(Context.EN() ? "edited" : "đã sửa")</text> }
+            </div>
+        </div>
+        @if (isOwner)
+        {
+            <div class="post-menu">
+                <button class="menu-toggle"><i class="bi bi-three-dots"></i></button>
+                <div class="mini-menu">
+                    <button type="button" class="edit-toggle"><i class="bi bi-pencil"></i> @Context.L("post.edit")</button>
+                    <form asp-controller="Posts" asp-action="Delete" method="post" onsubmit="return confirm('@Context.L("post.deleteConfirm")')">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                        <button type="submit"><i class="bi bi-trash"></i> @Context.L("post.delete")</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Content))
+    {
+        <div class="post-content">@Model.Content</div>
+    }
+
+    @if (media != null)
+    {
+        <div class="post-media">
+            @if (Model.MediaType == 2)
+            {
+                <video src="@media" controls></video>
+            }
+            else
+            {
+                <img src="@media" alt="media" loading="lazy"
+                     onerror="this.parentElement.innerHTML='<div class=\'post-media-failed\'><i class=\'bi bi-image\'></i> @Context.L("post.mediaFailed")</div>'" />
+            }
+        </div>
+    }
+
+    @if (isOwner)
+    {
+        <div class="edit-box" style="display:none; margin-top:12px;">
+            <form asp-controller="Posts" asp-action="Edit" method="post" enctype="multipart/form-data" data-composer>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                <input type="hidden" name="existingMediaUrl" value="@Model.MediaUrl" />
+                <input type="hidden" name="existingMediaType" value="@Model.MediaType" />
+                <textarea name="content" class="input" rows="3">@Model.Content</textarea>
+                <div class="composer-preview"></div>
+                <div class="flex" style="margin-top:8px;">
+                    <label class="composer-media-btn"><i class="bi bi-image"></i> @Context.L("composer.photo")
+                        <input type="file" name="media" accept="image/*,video/*" hidden />
+                    </label>
+                    @if (media != null)
+                    {
+                        <label class="muted"><input type="checkbox" name="removeMedia" value="true" /> @Context.L("post.delete") media</label>
+                    }
+                    <span class="spacer"></span>
+                    <button type="button" class="btn btn-ghost btn-sm edit-cancel">@Context.L("post.cancel")</button>
+                    <button type="submit" class="btn btn-primary btn-sm">@Context.L("post.save")</button>
+                </div>
+            </form>
+        </div>
+    }
+
+    <div class="post-stats">
+        <span class="emoji-stack">
+            @foreach (var kv in Model.ReactionCounts.Where(k => k.Value > 0).OrderByDescending(k => k.Value).Take(3))
+            {
+                <span>@UiHelpers.ReactionEmoji(kv.Key)</span>
+            }
+        </span>
+        <span class="react-count">@Model.ReactionCount</span>
+        <span class="spacer"></span>
+        <span><span class="comment-count">@Model.CommentCount</span> @Context.L("post.comments")</span>
+    </div>
+
+    <div class="reaction-bar">
+        <div class="reaction-wrap" data-post="@Model.Id" style="flex:1; position:relative;">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="reaction-pop">
+                    <button data-type="1" title="Like">👍</button>
+                    <button data-type="2" title="Love">❤️</button>
+                    <button data-type="3" title="Haha">😄</button>
+                </div>
+                <button class="reaction-btn reaction-trigger @(cur != null ? "active" : "")">
+                    <span class="reaction-label">
+                        @if (cur != null)
+                        {
+                            <text>@UiHelpers.ReactionEmoji(cur.Value) @UiHelpers.ReactionLabel(cur.Value)</text>
+                        }
+                        else
+                        {
+                            <text><i class="bi bi-hand-thumbs-up"></i> @(Context.EN() ? "Like" : "Thích")</text>
+                        }
+                    </span>
+                </button>
+            }
+            else
+            {
+                <a class="reaction-btn" asp-controller="Account" asp-action="Login"><i class="bi bi-hand-thumbs-up"></i> @Context.L("nav.login")</a>
+            }
+        </div>
+        <button class="reaction-btn comment-toggle"><i class="bi bi-chat"></i> @Context.L("post.comment")</button>
+    </div>
+
+    <div class="comments" style="display:none;">
+        <div class="comment-list"></div>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form class="comment-add-form comment-add">
+                <img src="@UiHelpers.Avatar(User.AvatarUrl(), User.DisplayName())" />
+                <input type="text" name="content" placeholder="@Context.L("post.writeComment")" />
+                <button type="submit" class="btn btn-primary btn-sm">@Context.L("post.send")</button>
+            </form>
+        }
+    </div>
+</div>

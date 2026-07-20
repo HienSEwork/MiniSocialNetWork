@@ -1,0 +1,39 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = Model.Profile.DisplayName;
+    var p = Model.Profile;
+}
+<div class="card">
+    <div class="profile-cover"></div>
+    <div class="profile-head">
+        <img src="@UiHelpers.Avatar(p.AvatarUrl, p.DisplayName)" alt="@p.DisplayName" />
+        <div style="padding-bottom:14px">
+            <div class="profile-name">@p.DisplayName</div>
+            <div class="muted">@p.Email</div>
+        </div>
+        <span class="spacer"></span>
+        <div style="padding-bottom:14px">
+            @if (Model.IsMe)
+            {
+                <a class="btn btn-primary" asp-action="Edit"><i class="bi bi-pencil"></i> @Context.L("profile.edit")</a>
+            }
+            else if (User.Identity?.IsAuthenticated == true)
+            {
+                <a class="btn btn-primary" asp-controller="Chat" asp-action="Index"><i class="bi bi-chat-dots"></i> @Context.L("nav.chat")</a>
+            }
+        </div>
+    </div>
+    <div class="card-pad">
+        @if (!string.IsNullOrWhiteSpace(p.Bio))
+        {
+            <p class="profile-bio">@p.Bio</p>
+        }
+        <div class="flex muted" style="gap:20px;margin-top:8px">
+            <span><i class="bi bi-calendar3"></i> @Context.L("profile.member_since") @p.CreatedDate.ToLocalTime().ToString("dd/MM/yyyy")</span>
+            @foreach (var r in p.Roles)
+            {
+                <span class="badge">@r</span>
+            }
+        </div>
+    </div>
+</div>
