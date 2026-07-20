@@ -10,3 +10,16 @@ C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSoc
 C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\refint\MiniSocialNetwork.Domain.dll
 C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.pdb
 C:\S5\PRN212\MiniSocialNetwork\MiniSocialNetwork.Domain\obj\Debug\net8.0\ref\MiniSocialNetwork.Domain.dll
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.deps.json
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.csproj.AssemblyReference.cache
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.AssemblyInfoInputs.cache
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.AssemblyInfo.cs
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.sourcelink.json
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\refint\MiniSocialNetwork.Domain.dll
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\ref\MiniSocialNetwork.Domain.dll

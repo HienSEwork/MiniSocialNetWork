@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj": {}
+    "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj": {}
   },
   "projects": {
-    "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj": {
+    "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
+        "projectUniqueName": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
         "projectName": "MiniSocialNetwork.Application",
-        "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
-        "packagesPath": "C:\\Users\\huakh\\.nuget\\packages\\",
-        "outputPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\obj\\",
+        "projectPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
+        "packagesPath": "C:\\Users\\ASUS_FX507Z\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\huakh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ASUS_FX507Z\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,15 +26,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj": {
-                "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj"
+              "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj": {
+                "projectPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj"
               }
             }
           }
@@ -49,7 +48,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -80,24 +79,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj": {
+    "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
         "projectName": "MiniSocialNetwork.Domain",
-        "projectPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
-        "packagesPath": "C:\\Users\\huakh\\.nuget\\packages\\",
-        "outputPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\obj\\",
+        "projectPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
+        "packagesPath": "C:\\Users\\ASUS_FX507Z\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\huakh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ASUS_FX507Z\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -106,7 +105,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -125,7 +123,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -133,7 +131,7 @@
           "dependencies": {
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.2, )"
+              "version": "[8.0.29, )"
             }
           },
           "imports": [
@@ -152,7 +150,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

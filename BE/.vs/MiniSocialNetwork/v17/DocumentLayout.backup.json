@@ -1,210 +1,208 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\S5\\PRN212\\MiniSocialNetwork\\",
+  "WorkspaceRootPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\sharedresource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\sharedresource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\controllers\\localizationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\controllers\\localizationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.infrastructure\\repositories\\implementations\\adminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\repositories\\implementations\\adminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\interfaces\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\interfaces\\repositories\\iadminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\repositories\\iadminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\admin\\userquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\admin\\userquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\admin\\userresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\admin\\userresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\admin\\postsperdayitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\admin\\postsperdayitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\admin\\dashboardstatsresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\admin\\dashboardstatsresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\controllers\\grouppostscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\controllers\\grouppostscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.infrastructure\\repositories\\implementations\\postrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\repositories\\implementations\\postrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\interfaces\\ipostservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\ipostservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\interfaces\\repositories\\ipostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\repositories\\ipostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\post\\postquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\post\\postquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\post\\postresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\post\\postresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\post\\createpostrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\post\\createpostrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\services\\groupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\services\\groupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\creategrouprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\creategrouprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\interfaces\\igroupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\igroupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\groupresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\groupresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\minisocialnetwork.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\minisocialnetwork.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\minisocialnetwork.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.infrastructure\\persistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\persistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\entities\\reaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\reaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\entities\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\entities\\groupmember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\groupmember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\entities\\group.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\group.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\entities\\comment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\comment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\interfaces\\repositories\\igrouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\repositories\\igrouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.infrastructure\\repositories\\implementations\\grouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\repositories\\implementations\\grouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\common\\pagedresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\common\\pagedresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\middlewares\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\middlewares\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\group\\changerolerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\group\\changerolerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\controllers\\groupscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\controllers\\groupscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\group\\groupquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\group\\groupquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\dtos\\common\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\common\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.infrastructure\\persistence\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\repositories\\implementations\\adminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\repositories\\implementations\\adminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\controllers\\localizationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\controllers\\localizationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\sharedresource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\sharedresource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\services\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\interfaces\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\interfaces\\repositories\\iadminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\repositories\\iadminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\admin\\userquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\admin\\userquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\admin\\userresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\admin\\userresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\admin\\postsperdayitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\admin\\postsperdayitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\admin\\dashboardstatsresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\admin\\dashboardstatsresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\controllers\\grouppostscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\controllers\\grouppostscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\repositories\\implementations\\postrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\repositories\\implementations\\postrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\interfaces\\ipostservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\ipostservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\interfaces\\repositories\\ipostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\repositories\\ipostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\post\\postquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\post\\postquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\post\\postresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\post\\postresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\post\\createpostrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\post\\createpostrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\services\\groupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\services\\groupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\creategrouprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\creategrouprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\interfaces\\igroupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\igroupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\groupresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\groupresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\persistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\persistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\entities\\reaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\reaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\entities\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\entities\\groupmember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\groupmember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\entities\\group.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\group.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\entities\\comment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\entities\\comment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\interfaces\\repositories\\igrouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\interfaces\\repositories\\igrouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\repositories\\implementations\\grouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\repositories\\implementations\\grouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\common\\pagedresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\common\\pagedresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\middlewares\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\middlewares\\exceptionmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\group\\changerolerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\group\\changerolerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\controllers\\groupscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\controllers\\groupscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\group\\groupquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\group\\groupquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\dtos\\common\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\dtos\\common\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\persistence\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\persistence\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\minisocialnetwork.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\minisocialnetwork.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
       "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\minisocialnetwork.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.api\\extensions\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\extensions\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\extensions\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\enums\\grouprole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\enums\\grouprole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\enums\\grouprole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.infrastructure\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.domain\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\s5\\prn212\\minisocialnetwork\\minisocialnetwork.application\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\migrations\\20260718150939_initclean.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\migrations\\20260718150939_initclean.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -214,8 +212,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 13,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -229,12 +239,29 @@
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\appsettings.json",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\appsettings.json",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\appsettings.json",
+              "RelativeToolTip": "MiniSocialNetwork.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-18T08:35:19.857Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "SharedResource.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\SharedResource.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\SharedResource.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\SharedResource.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\SharedResource.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\SharedResource.cs",
               "RelativeToolTip": "MiniSocialNetwork.API\\SharedResource.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -243,11 +270,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "LocalizationController.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
               "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -256,236 +283,49 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Controllers\\AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\AdminController.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\AdminController.cs",
               "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\AdminController.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAQwCUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAzwCAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-18T15:42:41.591Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "AdminRepository.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
               "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
-              "ViewState": "AgIAAEQAAAAAAAAAAAAowFMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACkAAAAAAAAAAAAAAFMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-18T15:42:11.897Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AdminService.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Services\\AdminService.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\AdminService.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Services\\AdminService.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Services\\AdminService.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAgwDgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:41:42.689Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "IAdminService.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:41:14.519Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "IAdminRepository.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
               "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:40:46.064Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T15:40:46.064Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "UserQuery.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:40:26.932Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "UserResponse.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:40:06.362Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "PostsPerDayItem.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:39:50.523Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "DashboardStatsResponse.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:39:19.861Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "GroupPostsController.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
-              "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:34:05.001Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "PostRepository.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:33:29.66Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "PostService.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Services\\PostService.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\PostService.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Services\\PostService.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Services\\PostService.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAwGcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:32:42.398Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "IPostService.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:32:08.941Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "IPostRepository.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:31:44.137Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "PostQuery.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:31:17.81Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "PostResponse.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAzwBMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:30:56.172Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "CreatePostRequest.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:30:31.178Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "MiniSocialNetwork.Application",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
+              "DocumentIndex": 0,
+              "Title": "MiniSocialNetwork.Application.csproj",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
               "RelativeToolTip": "MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
@@ -494,406 +334,531 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
-              "Title": "20260718150939_InitClean.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
-              "ViewState": "AgIAAIwAAAAAAAAAAADgvwAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 9,
+              "Title": "IAdminService.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:09:40.16Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T15:41:14.519Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 8,
+              "Title": "AdminService.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\AdminService.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\AdminService.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\AdminService.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Services\\AdminService.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAgwDgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:41:42.689Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "UserQuery.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:40:26.932Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "UserResponse.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:40:06.362Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PostsPerDayItem.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:39:50.523Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "DashboardStatsResponse.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:39:19.861Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "GroupPostsController.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
+              "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:34:05.001Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "PostRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:33:29.66Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "PostService.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\PostService.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\PostService.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\PostService.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Services\\PostService.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAwGcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:32:42.398Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "IPostService.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:32:08.941Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "IPostRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:31:44.137Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "PostQuery.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:31:17.81Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "PostResponse.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAzwBMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:30:56.172Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "CreatePostRequest.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:30:31.178Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "20260718150939_InitClean.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
+              "ViewState": "AgIAAIwAAAAAAAAAAADgvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:09:40.16Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
               "Title": "20260718150816_InitFull2.cs",
               "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs",
               "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:08:16.822Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T15:08:16.822Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 39,
               "Title": "ChangeRoleRequest.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Group\\ChangeRoleRequest.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Group\\ChangeRoleRequest.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Group\\ChangeRoleRequest.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Group\\ChangeRoleRequest.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Group\\ChangeRoleRequest.cs",
               "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Group\\ChangeRoleRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T14:46:02.784Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T14:46:02.784Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 41,
               "Title": "GroupQuery.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Group\\GroupQuery.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Group\\GroupQuery.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Group\\GroupQuery.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Group\\GroupQuery.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Group\\GroupQuery.cs",
               "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Group\\GroupQuery.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T14:02:17.958Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T14:02:17.958Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 37,
               "Title": "PagedResult.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Common\\PagedResult.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Common\\PagedResult.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Common\\PagedResult.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Common\\PagedResult.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Common\\PagedResult.cs",
               "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Common\\PagedResult.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAuwAYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T13:56:35.574Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T13:56:35.574Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 42,
               "Title": "ApiResponse.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Common\\ApiResponse.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Common\\ApiResponse.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Common\\ApiResponse.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\Common\\ApiResponse.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Common\\ApiResponse.cs",
               "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\Common\\ApiResponse.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAuwAUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T13:56:14.09Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T13:56:14.09Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 31,
               "Title": "Message.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Message.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Message.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Message.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Message.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Message.cs",
               "RelativeToolTip": "MiniSocialNetwork.Domain\\Entities\\Message.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T13:43:01.207Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T13:43:01.207Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 29,
               "Title": "Reaction.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Reaction.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Reaction.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Reaction.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Reaction.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Reaction.cs",
               "RelativeToolTip": "MiniSocialNetwork.Domain\\Entities\\Reaction.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T13:42:47.708Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T13:42:47.708Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 34,
               "Title": "Comment.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Comment.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Comment.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Comment.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Comment.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Comment.cs",
               "RelativeToolTip": "MiniSocialNetwork.Domain\\Entities\\Comment.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T13:42:37.446Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T13:42:37.446Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 30,
               "Title": "Post.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Post.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Post.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Post.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Post.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Post.cs",
               "RelativeToolTip": "MiniSocialNetwork.Domain\\Entities\\Post.cs",
               "ViewState": "AgIAAAUAAAAAAAAAAAAgwBgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T13:42:23.592Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T13:42:23.592Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "AppUser.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\AppUser.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\AppUser.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\AppUser.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\AppUser.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\AppUser.cs",
               "RelativeToolTip": "MiniSocialNetwork.Domain\\Entities\\AppUser.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T13:41:39.395Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T13:41:39.395Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 43,
               "Title": "AppDbContextFactory.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContextFactory.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContextFactory.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContextFactory.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContextFactory.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContextFactory.cs",
               "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContextFactory.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:59:00.699Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:59:00.699Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 35,
               "Title": "IGroupRepository.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IGroupRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IGroupRepository.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IGroupRepository.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IGroupRepository.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IGroupRepository.cs",
               "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IGroupRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:48:50.242Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:48:50.242Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 44,
               "Title": "MiniSocialNetwork.API.http",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
               "RelativeToolTip": "MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-07-18T08:44:58.21Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:44:58.21Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\appsettings.json",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\appsettings.json",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\appsettings.json",
-              "RelativeToolTip": "MiniSocialNetwork.API\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-07-18T08:35:19.857Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Program.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Program.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Program.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Program.cs",
               "RelativeToolTip": "MiniSocialNetwork.API\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:42:18.832Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:42:18.832Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 36,
               "Title": "GroupRepository.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\GroupRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\GroupRepository.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\GroupRepository.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\GroupRepository.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\GroupRepository.cs",
               "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\GroupRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:38:51.285Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:38:51.285Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 28,
               "Title": "AppDbContext.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContext.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContext.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContext.cs",
               "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContext.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAA0wEAAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:37:50.583Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "GroupService.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Services\\GroupService.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\GroupService.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Services\\GroupService.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Services\\GroupService.cs",
-              "ViewState": "AgIAAK8AAAAAAAAAAADwv1MAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:37:33.682Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "GroupResponse.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:37:15.839Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "CreateGroupRequest.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:37:08.226Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:37:50.583Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 23,
-              "Title": "IGroupService.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAAAAsAAAA2AAAAAAAAAA==",
+              "Title": "GroupService.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\GroupService.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\GroupService.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\GroupService.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Services\\GroupService.cs",
+              "ViewState": "AgIAAK8AAAAAAAAAAADwv1MAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:36:51.432Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:37:33.682Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 26,
+              "Title": "GroupResponse.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T08:37:15.839Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "CreateGroupRequest.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T08:37:08.226Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "IGroupService.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAAAsAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T08:36:51.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
               "Title": "ServiceExtensions.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Extensions\\ServiceExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Extensions\\ServiceExtensions.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Extensions\\ServiceExtensions.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Extensions\\ServiceExtensions.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Extensions\\ServiceExtensions.cs",
               "RelativeToolTip": "MiniSocialNetwork.API\\Extensions\\ServiceExtensions.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:36:22.043Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:36:22.043Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 38,
               "Title": "ExceptionMiddleware.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Middlewares\\ExceptionMiddleware.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Middlewares\\ExceptionMiddleware.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Middlewares\\ExceptionMiddleware.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Middlewares\\ExceptionMiddleware.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Middlewares\\ExceptionMiddleware.cs",
               "RelativeToolTip": "MiniSocialNetwork.API\\Middlewares\\ExceptionMiddleware.cs",
               "ViewState": "AgIAACIAAAAAAAAAAAAAwDgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:36:03.934Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:36:03.934Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 40,
               "Title": "GroupsController.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Controllers\\GroupsController.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\GroupsController.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\GroupsController.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.API\\Controllers\\GroupsController.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\GroupsController.cs",
               "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\GroupsController.cs",
               "ViewState": "AgIAADsAAAAAAAAAAAAAAFkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:35:41.194Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:35:41.194Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 46,
               "Title": "GroupRole.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Enums\\GroupRole.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Enums\\GroupRole.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Enums\\GroupRole.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Enums\\GroupRole.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Enums\\GroupRole.cs",
               "RelativeToolTip": "MiniSocialNetwork.Domain\\Enums\\GroupRole.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:34:54.9Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:34:54.9Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 32,
               "Title": "GroupMember.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\GroupMember.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\GroupMember.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\GroupMember.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\GroupMember.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\GroupMember.cs",
               "RelativeToolTip": "MiniSocialNetwork.Domain\\Entities\\GroupMember.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:34:33.065Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:34:33.065Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 33,
               "Title": "Group.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Group.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Group.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Group.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Entities\\Group.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Group.cs",
               "RelativeToolTip": "MiniSocialNetwork.Domain\\Entities\\Group.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:33:00.835Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 48,
-              "Title": "Class1.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Class1.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Class1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:29:03.497Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 49,
-              "Title": "Class1.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Class1.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Class1.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Domain\\Class1.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Domain\\Class1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:28:38.353Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:33:00.835Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 50,
               "Title": "Class1.cs",
-              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Class1.cs",
+              "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs",
+              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T08:29:03.497Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Class1.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Class1.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Class1.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Domain\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T08:28:38.353Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Class1.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Class1.cs",
-              "ToolTip": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Application\\Class1.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Class1.cs",
               "RelativeToolTip": "MiniSocialNetwork.Application\\Class1.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:27:06.181Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T08:27:06.181Z"
             }
           ]
         },
