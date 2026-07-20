@@ -255,8 +255,8 @@ class TechNetSideDrawer extends StatelessWidget {
     final email = auth.session?.email ?? copy.member;
     final items = [
       _DrawerItem(Icons.home_outlined, copy.feed, 0),
-      _DrawerItem(Icons.diversity_3_outlined, copy.groups, 1),
-      _DrawerItem(Icons.forum_outlined, copy.chat, 2),
+      _DrawerItem(Icons.diversity_3_outlined, copy.communityFallback, 1),
+      const _DrawerItem(Icons.work_outline_rounded, 'Tech Job', 2),
       _DrawerItem(Icons.notifications_none_rounded, copy.activity, 3),
       _DrawerItem(Icons.person_outline_rounded, copy.profile, 4),
     ];
@@ -311,6 +311,14 @@ class TechNetSideDrawer extends StatelessWidget {
                       onSelect(item.index);
                     },
                   ),
+                _DrawerTile(
+                  icon: Icons.forum_outlined,
+                  label: copy.chat,
+                  onTap: () {
+                    Navigator.pop(context);
+                    context.push('/chat');
+                  },
+                ),
                 _DrawerTile(
                   icon: Icons.qr_code_2_rounded,
                   label: 'QR Code',

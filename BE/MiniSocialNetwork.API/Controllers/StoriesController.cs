@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniSocialNetwork.Application.DTOs.Story;
 using MiniSocialNetwork.Application.Interfaces;
+using MiniSocialNetwork.Application.DTOs.Chat;
 
 namespace MiniSocialNetwork.API.Controllers;
 
@@ -20,11 +21,11 @@ public sealed class StoriesController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetActive()
-        => Ok(await _storyService.GetActiveAsync());
+        => Ok(await _storyService.GetActiveAsync(CurrentUserId));
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(Guid id)
-        => Ok(await _storyService.GetByIdAsync(id));
+        => Ok(await _storyService.GetByIdAsync(id, CurrentUserId));
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateStoryRequest request)
@@ -44,6 +45,25 @@ public sealed class StoriesController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         await _storyService.DeleteAsync(id, CurrentUserId);
+        return NoContent();
+    }
+
+    [HttpPost("{id:guid}/reactions")]
+    public async Task<IActionResult> React(Guid id, StoryReactionRequest request)
+        => Ok(await _storyService.ReactAsync(id, request.Type, CurrentUserId));
+
+    [HttpPost("{id:guid}/reply")]
+    public async Task<IActionResult> Reply(
+        Guid id,
+        StoryReplyRequest request,
+        [FromServices] IChatService chatService)
+    {
+        var authorId = await _storyService.GetAuthorIdAsync(id);
+        await chatService.SendAsync(CurrentUserId, new SendMessageRequest
+        {
+            ReceiverId = authorId,
+            Content = $"Reply story: {request.Content.Trim()}"
+        });
         return NoContent();
     }
 

@@ -13,7 +13,8 @@ import '../../data/providers/auth_provider.dart';
 import '../../data/providers/community_provider.dart';
 import '../widgets/common.dart';
 import '../widgets/post_card.dart';
-import 'groups_screen.dart' show GroupDetailScreen, GroupsScreen;
+import 'community_hub_screen.dart';
+import 'groups_screen.dart' show GroupDetailScreen;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (index == 2) {
       Navigator.of(
         context,
-      ).push(MaterialPageRoute(builder: (_) => const GroupsScreen()));
+      ).push(MaterialPageRoute(builder: (_) => const CommunityHubScreen()));
       return;
     }
     setState(() => _selectedSegment = index);
@@ -288,16 +289,17 @@ class _StoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaUrl = story.mediaUrl;
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: onTap,
       child: SizedBox(
-        width: 74,
+        width: 82,
         child: Column(
           children: [
             Container(
-              width: 66,
-              height: 66,
+              width: 70,
+              height: 70,
               padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -324,11 +326,55 @@ class _StoryTile extends StatelessWidget {
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
-                child: UserAvatar(
-                  label: story.authorLabel,
-                  imageUrl: story.authorAvatarUrl,
-                  radius: 28,
-                  accent: owned ? AppColors.electric : AppColors.grape,
+                child: ClipOval(
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      if (story.isVideo)
+                        Container(
+                          color: AppColors.ink,
+                          child: const Icon(
+                            Icons.play_arrow_rounded,
+                            color: Colors.white,
+                            size: 32,
+                          ),
+                        )
+                      else if (mediaUrl?.isNotEmpty == true)
+                        Image.network(
+                          mediaUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) =>
+                              _StoryTextPreview(story: story),
+                        )
+                      else
+                        _StoryTextPreview(story: story),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 3,
+                          ),
+                          color: Colors.black.withValues(alpha: .42),
+                          child: Text(
+                            story.content.trim().isEmpty
+                                ? story.authorLabel
+                                : story.content,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -341,6 +387,43 @@ class _StoryTile extends StatelessWidget {
               style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryTextPreview extends StatelessWidget {
+  const _StoryTextPreview({required this.story});
+
+  final SocialStory story;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = story.content.trim();
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.violet, AppColors.grape, AppColors.electric],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            text.isEmpty ? story.authorLabel.characters.first : text,
+            maxLines: text.length <= 2 ? 1 : 3,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: text.length <= 2 ? 24 : 11,
+              height: 1.05,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
         ),
       ),
     );
@@ -365,6 +448,7 @@ class _StoryViewer extends StatefulWidget {
 class _StoryViewerState extends State<_StoryViewer> {
   late final PageController _controller;
   late int _index;
+  final _reply = TextEditingController();
 
   @override
   void initState() {
@@ -375,6 +459,7 @@ class _StoryViewerState extends State<_StoryViewer> {
 
   @override
   void dispose() {
+    _reply.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -458,9 +543,151 @@ class _StoryViewerState extends State<_StoryViewer> {
                 ],
               ),
             ),
+            Positioned(
+              left: 14,
+              right: 14,
+              bottom: 12,
+              child: _StoryActions(
+                story: stories[_index],
+                replyController: _reply,
+                isOwnStory: stories[_index].userId == widget.currentUserId,
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _StoryActions extends StatefulWidget {
+  const _StoryActions({
+    required this.story,
+    required this.replyController,
+    required this.isOwnStory,
+  });
+
+  final SocialStory story;
+  final TextEditingController replyController;
+  final bool isOwnStory;
+
+  @override
+  State<_StoryActions> createState() => _StoryActionsState();
+}
+
+class _StoryActionsState extends State<_StoryActions> {
+  var _busy = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final reactions = const ['👍', '❤️', '😂', '😮', '😢', '🔥'];
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: .28),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: Colors.white.withValues(alpha: .14)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                for (var i = 0; i < reactions.length; i++)
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    onPressed: _busy
+                        ? null
+                        : () async {
+                            setState(() => _busy = true);
+                            final error = await context
+                                .read<CommunityProvider>()
+                                .reactStory(widget.story, i + 1);
+                            if (!context.mounted) return;
+                            setState(() => _busy = false);
+                            if (error != null) {
+                              showResultMessage(context, error, error: true);
+                            }
+                          },
+                    icon: Text(
+                      reactions[i],
+                      style: TextStyle(
+                        fontSize: widget.story.currentUserReaction == i + 1
+                            ? 28
+                            : 23,
+                      ),
+                    ),
+                  ),
+                if (widget.story.reactionCount > 0)
+                  Text(
+                    '${widget.story.reactionCount}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (!widget.isOwnStory) ...[
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: widget.replyController,
+                  enabled: !_busy,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Trả lời story...',
+                    hintStyle: const TextStyle(color: Colors.white70),
+                    filled: true,
+                    fillColor: Colors.black.withValues(alpha: .34),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton.filled(
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.grape,
+                ),
+                onPressed: _busy
+                    ? null
+                    : () async {
+                        setState(() => _busy = true);
+                        final error = await context
+                            .read<CommunityProvider>()
+                            .replyStory(
+                              widget.story,
+                              widget.replyController.text,
+                            );
+                        if (!context.mounted) return;
+                        setState(() => _busy = false);
+                        if (error == null) {
+                          widget.replyController.clear();
+                          showResultMessage(context, 'Đã gửi trả lời story.');
+                        } else {
+                          showResultMessage(context, error, error: true);
+                        }
+                      },
+                icon: const Icon(Icons.send_rounded),
+              ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }
@@ -641,6 +868,14 @@ class _HomeHeroPanel extends StatelessWidget {
                           ),
                         ),
                         IconButton(
+                          tooltip: copy.chat,
+                          onPressed: () => context.push('/chat'),
+                          icon: const Icon(
+                            Icons.forum_rounded,
+                            color: Colors.white,
+                          ),
+                        ),
+                        IconButton(
                           tooltip: copy.search,
                           onPressed: () => context.push('/search'),
                           icon: const Icon(
@@ -716,7 +951,7 @@ class _SegmentedPills extends StatelessWidget {
             selected: selectedIndex == 1,
             onTap: () => onSelected(1),
           ),
-          _Segment(text: copy.groups, onTap: () => onSelected(2)),
+          _Segment(text: copy.communityFallback, onTap: () => onSelected(2)),
         ],
       ),
     );
@@ -1074,6 +1309,8 @@ List<_RankedGroup> _rankGroups(
 
 Future<void> showStorySheet(BuildContext context, {SocialStory? story}) async {
   final provider = context.read<CommunityProvider>();
+  final navigator = Navigator.of(context);
+  final messenger = ScaffoldMessenger.of(context);
   final editing = story != null;
   final content = TextEditingController(text: story?.content ?? '');
   final media = TextEditingController(text: story?.mediaUrl ?? '');
@@ -1221,10 +1458,19 @@ Future<void> showStorySheet(BuildContext context, {SocialStory? story}) async {
                         if (!sheetContext.mounted) return;
                         if (error == null) {
                           Navigator.pop(sheetContext);
-                          showResultMessage(
-                            context,
-                            editing ? 'Đã cập nhật story.' : 'Đã đăng story.',
+                          messenger.showSnackBar(
+                            SnackBar(
+                              backgroundColor: AppColors.ink,
+                              content: Text(
+                                editing
+                                    ? 'Đã cập nhật story.'
+                                    : 'Đã đăng story.',
+                              ),
+                            ),
                           );
+                          if (editing && navigator.canPop()) {
+                            navigator.pop();
+                          }
                         } else {
                           setSheetState(() => submitting = false);
                           showResultMessage(sheetContext, error, error: true);
@@ -1248,8 +1494,6 @@ Future<void> showStorySheet(BuildContext context, {SocialStory? story}) async {
       ),
     ),
   );
-  content.dispose();
-  media.dispose();
 }
 
 class _Composer extends StatelessWidget {

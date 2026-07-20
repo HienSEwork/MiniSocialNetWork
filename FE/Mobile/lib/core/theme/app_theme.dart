@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   AppColors._();
@@ -32,6 +33,10 @@ class AppTheme {
       surface: isDark ? const Color(0xFF171925) : Colors.white,
     );
 
+    final baseTextTheme = GoogleFonts.montserratTextTheme(
+      ThemeData(brightness: brightness).textTheme,
+    );
+
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
@@ -40,14 +45,24 @@ class AppTheme {
           ? const Color(0xFF0F111A)
           : AppColors.cloud,
       dividerColor: isDark ? Colors.white12 : AppColors.line,
-      textTheme: const TextTheme(
-        headlineLarge: TextStyle(fontWeight: FontWeight.w800),
-        headlineMedium: TextStyle(fontWeight: FontWeight.w800),
-        titleLarge: TextStyle(fontWeight: FontWeight.w700),
-        titleMedium: TextStyle(fontWeight: FontWeight.w700),
-        bodyLarge: TextStyle(height: 1.45),
-        bodyMedium: TextStyle(height: 1.4),
-        labelLarge: TextStyle(fontWeight: FontWeight.w700),
+      textTheme: baseTextTheme.copyWith(
+        headlineLarge: baseTextTheme.headlineLarge?.copyWith(
+          fontWeight: FontWeight.w800,
+        ),
+        headlineMedium: baseTextTheme.headlineMedium?.copyWith(
+          fontWeight: FontWeight.w800,
+        ),
+        titleLarge: baseTextTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
+        titleMedium: baseTextTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
+        bodyLarge: baseTextTheme.bodyLarge?.copyWith(height: 1.45),
+        bodyMedium: baseTextTheme.bodyMedium?.copyWith(height: 1.4),
+        labelLarge: baseTextTheme.labelLarge?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
       ),
       appBarTheme: AppBarTheme(
         elevation: 0,

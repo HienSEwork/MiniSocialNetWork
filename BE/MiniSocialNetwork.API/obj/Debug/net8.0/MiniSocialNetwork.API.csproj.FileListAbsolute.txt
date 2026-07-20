@@ -408,5 +408,4 @@ C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.API.pdb
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\en\MiniSocialNetwork.API.resources.dll
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\vi\MiniSocialNetwork.API.resources.dll
-C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.API\obj\Debug\net8.0\en\MiniSocialNetwork.API.resources.cs
-C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.API\obj\Debug\net8.0\vi\MiniSocialNetwork.API.resources.cs
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

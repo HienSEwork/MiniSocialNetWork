@@ -118,6 +118,7 @@ app.UseRequestLocalization();
 app.UseSwagger();
 app.UseSwaggerUI();
 if (!app.Environment.IsDevelopment()) app.UseHttpsRedirection();
+app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseCors("MobileAndWeb");
 app.UseAuthentication();

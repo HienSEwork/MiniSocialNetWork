@@ -1,5 +1,25 @@
 [
   {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.AchievementsController",
+    "Method": "Me",
+    "RelativePath": "api/achievements/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IReadOnlyCollection\u00601[[MiniSocialNetwork.Application.DTOs.Achievement.AchievementResponse, MiniSocialNetwork.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "MiniSocialNetwork.API.Controllers.AdminController",
     "Method": "GetPostsPerDay",
     "RelativePath": "api/admin/posts-per-day",
@@ -553,6 +573,214 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "GetAll",
+    "RelativePath": "api/marketplace",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "keyword",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "category",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IReadOnlyCollection\u00601[[MiniSocialNetwork.Application.DTOs.Marketplace.MarketplaceItemResponse, MiniSocialNetwork.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "Create",
+    "RelativePath": "api/marketplace",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Marketplace.MarketplaceItemRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "Update",
+    "RelativePath": "api/marketplace/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Marketplace.MarketplaceItemRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "Delete",
+    "RelativePath": "api/marketplace/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "MarkSold",
+    "RelativePath": "api/marketplace/{id}/mark-sold",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "Relist",
+    "RelativePath": "api/marketplace/{id}/relist",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "Mine",
+    "RelativePath": "api/marketplace/mine",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IReadOnlyCollection\u00601[[MiniSocialNetwork.Application.DTOs.Marketplace.MarketplaceItemResponse, MiniSocialNetwork.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "MyStats",
+    "RelativePath": "api/marketplace/mine/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "MiniSocialNetwork.Application.DTOs.Marketplace.MarketplaceSellerStatsResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "Seller",
+    "RelativePath": "api/marketplace/seller/{sellerId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sellerId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IReadOnlyCollection\u00601[[MiniSocialNetwork.Application.DTOs.Marketplace.MarketplaceItemResponse, MiniSocialNetwork.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.MarketplaceController",
+    "Method": "SellerStats",
+    "RelativePath": "api/marketplace/seller/{sellerId}/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sellerId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MiniSocialNetwork.Application.DTOs.Marketplace.MarketplaceSellerStatsResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "MiniSocialNetwork.API.Controllers.MediaController",
     "Method": "Upload",
     "RelativePath": "api/media/upload",
@@ -806,6 +1034,58 @@
     ]
   },
   {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.AchievementsController",
+    "Method": "Profile",
+    "RelativePath": "api/profiles/{userId}/achievements",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IReadOnlyCollection\u00601[[MiniSocialNetwork.Application.DTOs.Achievement.AchievementResponse, MiniSocialNetwork.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.ProfilesController",
+    "Method": "GetPortfolio",
+    "RelativePath": "api/profiles/{userId}/portfolio",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MiniSocialNetwork.Application.DTOs.Profile.PortfolioResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "MiniSocialNetwork.API.Controllers.ProfilesController",
     "Method": "Update",
     "RelativePath": "api/profiles/me",
@@ -822,6 +1102,32 @@
     "ReturnTypes": [
       {
         "Type": "MiniSocialNetwork.Application.DTOs.Auth.UserProfileResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.ProfilesController",
+    "Method": "UpdatePortfolio",
+    "RelativePath": "api/profiles/me/portfolio",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Profile.UpdatePortfolioRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MiniSocialNetwork.Application.DTOs.Profile.PortfolioResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -861,5 +1167,126 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.StoriesController",
+    "Method": "GetActive",
+    "RelativePath": "api/stories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.StoriesController",
+    "Method": "Create",
+    "RelativePath": "api/stories",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Story.CreateStoryRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.StoriesController",
+    "Method": "Get",
+    "RelativePath": "api/stories/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.StoriesController",
+    "Method": "Update",
+    "RelativePath": "api/stories/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Story.CreateStoryRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.StoriesController",
+    "Method": "Delete",
+    "RelativePath": "api/stories/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.StoriesController",
+    "Method": "React",
+    "RelativePath": "api/stories/{id}/reactions",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Story.StoryReactionRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.StoriesController",
+    "Method": "Reply",
+    "RelativePath": "api/stories/{id}/reply",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Story.StoryReplyRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

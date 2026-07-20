@@ -10,6 +10,9 @@ class SocialStory {
     this.mediaUrl,
     this.mediaType = 0,
     this.updatedDate,
+    this.reactionCount = 0,
+    this.currentUserReaction,
+    this.reactionCounts = const {},
   });
 
   factory SocialStory.fromJson(Map<String, dynamic> json) => SocialStory(
@@ -28,6 +31,11 @@ class SocialStory {
     updatedDate: json['updatedDate'] == null
         ? null
         : DateTime.tryParse('${json['updatedDate']}'),
+    reactionCount: _asInt(json['reactionCount']),
+    currentUserReaction: json['currentUserReaction'] == null
+        ? null
+        : _asInt(json['currentUserReaction']),
+    reactionCounts: _asCounts(json['reactionCounts']),
   );
 
   final String id;
@@ -40,6 +48,9 @@ class SocialStory {
   final DateTime createdDate;
   final DateTime expiresAt;
   final DateTime? updatedDate;
+  final int reactionCount;
+  final int? currentUserReaction;
+  final Map<int, int> reactionCounts;
 
   bool get hasMedia => mediaUrl?.trim().isNotEmpty == true;
   bool get isVideo => mediaType == 2;
@@ -51,4 +62,9 @@ class SocialStory {
 
   static int _asInt(dynamic value) =>
       value is int ? value : int.tryParse('$value') ?? 0;
+
+  static Map<int, int> _asCounts(dynamic value) {
+    if (value is! Map) return const {};
+    return value.map((key, count) => MapEntry(_asInt(key), _asInt(count)));
+  }
 }

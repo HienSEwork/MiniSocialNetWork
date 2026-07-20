@@ -316,6 +316,31 @@ class CommunityProvider extends ChangeNotifier {
     }
   }
 
+  Future<String?> reactStory(SocialStory story, int type) async {
+    try {
+      await _api.post('/stories/${story.id}/reactions', data: {'type': type});
+      await fetchStories();
+      return null;
+    } on ApiFailure catch (error) {
+      return error.message;
+    }
+  }
+
+  Future<String?> replyStory(SocialStory story, String content) async {
+    if (content.trim().isEmpty) {
+      return _t('Message is empty.', 'Tin nhắn đang trống.');
+    }
+    try {
+      await _api.post(
+        '/stories/${story.id}/reply',
+        data: {'content': content.trim()},
+      );
+      return null;
+    } on ApiFailure catch (error) {
+      return error.message;
+    }
+  }
+
   Future<UploadedMedia> uploadMedia({
     required String fileName,
     String? filePath,

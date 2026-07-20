@@ -43,6 +43,7 @@ dependencies:
   signalr_netcore: ^1.4.4
   flutter_secure_storage: ^10.3.1
   image_picker: ^1.2.1
+  google_fonts: ^8.2.0
 
 dev_dependencies:
   flutter_test:

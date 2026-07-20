@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import '../../core/constants.dart';
 import '../../core/app_copy.dart';
 import '../../data/providers/community_provider.dart';
-import 'groups_screen.dart';
-import 'chat_screen.dart';
+import 'community_hub_screen.dart';
 import 'home_screen.dart';
 import 'notifications_screen.dart';
 import 'profile_screen.dart';
+import 'tech_job_screen.dart';
 import '../widgets/common.dart';
 
 class MainLayout extends StatefulWidget {
@@ -46,8 +46,8 @@ class _MainLayoutState extends State<MainLayout> {
         final copy = AppCopy.of(context);
         final pages = [
           HomeScreen(key: ValueKey('home-$_reloadVersion')),
-          GroupsScreen(key: ValueKey('groups-$_reloadVersion')),
-          ChatScreen(key: ValueKey('chat-$_reloadVersion')),
+          CommunityHubScreen(key: ValueKey('community-$_reloadVersion')),
+          TechJobScreen(key: ValueKey('tech-job-$_reloadVersion')),
           NotificationsScreen(key: ValueKey('activity-$_reloadVersion')),
           ProfileScreen(key: ValueKey('profile-$_reloadVersion')),
         ];
@@ -60,12 +60,12 @@ class _MainLayoutState extends State<MainLayout> {
           NavigationDestination(
             icon: const Icon(Icons.diversity_3_outlined),
             selectedIcon: const Icon(Icons.diversity_3_rounded),
-            label: copy.groups,
+            label: copy.communityFallback,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.forum_outlined),
-            selectedIcon: const Icon(Icons.forum_rounded),
-            label: copy.chat,
+            icon: const Icon(Icons.work_outline_rounded),
+            selectedIcon: const Icon(Icons.work_rounded),
+            label: 'Tech Job',
           ),
           NavigationDestination(
             icon: const Icon(Icons.notifications_none_rounded),

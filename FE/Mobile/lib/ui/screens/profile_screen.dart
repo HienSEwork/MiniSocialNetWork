@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/app_copy.dart';
+import '../../data/models/achievement_model.dart';
+import '../../data/models/marketplace_model.dart';
+import '../../data/models/portfolio_model.dart';
 import '../../data/providers/auth_provider.dart';
 import '../../data/providers/community_provider.dart';
 import '../../data/providers/settings_provider.dart';
+import '../../data/services/api_service.dart';
 import '../widgets/common.dart';
+import 'marketplace_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -19,6 +25,7 @@ class ProfileScreen extends StatelessWidget {
     final session = auth.session;
     final dark = Theme.of(context).brightness == Brightness.dark;
     final copy = AppCopy.of(context);
+    final achievementKey = GlobalKey();
 
     return Scaffold(
       body: CustomScrollView(
@@ -72,12 +79,48 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         IconButton.filledTonal(
                           tooltip: copy.editProfile,
-                          onPressed: () => _editProfile(context),
+                          onPressed: () => editProfileSheet(context),
                           icon: const Icon(Icons.edit_outlined),
                         ),
                       ],
                     ),
                   ),
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ResponsivePage(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(22, 22, 22, 0),
+                child: KeyedSubtree(
+                  key: achievementKey,
+                  child: _AchievementSection(
+                    userId: session?.userId,
+                    isGuest: session?.isGuest == true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ResponsivePage(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(22, 22, 22, 0),
+                child: _PortfolioSection(
+                  userId: session?.userId,
+                  editable: session?.isGuest != true,
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ResponsivePage(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(22, 22, 22, 0),
+                child: _MarketplaceSection(
+                  userId: session?.userId,
+                  editable: session?.isGuest != true,
                 ),
               ),
             ),
@@ -113,13 +156,37 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const Divider(height: 1, indent: 64),
                       ListTile(
+                        leading: const Icon(Icons.emoji_events_outlined),
+                        title: const Text('Achievement'),
+                        subtitle: const Text('Badges va tien do ca nhan'),
+                        trailing: const Icon(Icons.keyboard_arrow_up_rounded),
+                        onTap: () {
+                          final target = achievementKey.currentContext;
+                          if (target == null) return;
+                          Scrollable.ensureVisible(
+                            target,
+                            duration: const Duration(milliseconds: 280),
+                            curve: Curves.easeOutCubic,
+                          );
+                        },
+                      ),
+                      const Divider(height: 1, indent: 64),
+                      ListTile(
+                        leading: const Icon(Icons.storefront_outlined),
+                        title: const Text('Marketplace'),
+                        subtitle: const Text('Sàn mua bán đồ tech'),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => context.push('/marketplace'),
+                      ),
+                      const Divider(height: 1, indent: 64),
+                      ListTile(
                         leading: const Icon(Icons.translate_rounded),
                         title: Text(copy.language),
                         subtitle: Text(
                           settings.isEnglish ? 'English' : 'Tiếng Việt',
                         ),
                         trailing: const Icon(Icons.chevron_right_rounded),
-                        onTap: () => _chooseLanguage(context, settings),
+                        onTap: () => chooseLanguageSheet(context, settings),
                       ),
                     ],
                   ),
@@ -151,22 +218,441 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Future<void> _editProfile(BuildContext context) async {
-    final auth = context.read<AuthProvider>();
-    final copy = AppCopy.of(context);
-    final messenger = ScaffoldMessenger.of(context);
-    final community = context.read<CommunityProvider>();
-    if (auth.session?.isGuest == true) {
-      showResultMessage(context, copy.loginToEdit, error: true);
-      return;
+class _MarketplaceSection extends StatefulWidget {
+  const _MarketplaceSection({required this.userId, required this.editable});
+
+  final String? userId;
+  final bool editable;
+
+  @override
+  State<_MarketplaceSection> createState() => _MarketplaceSectionState();
+}
+
+class _MarketplaceSectionState extends State<_MarketplaceSection> {
+  List<MarketplaceItem> _items = const [];
+  MarketplaceStats? _stats;
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final userId = widget.userId;
+    if (userId == null || userId.isEmpty) return;
+    setState(() => _loading = true);
+    try {
+      final itemsRaw = widget.editable
+          ? await ApiService.instance.get('/marketplace/mine')
+          : await ApiService.instance.get('/marketplace/seller/$userId');
+      final statsRaw = widget.editable
+          ? await ApiService.instance.get('/marketplace/mine/stats')
+          : await ApiService.instance.get('/marketplace/seller/$userId/stats');
+      _items = _list(itemsRaw).map(MarketplaceItem.fromJson).toList();
+      _stats = MarketplaceStats.fromJson(Map<String, dynamic>.from(statsRaw));
+      _error = null;
+    } on ApiFailure catch (error) {
+      _error = error.message;
+    } finally {
+      if (mounted) setState(() => _loading = false);
     }
+  }
 
-    final name = TextEditingController(text: auth.displayName);
-    final bio = TextEditingController(text: auth.session?.bio);
-    var avatarUrl = auth.session?.avatarUrl ?? '';
-    var avatarName = '';
-    var uploading = false;
+  @override
+  Widget build(BuildContext context) {
+    final stats = _stats;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.storefront_outlined, color: AppColors.grape),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Sàn cá nhân',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                if (stats != null)
+                  Text(
+                    '${stats.activeCount}/${stats.limit} • Đã bán ${stats.soldCount}',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (_loading)
+              const LinearProgressIndicator()
+            else if (_error != null)
+              Text(
+                _error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              )
+            else if (_items.isEmpty)
+              Text(
+                'Chưa có sản phẩm trên sàn cá nhân.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              )
+            else
+              Column(
+                children: [
+                  for (final item in _items.take(2))
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: MarketplaceItemCard(item: item, onChanged: _load),
+                    ),
+                ],
+              ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => context.push('/marketplace'),
+                    icon: const Icon(Icons.open_in_new_rounded),
+                    label: const Text('Mở sàn'),
+                  ),
+                ),
+                if (widget.editable) ...[
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed:
+                          stats != null && stats.activeCount >= stats.limit
+                          ? null
+                          : () async {
+                              await showMarketplaceItemSheet(context);
+                              await _load();
+                            },
+                      icon: const Icon(Icons.add_rounded),
+                      label: const Text('Đăng bán'),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> _list(dynamic raw) {
+    if (raw is! List) return const [];
+    return raw
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+  }
+}
+
+class _AchievementSection extends StatefulWidget {
+  const _AchievementSection({required this.userId, required this.isGuest});
+
+  final String? userId;
+  final bool isGuest;
+
+  @override
+  State<_AchievementSection> createState() => _AchievementSectionState();
+}
+
+class _AchievementSectionState extends State<_AchievementSection> {
+  List<UserAchievement> _achievements = const [];
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final userId = widget.userId;
+    if (userId == null || userId.isEmpty) return;
+    setState(() => _loading = true);
+    try {
+      final raw = widget.isGuest
+          ? await ApiService.instance.get('/profiles/$userId/achievements')
+          : await ApiService.instance.get('/achievements/me');
+      _achievements = _list(raw).map(UserAchievement.fromJson).toList();
+      _error = null;
+    } on ApiFailure catch (error) {
+      _error = error.message;
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final unlocked = _achievements.where((item) => item.unlocked).length;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.emoji_events_outlined, color: AppColors.coral),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Thành tích',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                if (_achievements.isNotEmpty)
+                  Text(
+                    '$unlocked/${_achievements.length}',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (_loading)
+              const LinearProgressIndicator()
+            else if (_error != null)
+              Text(
+                _error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              )
+            else if (_achievements.isEmpty)
+              Text(
+                'Chưa có dữ liệu thành tích.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              )
+            else
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  for (final achievement in _achievements)
+                    _AchievementBadge(achievement: achievement),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> _list(dynamic raw) {
+    if (raw is! List) return const [];
+    return raw
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+  }
+}
+
+class _AchievementBadge extends StatelessWidget {
+  const _AchievementBadge({required this.achievement});
+
+  final UserAchievement achievement;
+
+  @override
+  Widget build(BuildContext context) {
+    final active = achievement.unlocked;
+    final color = active ? AppColors.coral : Colors.grey;
+    return Tooltip(
+      message: achievement.description,
+      child: AnimatedOpacity(
+        opacity: active ? 1 : .42,
+        duration: const Duration(milliseconds: 180),
+        child: Container(
+          width: 104,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: active ? .12 : .08),
+            border: Border.all(color: color.withValues(alpha: .28)),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(_achievementIcon(achievement.icon), color: color, size: 28),
+              const SizedBox(height: 8),
+              Text(
+                achievement.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  color: active
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _achievementIcon(String name) => switch (name) {
+    'edit_note' => Icons.edit_note_rounded,
+    'auto_awesome' => Icons.auto_awesome_rounded,
+    'groups' => Icons.groups_rounded,
+    'workspaces' => Icons.workspaces_rounded,
+    'favorite' => Icons.favorite_rounded,
+    _ => Icons.emoji_events_rounded,
+  };
+}
+
+class _PortfolioSection extends StatefulWidget {
+  const _PortfolioSection({required this.userId, required this.editable});
+
+  final String? userId;
+  final bool editable;
+
+  @override
+  State<_PortfolioSection> createState() => _PortfolioSectionState();
+}
+
+class _PortfolioSectionState extends State<_PortfolioSection> {
+  UserPortfolio? _portfolio;
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final userId = widget.userId;
+    if (userId == null || userId.isEmpty) return;
+    setState(() => _loading = true);
+    try {
+      final raw = await ApiService.instance.get('/profiles/$userId/portfolio');
+      _portfolio = UserPortfolio.fromJson(Map<String, dynamic>.from(raw));
+      _error = null;
+    } on ApiFailure catch (error) {
+      _error = error.message;
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final portfolio = _portfolio;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.workspaces_outline, color: AppColors.indigo),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Portfolio',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                if (widget.editable)
+                  IconButton.filledTonal(
+                    onPressed: portfolio == null
+                        ? null
+                        : () async {
+                            await _editPortfolio(context, portfolio);
+                            await _load();
+                          },
+                    icon: const Icon(Icons.edit_outlined),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (_loading)
+              const LinearProgressIndicator()
+            else if (_error != null)
+              Text(
+                _error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              )
+            else if (portfolio == null || portfolio.isEmpty)
+              Text(
+                'Chưa có portfolio. Thêm vai trò, kỹ năng và project nổi bật.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              )
+            else ...[
+              Text(
+                portfolio.title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              if (portfolio.location?.isNotEmpty == true) ...[
+                const SizedBox(height: 4),
+                Text(portfolio.location!),
+              ],
+              if (portfolio.bio.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Text(portfolio.bio),
+              ],
+              if (portfolio.skillList.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final skill in portfolio.skillList)
+                      Chip(label: Text(skill)),
+                  ],
+                ),
+              ],
+              if (portfolio.featuredProjectName?.isNotEmpty == true) ...[
+                const SizedBox(height: 12),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.folder_special_outlined),
+                  title: Text(portfolio.featuredProjectName!),
+                  subtitle: Text(portfolio.featuredProjectUrl ?? ''),
+                ),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _editPortfolio(
+    BuildContext context,
+    UserPortfolio portfolio,
+  ) async {
+    final title = TextEditingController(text: portfolio.title);
+    final bio = TextEditingController(text: portfolio.bio);
+    final skills = TextEditingController(text: portfolio.skills);
+    final location = TextEditingController(text: portfolio.location);
+    final github = TextEditingController(text: portfolio.githubUrl);
+    final website = TextEditingController(text: portfolio.websiteUrl);
+    final project = TextEditingController(text: portfolio.featuredProjectName);
+    final projectUrl = TextEditingController(
+      text: portfolio.featuredProjectUrl,
+    );
     var saving = false;
 
     await showModalBottomSheet<void>(
@@ -174,13 +660,13 @@ class ProfileScreen extends StatelessWidget {
       isScrollControlled: true,
       useSafeArea: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (sheetContext) => StatefulBuilder(
         builder: (context, setSheetState) => Padding(
           padding: EdgeInsets.fromLTRB(
             22,
-            22,
+            18,
             22,
             MediaQuery.viewInsetsOf(context).bottom + 22,
           ),
@@ -189,110 +675,86 @@ class ProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  copy.editProfile,
+                  'Chỉnh portfolio',
                   style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: UserAvatar(
-                    label: name.text,
-                    imageUrl: avatarUrl,
-                    radius: 46,
-                    accent: AppColors.coral,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton.icon(
-                  onPressed: uploading || saving
-                      ? null
-                      : () async {
-                          final image = await ImagePicker().pickImage(
-                            source: ImageSource.gallery,
-                            imageQuality: 88,
-                            maxWidth: 1200,
-                          );
-                          if (image == null) return;
-                          setSheetState(() => uploading = true);
-                          String? result;
-                          try {
-                            result = await auth.uploadAvatar(
-                              fileName: image.name,
-                              filePath: image.path,
-                              bytes: await image.readAsBytes(),
-                            );
-                          } catch (error) {
-                            result = '$error';
-                          }
-                          if (!sheetContext.mounted) return;
-                          setSheetState(() => uploading = false);
-                          final uploadedUrl = result;
-                          if (uploadedUrl == null || uploadedUrl.isEmpty) {
-                            showResultMessage(
-                              sheetContext,
-                              copy.uploadFailed,
-                              error: true,
-                            );
-                          } else {
-                            setSheetState(() {
-                              avatarUrl = uploadedUrl;
-                              avatarName = image.name;
-                            });
-                          }
-                        },
-                  icon: uploading
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.add_a_photo_outlined),
-                  label: Text(
-                    avatarName.isEmpty ? copy.chooseImage : avatarName,
-                  ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  controller: name,
-                  enabled: !saving,
-                  decoration: InputDecoration(labelText: copy.displayName),
+                  controller: title,
+                  decoration: const InputDecoration(labelText: 'Vai trò'),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 TextField(
                   controller: bio,
-                  enabled: !saving,
                   minLines: 2,
                   maxLines: 4,
-                  decoration: InputDecoration(labelText: copy.bio),
+                  decoration: const InputDecoration(labelText: 'Giới thiệu'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: skills,
+                  decoration: const InputDecoration(
+                    labelText: 'Kỹ năng, cách nhau bằng dấu phẩy',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: location,
+                  decoration: const InputDecoration(labelText: 'Địa điểm'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: github,
+                  decoration: const InputDecoration(labelText: 'GitHub'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: website,
+                  decoration: const InputDecoration(labelText: 'Website'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: project,
+                  decoration: const InputDecoration(
+                    labelText: 'Project nổi bật',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: projectUrl,
+                  decoration: const InputDecoration(labelText: 'Link project'),
                 ),
                 const SizedBox(height: 18),
                 FilledButton.icon(
-                  onPressed: saving || uploading
+                  onPressed: saving
                       ? null
                       : () async {
-                          final navigator = Navigator.of(sheetContext);
                           setSheetState(() => saving = true);
-                          final error = await auth.updateProfile(
-                            displayName: name.text,
-                            bio: bio.text,
-                            avatarUrl: avatarUrl,
-                          );
-                          if (!sheetContext.mounted) return;
-                          if (error == null) {
-                            await community.loadDashboard(force: true);
+                          try {
+                            await ApiService.instance.put(
+                              '/profiles/me/portfolio',
+                              data: {
+                                'title': title.text,
+                                'bio': bio.text,
+                                'skills': skills.text,
+                                'location': location.text,
+                                'githubUrl': github.text,
+                                'websiteUrl': website.text,
+                                'featuredProjectName': project.text,
+                                'featuredProjectUrl': projectUrl.text,
+                              },
+                            );
                             if (!sheetContext.mounted) return;
-                            navigator.pop();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              auth.notifyProfileChanged();
-                              messenger.showSnackBar(
-                                SnackBar(
-                                  backgroundColor: AppColors.ink,
-                                  content: Text(copy.profileUpdated),
-                                ),
-                              );
-                            });
-                          } else {
+                            Navigator.pop(sheetContext);
+                            showResultMessage(context, 'Đã lưu portfolio.');
+                          } on ApiFailure catch (error) {
+                            if (!sheetContext.mounted) return;
                             setSheetState(() => saving = false);
-                            showResultMessage(sheetContext, error, error: true);
+                            showResultMessage(
+                              sheetContext,
+                              error.message,
+                              error: true,
+                            );
                           }
                         },
                   icon: saving
@@ -302,9 +764,9 @@ class ProfileScreen extends StatelessWidget {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.save_outlined),
-                  label: Padding(
+                  label: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 13),
-                    child: Text(copy.saveChanges),
+                    child: Text('Lưu portfolio'),
                   ),
                 ),
               ],
@@ -314,28 +776,189 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Future<void> _chooseLanguage(
-    BuildContext context,
-    SettingsProvider settings,
-  ) async {
-    final code = await showModalBottomSheet<String>(
-      context: context,
-      showDragHandle: true,
-      builder: (sheetContext) => SafeArea(
-        child: RadioGroup<String>(
-          groupValue: settings.locale.languageCode,
-          onChanged: (value) => Navigator.pop(sheetContext, value),
+Future<void> editProfileSheet(BuildContext context) async {
+  final auth = context.read<AuthProvider>();
+  final copy = AppCopy.of(context);
+  final messenger = ScaffoldMessenger.of(context);
+  final community = context.read<CommunityProvider>();
+  if (auth.session?.isGuest == true) {
+    showResultMessage(context, copy.loginToEdit, error: true);
+    return;
+  }
+
+  final name = TextEditingController(text: auth.displayName);
+  final bio = TextEditingController(text: auth.session?.bio);
+  var avatarUrl = auth.session?.avatarUrl ?? '';
+  var avatarName = '';
+  var uploading = false;
+  var saving = false;
+
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (sheetContext) => StatefulBuilder(
+      builder: (context, setSheetState) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          22,
+          22,
+          22,
+          MediaQuery.viewInsetsOf(context).bottom + 22,
+        ),
+        child: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              RadioListTile<String>(value: 'vi', title: Text('Tiếng Việt')),
-              RadioListTile<String>(value: 'en', title: Text('English')),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                copy.editProfile,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: UserAvatar(
+                  label: name.text,
+                  imageUrl: avatarUrl,
+                  radius: 46,
+                  accent: AppColors.coral,
+                ),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: uploading || saving
+                    ? null
+                    : () async {
+                        final image = await ImagePicker().pickImage(
+                          source: ImageSource.gallery,
+                          imageQuality: 88,
+                          maxWidth: 1200,
+                        );
+                        if (image == null) return;
+                        setSheetState(() => uploading = true);
+                        String? result;
+                        try {
+                          result = await auth.uploadAvatar(
+                            fileName: image.name,
+                            filePath: image.path,
+                            bytes: await image.readAsBytes(),
+                          );
+                        } catch (error) {
+                          result = '$error';
+                        }
+                        if (!sheetContext.mounted) return;
+                        setSheetState(() => uploading = false);
+                        final uploadedUrl = result;
+                        if (uploadedUrl == null || uploadedUrl.isEmpty) {
+                          showResultMessage(
+                            sheetContext,
+                            copy.uploadFailed,
+                            error: true,
+                          );
+                        } else {
+                          setSheetState(() {
+                            avatarUrl = uploadedUrl;
+                            avatarName = image.name;
+                          });
+                        }
+                      },
+                icon: uploading
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.add_a_photo_outlined),
+                label: Text(avatarName.isEmpty ? copy.chooseImage : avatarName),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: name,
+                enabled: !saving,
+                decoration: InputDecoration(labelText: copy.displayName),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: bio,
+                enabled: !saving,
+                minLines: 2,
+                maxLines: 4,
+                decoration: InputDecoration(labelText: copy.bio),
+              ),
+              const SizedBox(height: 18),
+              FilledButton.icon(
+                onPressed: saving || uploading
+                    ? null
+                    : () async {
+                        final navigator = Navigator.of(sheetContext);
+                        setSheetState(() => saving = true);
+                        final error = await auth.updateProfile(
+                          displayName: name.text,
+                          bio: bio.text,
+                          avatarUrl: avatarUrl,
+                        );
+                        if (!sheetContext.mounted) return;
+                        if (error == null) {
+                          await community.loadDashboard(force: true);
+                          if (!sheetContext.mounted) return;
+                          navigator.pop();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            auth.notifyProfileChanged();
+                            messenger.showSnackBar(
+                              SnackBar(
+                                backgroundColor: AppColors.ink,
+                                content: Text(copy.profileUpdated),
+                              ),
+                            );
+                          });
+                        } else {
+                          setSheetState(() => saving = false);
+                          showResultMessage(sheetContext, error, error: true);
+                        }
+                      },
+                icon: saving
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.save_outlined),
+                label: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13),
+                  child: Text(copy.saveChanges),
+                ),
+              ),
             ],
           ),
         ),
       ),
-    );
-    if (code != null) await settings.setLanguage(code);
-  }
+    ),
+  );
+}
+
+Future<void> chooseLanguageSheet(
+  BuildContext context,
+  SettingsProvider settings,
+) async {
+  final code = await showModalBottomSheet<String>(
+    context: context,
+    showDragHandle: true,
+    builder: (sheetContext) => SafeArea(
+      child: RadioGroup<String>(
+        groupValue: settings.locale.languageCode,
+        onChanged: (value) => Navigator.pop(sheetContext, value),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            RadioListTile<String>(value: 'vi', title: Text('Tiếng Việt')),
+            RadioListTile<String>(value: 'en', title: Text('English')),
+          ],
+        ),
+      ),
+    ),
+  );
+  if (code != null) await settings.setLanguage(code);
 }

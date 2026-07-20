@@ -11,6 +11,7 @@ import '../../data/models/search_models.dart';
 import '../../data/providers/search_provider.dart';
 import '../widgets/common.dart';
 import '../widgets/post_card.dart';
+import 'groups_screen.dart' show GroupDetailScreen;
 
 enum _SearchFilter { all, people, groups, posts }
 
@@ -105,7 +106,13 @@ class _SearchScreenState extends State<SearchScreen> {
                         children: [
                           IconButton.filledTonal(
                             tooltip: copy.back,
-                            onPressed: context.pop,
+                            onPressed: () {
+                              if (Navigator.of(context).canPop()) {
+                                Navigator.of(context).pop();
+                              } else {
+                                context.go('/');
+                              }
+                            },
                             icon: const Icon(Icons.arrow_back_rounded),
                           ),
                           const SizedBox(width: 12),
@@ -250,6 +257,19 @@ class _SearchScreenState extends State<SearchScreen> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ],
+            const SizedBox(height: 20),
+            FilledButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.of(this.context).push(
+                  MaterialPageRoute(
+                    builder: (_) => GroupDetailScreen(group: group),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.open_in_new_rounded),
+              label: Text(copy.isEnglish ? 'Open group' : 'Mở nhóm'),
+            ),
           ],
         ),
       ),

@@ -20,8 +20,12 @@ public static class DemoDataSeeder
         await context.Database.MigrateAsync();
 
         var users = await EnsureUsersAsync(userManager);
+        await EnsureAchievementDefinitionsAsync(context);
         await EnsureGroupsAndPostsAsync(context, users);
         await EnsureChatMessagesAsync(context, users);
+        await EnsureStoriesAsync(context, users);
+        await EnsurePortfoliosAsync(context, users);
+        await EnsureMarketplaceAsync(context, users);
     }
 
     private static async Task<List<AppUser>> EnsureUsersAsync(UserManager<AppUser> userManager)
@@ -62,6 +66,36 @@ public static class DemoDataSeeder
         }
 
         return users;
+    }
+
+    private static async Task EnsureAchievementDefinitionsAsync(AppDbContext context)
+    {
+        var definitions = new[]
+        {
+            new AchievementDefinition { Code = "first-post", Name = "Bài viết đầu tiên", Description = "Đăng bài đầu tiên trong cộng đồng.", Icon = "edit_note", SortOrder = 1, IsActive = true },
+            new AchievementDefinition { Code = "first-story", Name = "Story đầu tiên", Description = "Chia sẻ story đầu tiên trên TechNet.", Icon = "auto_awesome", SortOrder = 2, IsActive = true },
+            new AchievementDefinition { Code = "joined-group", Name = "Thành viên cộng đồng", Description = "Tham gia ít nhất một nhóm.", Icon = "groups", SortOrder = 3, IsActive = true },
+            new AchievementDefinition { Code = "portfolio-ready", Name = "Portfolio sẵn sàng", Description = "Hoàn thiện vai trò, kỹ năng hoặc project nổi bật.", Icon = "workspaces", SortOrder = 4, IsActive = true },
+            new AchievementDefinition { Code = "got-reaction", Name = "Được quan tâm", Description = "Bài viết của bạn đã nhận reaction.", Icon = "favorite", SortOrder = 5, IsActive = true }
+        };
+
+        foreach (var definition in definitions)
+        {
+            var existing = await context.AchievementDefinitions.FindAsync(definition.Code);
+            if (existing == null)
+            {
+                await context.AchievementDefinitions.AddAsync(definition);
+            }
+            else
+            {
+                existing.Name = definition.Name;
+                existing.Description = definition.Description;
+                existing.Icon = definition.Icon;
+                existing.SortOrder = definition.SortOrder;
+                existing.IsActive = true;
+            }
+        }
+        await context.SaveChangesAsync();
     }
 
     private static async Task EnsureGroupsAndPostsAsync(AppDbContext context, IReadOnlyList<AppUser> users)
@@ -317,6 +351,107 @@ public static class DemoDataSeeder
         await context.SaveChangesAsync();
     }
 
+    private static async Task EnsureStoriesAsync(AppDbContext context, IReadOnlyList<AppUser> users)
+    {
+        if (users.Count == 0) return;
+
+        var now = DateTime.UtcNow;
+        var storyUsers = users.Take(16).ToList();
+        for (var i = 0; i < StoryBodies.Length; i++)
+        {
+            var user = storyUsers[i % storyUsers.Count];
+            var content = StoryBodies[i];
+            var story = await context.Stories.FirstOrDefaultAsync(s =>
+                s.UserId == user.Id &&
+                s.Content == content);
+
+            if (story == null)
+            {
+                story = new Story
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    Content = content,
+                    MediaUrl = i % 3 == 0 ? DemoImages[i % DemoImages.Length] : null,
+                    MediaType = i % 3 == 0 ? 1 : 0,
+                    CreatedDate = now.AddMinutes(-(i + 1) * 23),
+                    ExpiresAt = now.AddHours(24).AddMinutes(-i * 23),
+                    IsDeleted = false
+                };
+                await context.Stories.AddAsync(story);
+            }
+            else
+            {
+                story.MediaUrl = i % 3 == 0 ? DemoImages[i % DemoImages.Length] : null;
+                story.MediaType = i % 3 == 0 ? 1 : 0;
+                story.CreatedDate = now.AddMinutes(-(i + 1) * 23);
+                story.ExpiresAt = now.AddHours(24).AddMinutes(-i * 23);
+                story.IsDeleted = false;
+                story.UpdatedDate = now;
+            }
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    private static async Task EnsurePortfoliosAsync(AppDbContext context, IReadOnlyList<AppUser> users)
+    {
+        for (var i = 0; i < users.Count; i++)
+        {
+            var user = users[i];
+            var portfolio = await context.UserPortfolios.FirstOrDefaultAsync(item => item.UserId == user.Id);
+            if (portfolio == null)
+            {
+                portfolio = new UserPortfolio { UserId = user.Id };
+                await context.UserPortfolios.AddAsync(portfolio);
+            }
+
+            portfolio.Title = PortfolioTitles[i % PortfolioTitles.Length];
+            portfolio.Bio = PortfolioBios[i % PortfolioBios.Length];
+            portfolio.Skills = PortfolioSkills[i % PortfolioSkills.Length];
+            portfolio.GithubUrl = $"https://github.com/demo-tech-{i + 1:00}";
+            portfolio.WebsiteUrl = $"https://portfolio-demo-{i + 1:00}.local";
+            portfolio.Location = i % 2 == 0 ? "Ha Noi" : "Ho Chi Minh City";
+            portfolio.FeaturedProjectName = PortfolioProjects[i % PortfolioProjects.Length];
+            portfolio.FeaturedProjectUrl = $"https://github.com/demo-tech-{i + 1:00}/featured-project";
+            portfolio.UpdatedDate = DateTime.UtcNow.AddDays(-i);
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    private static async Task EnsureMarketplaceAsync(AppDbContext context, IReadOnlyList<AppUser> users)
+    {
+        if (users.Count == 0) return;
+        for (var i = 0; i < MarketplaceTitles.Length; i++)
+        {
+            var seller = users[i % Math.Min(users.Count, 12)];
+            var title = MarketplaceTitles[i];
+            var item = await context.MarketplaceItems.FirstOrDefaultAsync(product =>
+                product.SellerId == seller.Id && product.Title == title);
+            if (item == null)
+            {
+                item = new MarketplaceItem
+                {
+                    Id = Guid.NewGuid(),
+                    SellerId = seller.Id,
+                    Title = title,
+                    CreatedDate = DateTime.UtcNow.AddHours(-(i + 1) * 4)
+                };
+                await context.MarketplaceItems.AddAsync(item);
+            }
+
+            item.Description = MarketplaceDescriptions[i % MarketplaceDescriptions.Length];
+            item.Price = MarketplacePrices[i % MarketplacePrices.Length];
+            item.Category = MarketplaceCategories[i % MarketplaceCategories.Length];
+            item.Condition = i % 4 == 0 ? "Mới" : "Đã sử dụng";
+            item.MediaUrl = DemoImages[i % DemoImages.Length];
+            item.Status = i % 5 == 0 ? 1 : 0;
+            item.UpdatedDate = DateTime.UtcNow.AddHours(-i);
+        }
+        await context.SaveChangesAsync();
+    }
+
     private static readonly string[] DemoNames =
     [
         "An Nguyễn", "Bình Trần", "Chi Lê", "Dũng Phạm", "Em Võ", "Giang Đỗ",
@@ -456,6 +591,98 @@ public static class DemoDataSeeder
         "Nếu deploy bản demo, nhớ bật seed data để app nhìn có sức sống hơn nhé.",
         "Mình nghĩ bài viết nên có comment và reaction sẵn, nhìn giống cộng đồng đang hoạt động hơn.",
         "Mai mình thử chạy local model với bộ tài liệu nhỏ, xem latency thế nào."
+    ];
+
+    private static readonly string[] StoryBodies =
+    [
+        "Setup sáng nay: màn phụ dọc để đọc log, rất đáng tiền.",
+        "Vừa test prompt mới cho workflow AI, kết quả ổn hơn hẳn.",
+        "Checklist hôm nay: backup DB, update package, review security.",
+        "Góc làm việc gọn lại sau khi đổi dock USB-C.",
+        "Đang thử build app Flutter trên Windows, hot reload vẫn mượt.",
+        "Một mẹo nhỏ: resize ảnh trước khi đưa lên feed sẽ nhẹ app hơn.",
+        "Vừa đọc tin GPU mới, VRAM vẫn là thứ đáng cân nhắc nhất.",
+        "Hôm nay học thêm về SignalR để làm realtime notification.",
+        "Team mình đang thử dùng AI để tạo test case edge.",
+        "Có ai dùng laptop AI PC chưa, NPU thực tế thế nào?",
+        "Đang gom tài liệu .NET clean architecture cho nhóm.",
+        "Story test từ demo account, feed nhìn có sức sống hơn.",
+        "Vừa đổi bàn phím low-profile, cổ tay đỡ mỏi khi code dài.",
+        "Đọc paper về RAG thấy chunking quan trọng hơn mình nghĩ.",
+        "Một buổi tối debug SQL, index đúng là cứu hiệu năng.",
+        "Đang setup mini lab Docker để test deploy nhanh."
+    ];
+
+    private static readonly string[] PortfolioTitles =
+    [
+        "Flutter Developer",
+        ".NET Backend Engineer",
+        "AI Product Builder",
+        "Data Analyst",
+        "Cloud DevOps Learner"
+    ];
+
+    private static readonly string[] PortfolioBios =
+    [
+        "Thich xay app mobile nhanh, UI gon va co trai nghiem tot.",
+        "Tap trung API, auth, database va he thong co kha nang mo rong.",
+        "Dang thu nghiem AI workflow, RAG va assistant cho san pham thuc te.",
+        "Quan tam dashboard, SQL, tracking metric va chuyen doi du lieu thanh insight.",
+        "Hoc Docker, CI/CD, cloud cost va quan sat he thong."
+    ];
+
+    private static readonly string[] PortfolioSkills =
+    [
+        "Flutter, Dart, Provider, REST API",
+        "ASP.NET Core, EF Core, SQL Server, JWT",
+        "Python, LLM, RAG, Prompt Engineering",
+        "SQL, Power BI, Excel, Data Modeling",
+        "Docker, GitHub Actions, Azure, Linux"
+    ];
+
+    private static readonly string[] PortfolioProjects =
+    [
+        "TechNet mobile social feed",
+        "Realtime group chat",
+        "AI document assistant",
+        "Laptop price tracking dashboard",
+        "DevOps deployment template"
+    ];
+
+    private static readonly string[] MarketplaceTitles =
+    [
+        "Laptop ThinkPad T14 Gen 3",
+        "Màn hình Dell 27 inch 2K",
+        "Bàn phím cơ Keychron K3",
+        "Chuột Logitech MX Master",
+        "SSD NVMe Samsung 1TB",
+        "RAM DDR4 32GB kit",
+        "Dock USB-C đa cổng",
+        "Tai nghe Sony WH-1000XM",
+        "GPU RTX 3060 12GB",
+        "Mini PC Intel NUC",
+        "Webcam Logitech C920",
+        "Router Wi-Fi 6 Asus"
+    ];
+
+    private static readonly string[] MarketplaceDescriptions =
+    [
+        "Đồ tech còn tốt, phù hợp học tập, làm việc và build setup cá nhân.",
+        "Đã test ổn định, ngoại hình đẹp, ưu tiên giao dịch nhanh trong cộng đồng.",
+        "Nâng cấp setup nên cần nhượng lại, còn dùng tốt cho dev và creator.",
+        "Phù hợp sinh viên IT hoặc người mới setup góc làm việc."
+    ];
+
+    private static readonly decimal[] MarketplacePrices =
+    [
+        12500000, 4200000, 1850000, 1650000, 2100000, 1900000,
+        950000, 3900000, 5200000, 6800000, 1200000, 2400000
+    ];
+
+    private static readonly string[] MarketplaceCategories =
+    [
+        "Laptop", "Màn hình", "Gear", "Gear", "Linh kiện", "Linh kiện",
+        "Phụ kiện", "Audio", "Linh kiện", "PC", "Phụ kiện", "Network"
     ];
 
     private static readonly string[] DemoImages =

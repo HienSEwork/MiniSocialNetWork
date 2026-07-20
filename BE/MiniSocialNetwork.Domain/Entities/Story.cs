@@ -12,4 +12,5 @@ public class Story
     public DateTime ExpiresAt { get; set; }
     public DateTime? UpdatedDate { get; set; }
     public bool IsDeleted { get; set; }
+    public ICollection<StoryReaction> Reactions { get; set; } = new List<StoryReaction>();
 }
