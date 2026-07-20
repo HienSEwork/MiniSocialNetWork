@@ -51,8 +51,8 @@ public class GroupService : IGroupService
 
         var group = await GetActiveGroupAsync(groupId);
 
-        //if (group.OwnerId != userId)
-        //    throw new UnauthorizedAccessException("Only the owner can edit this group");
+        if (group.OwnerId != userId)
+            throw new UnauthorizedAccessException("Only the owner can edit this group");
 
         group.Name = req.Name.Trim();
         group.Description = req.Description;
@@ -64,8 +64,8 @@ public class GroupService : IGroupService
     {
         var group = await GetActiveGroupAsync(groupId);
 
-        //if (group.OwnerId != userId)
-        //    throw new UnauthorizedAccessException("Only the owner can delete this group");
+        if (group.OwnerId != userId)
+            throw new UnauthorizedAccessException("Only the owner can delete this group");
 
         group.IsDeleted = true;
 
@@ -110,8 +110,8 @@ public class GroupService : IGroupService
     {
         var group = await GetActiveGroupAsync(groupId);
 
-        //if (group.OwnerId != requesterId)
-        //    throw new UnauthorizedAccessException("Only the owner can remove members");
+        if (group.OwnerId != requesterId)
+            throw new UnauthorizedAccessException("Only the owner can remove members");
 
         if (targetUserId == group.OwnerId)
             throw new InvalidOperationException("Owner cannot be removed");
@@ -132,8 +132,8 @@ public class GroupService : IGroupService
 
         var group = await GetActiveGroupAsync(groupId);
 
-        //if (group.OwnerId != requesterId)
-        //    throw new UnauthorizedAccessException("Only the owner can change roles");
+        if (group.OwnerId != requesterId)
+            throw new UnauthorizedAccessException("Only the owner can change roles");
 
         if (targetUserId == group.OwnerId)
             throw new InvalidOperationException("Owner role cannot be changed");
@@ -191,6 +191,14 @@ public class GroupService : IGroupService
         Description = g.Description,
         OwnerId = g.OwnerId,
         MemberCount = g.Members?.Count ?? 0,
-        CreatedDate = g.CreatedDate
+        CreatedDate = g.CreatedDate,
+        Members = g.Members?.Select(member => new GroupMemberResponse
+        {
+            UserId = member.UserId,
+            DisplayName = member.User?.DisplayName ?? "Member",
+            AvatarUrl = member.User?.AvatarUrl,
+            Role = member.Role,
+            JoinedDate = member.JoinedDate
+        }).ToArray() ?? Array.Empty<GroupMemberResponse>()
     };
 }

@@ -68,9 +68,9 @@ public class AppDbContext : IdentityDbContext<AppUser>
 
         // Message check constraint
         builder.Entity<Message>()
-            .HasCheckConstraint("CK_Messages_Target",
+            .ToTable(table => table.HasCheckConstraint("CK_Messages_Target",
                 @"([IsGroupMessage] = 1 AND [GroupId] IS NOT NULL AND [ReceiverId] IS NULL) 
-                  OR ([IsGroupMessage] = 0 AND [GroupId] IS NULL AND [ReceiverId] IS NOT NULL)");
+                  OR ([IsGroupMessage] = 0 AND [GroupId] IS NULL AND [ReceiverId] IS NOT NULL)"));
 
         // Reaction unique
         builder.Entity<Reaction>()

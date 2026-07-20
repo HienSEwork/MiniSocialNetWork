@@ -8,4 +8,14 @@ public class GroupResponse
     public string OwnerId { get; set; } = string.Empty;
     public int MemberCount { get; set; }
     public DateTime CreatedDate { get; set; }
+    public IReadOnlyCollection<GroupMemberResponse> Members { get; set; } = Array.Empty<GroupMemberResponse>();
+}
+
+public sealed class GroupMemberResponse
+{
+    public string UserId { get; set; } = string.Empty;
+    public string DisplayName { get; set; } = string.Empty;
+    public string? AvatarUrl { get; set; }
+    public int Role { get; set; }
+    public DateTime JoinedDate { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniSocialNetwork.Application.DTOs.Group;
 using MiniSocialNetwork.Application.Interfaces;
@@ -7,31 +8,20 @@ namespace MiniSocialNetwork.API.Controllers;
 
 [ApiController]
 [Route("api/groups")]
-public class GroupsController : ControllerBase
+[Authorize]
+public sealed class GroupsController : ControllerBase
 {
     private readonly IGroupService _service;
+    public GroupsController(IGroupService service) => _service = service;
+    private string CurrentUserId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-    public GroupsController(IGroupService service)
-    {
-        _service = service;
-    }
+    [AllowAnonymous, HttpGet]
+    public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
-    // TODO: rely solely on the authenticated user once JWT auth is wired up.
-    // Falls back to an "X-User-Id" header (and finally "demo-user") for local testing.
-    private string CurrentUserId =>
-        User?.FindFirstValue(ClaimTypes.NameIdentifier)
-        ?? Request.Headers["X-User-Id"].FirstOrDefault()
-        ?? "demo-user";
+    [AllowAnonymous, HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] GroupQuery query) => Ok(await _service.SearchAsync(query));
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-        => Ok(await _service.GetAllAsync());
-
-    [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] GroupQuery query)
-        => Ok(await _service.SearchAsync(query));
-
-    [HttpGet("{id:guid}")]
+    [AllowAnonymous, HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var group = await _service.GetByIdAsync(id);
@@ -39,14 +29,14 @@ public class GroupsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateGroupRequest request)
+    public async Task<IActionResult> Create(CreateGroupRequest request)
     {
         var id = await _service.CreateGroupAsync(request, CurrentUserId);
-        return CreatedAtAction(nameof(GetById), new { id }, id);
+        return CreatedAtAction(nameof(GetById), new { id }, new { id });
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] CreateGroupRequest request)
+    public async Task<IActionResult> Update(Guid id, CreateGroupRequest request)
     {
         await _service.UpdateGroupAsync(id, request, CurrentUserId);
         return NoContent();
@@ -63,14 +53,14 @@ public class GroupsController : ControllerBase
     public async Task<IActionResult> Join(Guid id)
     {
         await _service.JoinGroupAsync(id, CurrentUserId);
-        return Ok();
+        return NoContent();
     }
 
     [HttpPost("{id:guid}/leave")]
     public async Task<IActionResult> Leave(Guid id)
     {
         await _service.LeaveGroupAsync(id, CurrentUserId);
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete("{id:guid}/members/{userId}")]
@@ -81,7 +71,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpPut("{id:guid}/members/{userId}/role")]
-    public async Task<IActionResult> ChangeRole(Guid id, string userId, [FromBody] ChangeRoleRequest request)
+    public async Task<IActionResult> ChangeRole(Guid id, string userId, ChangeRoleRequest request)
     {
         await _service.ChangeRoleAsync(id, userId, request.Role, CurrentUserId);
         return NoContent();
