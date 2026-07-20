@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_copy.dart';
@@ -98,6 +99,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
     final copy = AppCopy.of(context);
     final name = TextEditingController();
     final description = TextEditingController();
+    var avatarUrl = '';
+    var avatarName = '';
+    var uploading = false;
     var submitting = false;
     await showModalBottomSheet<void>(
       context: context,
@@ -130,6 +134,26 @@ class _GroupsScreenState extends State<GroupsScreen> {
                   ),
                 ),
                 const SizedBox(height: 22),
+                _GroupAvatarPicker(
+                  label: name.text,
+                  avatarUrl: avatarUrl,
+                  avatarName: avatarName,
+                  uploading: uploading,
+                  saving: submitting,
+                  onPick: () async {
+                    final uploaded = await _pickAndUploadGroupAvatar(
+                      sheetContext,
+                      setSheetState,
+                      setUploading: (value) => uploading = value,
+                    );
+                    if (uploaded == null) return;
+                    setSheetState(() {
+                      avatarUrl = uploaded.url;
+                      avatarName = uploaded.name;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: name,
                   enabled: !submitting,
@@ -155,7 +179,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
                           setSheetState(() => submitting = true);
                           final error = await sheetContext
                               .read<CommunityProvider>()
-                              .createGroup(name.text, description.text);
+                              .createGroup(
+                                name.text,
+                                description.text,
+                                avatarUrl: avatarUrl,
+                              );
                           if (!sheetContext.mounted) return;
                           if (error == null) {
                             Navigator.pop(sheetContext);
@@ -288,6 +316,97 @@ class _GroupsHero extends StatelessWidget {
   }
 }
 
+class _GroupAvatarPicker extends StatelessWidget {
+  const _GroupAvatarPicker({
+    required this.label,
+    required this.avatarUrl,
+    required this.avatarName,
+    required this.uploading,
+    required this.saving,
+    required this.onPick,
+  });
+
+  final String label;
+  final String avatarUrl;
+  final String avatarName;
+  final bool uploading;
+  final bool saving;
+  final VoidCallback onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final copy = AppCopy.of(context);
+    return Row(
+      children: [
+        UserAvatar(
+          label: label,
+          imageUrl: avatarUrl,
+          radius: 34,
+          accent: AppColors.grape,
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: uploading || saving ? null : onPick,
+            icon: uploading
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.add_photo_alternate_outlined),
+            label: Text(
+              avatarName.isEmpty ? copy.chooseImage : avatarName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _UploadedGroupAvatar {
+  const _UploadedGroupAvatar({required this.url, required this.name});
+
+  final String url;
+  final String name;
+}
+
+Future<_UploadedGroupAvatar?> _pickAndUploadGroupAvatar(
+  BuildContext context,
+  StateSetter setSheetState, {
+  required ValueChanged<bool> setUploading,
+}) async {
+  final provider = context.read<CommunityProvider>();
+  final image = await ImagePicker().pickImage(
+    source: ImageSource.gallery,
+    imageQuality: 88,
+    maxWidth: 1200,
+  );
+  if (image == null) return null;
+  setSheetState(() => setUploading(true));
+  try {
+    final uploaded = await provider.uploadMedia(
+      fileName: image.name,
+      filePath: image.path,
+      bytes: await image.readAsBytes(),
+    );
+    if (!context.mounted) return null;
+    return _UploadedGroupAvatar(url: uploaded.url, name: image.name);
+  } catch (error) {
+    if (context.mounted) {
+      showResultMessage(context, '$error', error: true);
+    }
+    return null;
+  } finally {
+    if (context.mounted) {
+      setSheetState(() => setUploading(false));
+    }
+  }
+}
+
 class _GroupCard extends StatelessWidget {
   const _GroupCard({required this.group});
   final SocialGroup group;
@@ -309,26 +428,11 @@ class _GroupCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           child: Row(
             children: [
-              Container(
-                width: 54,
-                height: 54,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.electric,
-                      AppColors.grape.withValues(alpha: .9),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Text(
-                  group.initials,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+              UserAvatar(
+                label: group.name,
+                imageUrl: group.avatarUrl,
+                radius: 27,
+                accent: AppColors.grape,
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -383,6 +487,9 @@ Future<void> showEditGroupSheet(BuildContext context, SocialGroup group) async {
   final copy = AppCopy.of(context);
   final name = TextEditingController(text: group.name);
   final description = TextEditingController(text: group.description);
+  var avatarUrl = group.avatarUrl ?? '';
+  var avatarName = '';
+  var uploading = false;
   var submitting = false;
   await showModalBottomSheet<void>(
     context: context,
@@ -408,6 +515,26 @@ Future<void> showEditGroupSheet(BuildContext context, SocialGroup group) async {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 22),
+              _GroupAvatarPicker(
+                label: name.text,
+                avatarUrl: avatarUrl,
+                avatarName: avatarName,
+                uploading: uploading,
+                saving: submitting,
+                onPick: () async {
+                  final uploaded = await _pickAndUploadGroupAvatar(
+                    sheetContext,
+                    setSheetState,
+                    setUploading: (value) => uploading = value,
+                  );
+                  if (uploaded == null) return;
+                  setSheetState(() {
+                    avatarUrl = uploaded.url;
+                    avatarName = uploaded.name;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: name,
                 enabled: !submitting,
@@ -433,7 +560,12 @@ Future<void> showEditGroupSheet(BuildContext context, SocialGroup group) async {
                         setSheetState(() => submitting = true);
                         final error = await sheetContext
                             .read<CommunityProvider>()
-                            .updateGroup(group, name.text, description.text);
+                            .updateGroup(
+                              group,
+                              name.text,
+                              description.text,
+                              avatarUrl: avatarUrl,
+                            );
                         if (!sheetContext.mounted) return;
                         if (error == null) {
                           Navigator.pop(sheetContext);
@@ -591,17 +723,11 @@ class _GroupHero extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
+                    UserAvatar(
+                      label: group.name,
+                      imageUrl: group.avatarUrl,
                       radius: 30,
-                      backgroundColor: AppColors.indigo.withValues(alpha: .12),
-                      child: Text(
-                        group.initials,
-                        style: const TextStyle(
-                          color: AppColors.indigo,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
+                      accent: AppColors.indigo,
                     ),
                     const SizedBox(width: 14),
                     Expanded(

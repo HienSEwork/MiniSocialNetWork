@@ -33,3 +33,6 @@ C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\refint\MiniSocialNetwork.Infrastructure.dll
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.pdb
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\ref\MiniSocialNetwork.Infrastructure.dll
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Infrastructure.deps.json
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Infrastructure.dll
+C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Infrastructure.pdb

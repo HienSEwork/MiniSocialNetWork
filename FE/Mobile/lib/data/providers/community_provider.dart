@@ -17,13 +17,16 @@ class CommunityProvider extends ChangeNotifier {
   final ApiService _api = ApiService.instance;
 
   List<SocialGroup> _groups = const [];
+  List<SocialGroup> _joinedGroups = const [];
   List<SocialPost> _posts = const [];
+  UserSession? _session;
   bool _isLoading = false;
   bool _hasLoaded = false;
   bool _english = false;
   String? _error;
 
   List<SocialGroup> get groups => _groups;
+  List<SocialGroup> get joinedGroups => _joinedGroups;
   List<SocialPost> get posts => _posts;
   bool get isLoading => _isLoading;
   bool get hasLoaded => _hasLoaded;
@@ -32,6 +35,7 @@ class CommunityProvider extends ChangeNotifier {
   String get apiBaseUrl => _api.baseUrl;
 
   void updateSession(UserSession? session) {
+    _session = session;
     _api.setSession(token: session?.token, userId: session?.userId);
   }
 
@@ -46,11 +50,14 @@ class CommunityProvider extends ChangeNotifier {
     _error = null;
     try {
       _groups = await _fetchGroups();
+      _joinedGroups = await fetchJoinedGroups();
       final rawFeed = await _api.get(
         '/posts',
         queryParameters: {'page': 1, 'pageSize': 30},
       );
-      _posts = _extractList(rawFeed).map(SocialPost.fromJson).toList();
+      _posts = _sortNewestFirst(
+        _extractList(rawFeed).map(SocialPost.fromJson).toList(),
+      );
       _hasLoaded = true;
     } on ApiFailure catch (error) {
       _error = error.message;
@@ -85,7 +92,11 @@ class CommunityProvider extends ChangeNotifier {
     ).map((item) => SocialPost.fromJson(item, groupName: group.name)).toList();
   }
 
-  Future<String?> createGroup(String name, String description) async {
+  Future<String?> createGroup(
+    String name,
+    String description, {
+    String? avatarUrl,
+  }) async {
     if (name.trim().length < 3) {
       return _t(
         'Group name needs at least 3 characters.',
@@ -95,7 +106,11 @@ class CommunityProvider extends ChangeNotifier {
     try {
       await _api.post(
         '/groups',
-        data: {'name': name.trim(), 'description': description.trim()},
+        data: {
+          'name': name.trim(),
+          'description': description.trim(),
+          'avatarUrl': _emptyToNull(avatarUrl),
+        },
       );
       _hasLoaded = false;
       await loadDashboard(force: true);
@@ -108,8 +123,9 @@ class CommunityProvider extends ChangeNotifier {
   Future<String?> updateGroup(
     SocialGroup group,
     String name,
-    String description,
-  ) async {
+    String description, {
+    String? avatarUrl,
+  }) async {
     if (name.trim().length < 3) {
       return _t(
         'Group name needs at least 3 characters.',
@@ -119,7 +135,11 @@ class CommunityProvider extends ChangeNotifier {
     try {
       await _api.put(
         '/groups/${group.id}',
-        data: {'name': name.trim(), 'description': description.trim()},
+        data: {
+          'name': name.trim(),
+          'description': description.trim(),
+          'avatarUrl': _emptyToNull(avatarUrl),
+        },
       );
       _hasLoaded = false;
       await loadDashboard(force: true);
@@ -203,7 +223,7 @@ class CommunityProvider extends ChangeNotifier {
     );
     final map = raw is Map ? Map<String, dynamic>.from(raw) : const {};
     return UploadedMedia(
-      url: '${map['url'] ?? ''}',
+      url: _absoluteMediaUrl('${map['url'] ?? ''}') ?? '',
       mediaType: _asInt(map['mediaType']),
     );
   }
@@ -269,6 +289,25 @@ class CommunityProvider extends ChangeNotifier {
     return _extractList(raw).map(SocialGroup.fromJson).toList();
   }
 
+  Future<List<SocialGroup>> fetchJoinedGroups() async {
+    if (_session?.token?.isNotEmpty != true) {
+      _joinedGroups = const [];
+      notifyListeners();
+      return const [];
+    }
+    try {
+      final raw = await _api.get('/groups/mine');
+      final groups = _extractList(raw).map(SocialGroup.fromJson).toList();
+      _joinedGroups = groups;
+      notifyListeners();
+      return groups;
+    } on ApiFailure {
+      _joinedGroups = const [];
+      notifyListeners();
+      return const [];
+    }
+  }
+
   List<Map<String, dynamic>> _extractList(dynamic raw) {
     dynamic value = raw;
     if (value is Map && value['data'] != null) value = value['data'];
@@ -282,6 +321,26 @@ class CommunityProvider extends ChangeNotifier {
 
   int _asInt(dynamic value) =>
       value is int ? value : int.tryParse('$value') ?? 0;
+
+  String? _emptyToNull(String? value) {
+    final text = value?.trim();
+    return text?.isNotEmpty == true ? text : null;
+  }
+
+  String? _absoluteMediaUrl(String? value) {
+    final url = value?.trim();
+    if (url == null || url.isEmpty || url.startsWith('assets/')) return url;
+    final parsed = Uri.tryParse(url);
+    if (parsed?.hasScheme == true) return url;
+
+    final origin = _api.baseUrl.replaceFirst(RegExp(r'/api/?$'), '');
+    if (url.startsWith('/')) return '$origin$url';
+    return '$origin/$url';
+  }
+
+  List<SocialPost> _sortNewestFirst(List<SocialPost> posts) {
+    return posts..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+  }
 
   void _setLoading(bool value) {
     _isLoading = value;

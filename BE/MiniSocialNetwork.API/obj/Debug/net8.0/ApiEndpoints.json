@@ -483,6 +483,16 @@
   },
   {
     "ContainingType": "MiniSocialNetwork.API.Controllers.GroupsController",
+    "Method": "Mine",
+    "RelativePath": "api/groups/mine",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.GroupsController",
     "Method": "Search",
     "RelativePath": "api/groups/search",
     "HttpMethod": "GET",

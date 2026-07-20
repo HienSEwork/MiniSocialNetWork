@@ -52,6 +52,7 @@ public sealed class SearchService : ISearchService
         Id = group.Id,
         Name = group.Name,
         Description = group.Description,
+        AvatarUrl = group.AvatarUrl,
         OwnerId = group.OwnerId,
         MemberCount = group.Members.Count,
         CreatedDate = group.CreatedDate

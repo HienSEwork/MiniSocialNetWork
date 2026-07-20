@@ -15,6 +15,7 @@ public interface IGroupService
     Task ChangeRoleAsync(Guid groupId, string targetUserId, int role, string requesterId);
 
     Task<List<GroupResponse>> GetAllAsync();
+    Task<List<GroupResponse>> GetJoinedAsync(string userId);
     Task<GroupResponse?> GetByIdAsync(Guid groupId);
     Task<PagedResult<GroupResponse>> SearchAsync(GroupQuery query);
 }

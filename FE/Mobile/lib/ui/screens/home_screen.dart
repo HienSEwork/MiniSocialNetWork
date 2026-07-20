@@ -15,9 +15,7 @@ import '../widgets/post_card.dart';
 import 'groups_screen.dart' show GroupDetailScreen;
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, this.onOpenMenu});
-
-  final VoidCallback? onOpenMenu;
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +23,9 @@ class HomeScreen extends StatelessWidget {
     final auth = context.watch<AuthProvider>();
     final copy = AppCopy.of(context);
     final bottomPadding = MediaQuery.paddingOf(context).bottom + 102;
-    final trendingPosts = [...community.posts]
-      ..sort(
-        (a, b) => (b.reactionCount + b.commentCount).compareTo(
-          a.reactionCount + a.commentCount,
-        ),
-      );
-    final featuredPost = trendingPosts.isEmpty ? null : trendingPosts.first;
+    final feedPosts = [...community.posts]
+      ..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+    final featuredPost = feedPosts.isEmpty ? null : feedPosts.first;
     final topGroups = _rankGroups(community.groups, community.posts);
 
     return Scaffold(
@@ -46,7 +40,6 @@ class HomeScreen extends StatelessWidget {
                 connected: community.isConnected,
                 post: featuredPost,
                 topGroups: topGroups,
-                onOpenMenu: onOpenMenu,
               ),
             ),
             SliverToBoxAdapter(
@@ -55,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
                   child: _Composer(
                     displayName: auth.displayName,
-                    enabled: community.groups.isNotEmpty,
+                    enabled: community.joinedGroups.isNotEmpty,
                     onTap: () => showCreatePostSheet(context),
                   ),
                 ),
@@ -109,12 +102,12 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               SliverList.separated(
-                itemCount: trendingPosts.length,
+                itemCount: feedPosts.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 14),
                 itemBuilder: (context, index) => ResponsivePage(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: PostCard(post: trendingPosts[index]),
+                    child: PostCard(post: feedPosts[index]),
                   ),
                 ),
               ),
@@ -133,14 +126,12 @@ class _HomeHeroPanel extends StatelessWidget {
     required this.connected,
     required this.post,
     required this.topGroups,
-    this.onOpenMenu,
   });
 
   final String name;
   final bool connected;
   final SocialPost? post;
   final List<_RankedGroup> topGroups;
-  final VoidCallback? onOpenMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -168,12 +159,17 @@ class _HomeHeroPanel extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        IconButton(
-                          tooltip: 'Menu',
-                          onPressed: onOpenMenu,
-                          icon: const Icon(
-                            Icons.chevron_left_rounded,
+                        Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: .16),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: const Icon(
+                            Icons.hub_rounded,
                             color: Colors.white,
+                            size: 24,
                           ),
                         ),
                         Expanded(
@@ -307,20 +303,11 @@ class _HeroGroupAvatar extends StatelessWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                CircleAvatar(
+                UserAvatar(
+                  label: group.name,
+                  imageUrl: group.avatarUrl,
                   radius: 27,
-                  backgroundColor: Colors.white,
-                  child: CircleAvatar(
-                    radius: 24,
-                    backgroundColor: AppColors.lavender.withValues(alpha: .18),
-                    child: Text(
-                      group.initials,
-                      style: const TextStyle(
-                        color: AppColors.violet,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
+                  accent: AppColors.violet,
                 ),
                 if (score > 0)
                   Positioned(
@@ -499,7 +486,18 @@ class _TechNetBanner extends StatelessWidget {
                       width: 112,
                       height: 112,
                       child: mediaUrl?.isNotEmpty == true
-                          ? Image.network(mediaUrl!, fit: BoxFit.cover)
+                          ? Image.network(
+                              mediaUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                color: Colors.white.withValues(alpha: .14),
+                                child: const Icon(
+                                  Icons.broken_image_outlined,
+                                  color: Colors.white,
+                                  size: 42,
+                                ),
+                              ),
+                            )
                           : Container(
                               color: Colors.white.withValues(alpha: .14),
                               child: const Icon(
@@ -648,8 +646,26 @@ Future<void> showCreatePostSheet(
 }) async {
   final provider = context.read<CommunityProvider>();
   final copy = AppCopy.of(context);
-  if (provider.groups.isEmpty) return;
-  var group = initialGroup ?? provider.groups.first;
+  final joinedGroups = await provider.fetchJoinedGroups();
+  if (!context.mounted) return;
+  if (joinedGroups.isEmpty) {
+    showResultMessage(
+      context,
+      copy.isEnglish
+          ? 'Join a group before posting.'
+          : 'Hãy tham gia một nhóm trước khi đăng bài.',
+      error: true,
+    );
+    return;
+  }
+  SocialGroup? selectedGroup;
+  for (final item in joinedGroups) {
+    if (item.id == initialGroup?.id) {
+      selectedGroup = item;
+      break;
+    }
+  }
+  var group = selectedGroup ?? joinedGroups.first;
   final content = TextEditingController();
   final media = TextEditingController();
   String? mediaUrl;
@@ -704,7 +720,7 @@ Future<void> showCreatePostSheet(
               DropdownButtonFormField<SocialGroup>(
                 initialValue: group,
                 decoration: InputDecoration(labelText: copy.postInGroup),
-                items: provider.groups
+                items: joinedGroups
                     .map(
                       (item) => DropdownMenuItem(
                         value: item,

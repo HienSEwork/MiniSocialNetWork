@@ -7,8 +7,32 @@
       "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\minisocialnetwork.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\minisocialnetwork.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\minisocialnetwork.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\minisocialnetwork.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\minisocialnetwork.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\minisocialnetwork.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\minisocialnetwork.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\minisocialnetwork.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\minisocialnetwork.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\repositories\\implementations\\adminrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -178,10 +202,6 @@
       "RelativeMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|solutionrelative:minisocialnetwork.infrastructure\\persistence\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\minisocialnetwork.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\minisocialnetwork.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.api\\extensions\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{45E72ACE-354A-42F2-B7F1-B89B675B8F95}|MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj|solutionrelative:minisocialnetwork.api\\extensions\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -192,10 +212,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.domain\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{28684DBF-B81A-438C-BA9B-FC8A364E6C69}|MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj|solutionrelative:minisocialnetwork.domain\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.application\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DA3EEDC1-A931-4C79-B2B4-105DB22DF578}|MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj|solutionrelative:minisocialnetwork.application\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9F71BE6F-8C2D-4F28-B9C1-2785D86089B9}|MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj|c:\\users\\asus_fx507z\\downloads\\minisocial\\minisocialnetwork\\be\\minisocialnetwork.infrastructure\\migrations\\20260718150939_initclean.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -212,8 +228,34 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 11,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\appsettings.Development.json",
+              "RelativeToolTip": "MiniSocialNetwork.API\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-07-20T06:13:47.185Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MiniSocialNetwork.API",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj",
+              "RelativeToolTip": "MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-20T06:13:19.953Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
@@ -244,80 +286,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\appsettings.json",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\appsettings.json",
               "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\appsettings.json",
               "RelativeToolTip": "MiniSocialNetwork.API\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAADAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-07-18T08:35:19.857Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SharedResource.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\SharedResource.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\SharedResource.cs",
-              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\SharedResource.cs",
-              "RelativeToolTip": "MiniSocialNetwork.API\\SharedResource.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T16:00:14.697Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "LocalizationController.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
-              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
-              "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:58:09.698Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\AdminController.cs",
-              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\AdminController.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAzwCAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:42:41.591Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AdminRepository.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
-              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAAAFMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:42:11.897Z",
+              "Title": "MiniSocialNetwork.API.http",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
+              "RelativeToolTip": "MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2026-07-18T08:44:58.21Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "IAdminRepository.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
-              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T15:40:46.064Z"
             },
             {
               "$type": "Document",
@@ -334,7 +325,110 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Class1.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Class1.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Class1.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T08:27:06.181Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MiniSocialNetwork.Domain",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
+              "RelativeToolTip": "MiniSocialNetwork.Domain\\MiniSocialNetwork.Domain.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-20T06:13:09.013Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MiniSocialNetwork.Infrastructure",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj",
+              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-20T06:12:43.086Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "SharedResource.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\SharedResource.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\SharedResource.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\SharedResource.cs",
+              "RelativeToolTip": "MiniSocialNetwork.API\\SharedResource.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T16:00:14.697Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "LocalizationController.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
+              "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\LocalizationController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:58:09.698Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 9,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "MiniSocialNetwork.API\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAzwCAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:42:41.591Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AdminRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\AdminRepository.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAAAFMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:42:11.897Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "IAdminRepository.cs",
+              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
+              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
+              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
+              "RelativeToolTip": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IAdminRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-18T15:40:46.064Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "IAdminService.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IAdminService.cs",
@@ -346,7 +440,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 14,
               "Title": "AdminService.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\AdminService.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\AdminService.cs",
@@ -358,7 +452,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 17,
               "Title": "UserQuery.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserQuery.cs",
@@ -370,7 +464,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "UserResponse.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\UserResponse.cs",
@@ -382,7 +476,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 19,
               "Title": "PostsPerDayItem.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\PostsPerDayItem.cs",
@@ -394,7 +488,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 20,
               "Title": "DashboardStatsResponse.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Admin\\DashboardStatsResponse.cs",
@@ -406,7 +500,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 21,
               "Title": "GroupPostsController.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\GroupPostsController.cs",
@@ -418,7 +512,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 22,
               "Title": "PostRepository.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\PostRepository.cs",
@@ -430,7 +524,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 23,
               "Title": "PostService.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\PostService.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\PostService.cs",
@@ -442,7 +536,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 24,
               "Title": "IPostService.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IPostService.cs",
@@ -454,7 +548,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 25,
               "Title": "IPostRepository.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IPostRepository.cs",
@@ -466,7 +560,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 26,
               "Title": "PostQuery.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\PostQuery.cs",
@@ -478,7 +572,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 27,
               "Title": "PostResponse.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\PostResponse.cs",
@@ -490,7 +584,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 28,
               "Title": "CreatePostRequest.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Post\\CreatePostRequest.cs",
@@ -502,7 +596,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 53,
               "Title": "20260718150939_InitClean.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Migrations\\20260718150939_InitClean.cs",
@@ -514,7 +608,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 33,
               "Title": "20260718150816_InitFull2.cs",
               "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Migrations\\20260718150816_InitFull2.cs",
@@ -526,7 +620,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 45,
               "Title": "ChangeRoleRequest.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Group\\ChangeRoleRequest.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Group\\ChangeRoleRequest.cs",
@@ -538,7 +632,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 47,
               "Title": "GroupQuery.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Group\\GroupQuery.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Group\\GroupQuery.cs",
@@ -550,7 +644,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 43,
               "Title": "PagedResult.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Common\\PagedResult.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Common\\PagedResult.cs",
@@ -562,7 +656,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 48,
               "Title": "ApiResponse.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\Common\\ApiResponse.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\Common\\ApiResponse.cs",
@@ -574,7 +668,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 37,
               "Title": "Message.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Message.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Message.cs",
@@ -586,7 +680,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 35,
               "Title": "Reaction.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Reaction.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Reaction.cs",
@@ -598,7 +692,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 40,
               "Title": "Comment.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Comment.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Comment.cs",
@@ -610,7 +704,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 36,
               "Title": "Post.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Post.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Post.cs",
@@ -622,7 +716,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 13,
               "Title": "AppUser.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\AppUser.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\AppUser.cs",
@@ -634,7 +728,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 49,
               "Title": "AppDbContextFactory.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContextFactory.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContextFactory.cs",
@@ -646,7 +740,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 41,
               "Title": "IGroupRepository.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\Repositories\\IGroupRepository.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\Repositories\\IGroupRepository.cs",
@@ -658,19 +752,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
-              "Title": "MiniSocialNetwork.API.http",
-              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
-              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
-              "RelativeToolTip": "MiniSocialNetwork.API\\MiniSocialNetwork.API.http",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-07-18T08:44:58.21Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Program.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Program.cs",
@@ -682,7 +764,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 42,
               "Title": "GroupRepository.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\GroupRepository.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Repositories\\Implementations\\GroupRepository.cs",
@@ -694,7 +776,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 34,
               "Title": "AppDbContext.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContext.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Infrastructure\\Persistence\\AppDbContext.cs",
@@ -706,7 +788,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 29,
               "Title": "GroupService.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Services\\GroupService.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Services\\GroupService.cs",
@@ -718,7 +800,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 32,
               "Title": "GroupResponse.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\GroupResponse.cs",
@@ -730,7 +812,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 30,
               "Title": "CreateGroupRequest.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\DTOs\\CreateGroupRequest.cs",
@@ -742,7 +824,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 31,
               "Title": "IGroupService.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Interfaces\\IGroupService.cs",
@@ -754,7 +836,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 50,
               "Title": "ServiceExtensions.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Extensions\\ServiceExtensions.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Extensions\\ServiceExtensions.cs",
@@ -766,7 +848,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 44,
               "Title": "ExceptionMiddleware.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Middlewares\\ExceptionMiddleware.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Middlewares\\ExceptionMiddleware.cs",
@@ -778,7 +860,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 46,
               "Title": "GroupsController.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\Controllers\\GroupsController.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.API\\Controllers\\GroupsController.cs",
@@ -790,7 +872,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 51,
               "Title": "GroupRole.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Enums\\GroupRole.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Enums\\GroupRole.cs",
@@ -802,7 +884,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 38,
               "Title": "GroupMember.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\GroupMember.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\GroupMember.cs",
@@ -814,7 +896,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 39,
               "Title": "Group.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Entities\\Group.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Entities\\Group.cs",
@@ -826,7 +908,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 54,
               "Title": "Class1.cs",
               "DocumentMoniker": "C:\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\S5\\PRN212\\MiniSocialNetwork\\MiniSocialNetwork.Infrastructure\\Class1.cs",
@@ -838,7 +920,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 52,
               "Title": "Class1.cs",
               "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Domain\\Class1.cs",
               "RelativeDocumentMoniker": "MiniSocialNetwork.Domain\\Class1.cs",
@@ -847,18 +929,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-18T08:28:38.353Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 48,
-              "Title": "Class1.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Class1.cs",
-              "RelativeDocumentMoniker": "MiniSocialNetwork.Application\\Class1.cs",
-              "ToolTip": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\Class1.cs",
-              "RelativeToolTip": "MiniSocialNetwork.Application\\Class1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T08:27:06.181Z"
             }
           ]
         },

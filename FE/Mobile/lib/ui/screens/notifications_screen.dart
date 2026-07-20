@@ -14,65 +14,41 @@ class NotificationsScreen extends StatelessWidget {
     final realtime = context.watch<ChatProvider>();
     final copy = AppCopy.of(context);
     return Scaffold(
-      body: ResponsivePage(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(22, 24, 22, 18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            copy.activity,
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                        ),
-                        Icon(
-                          realtime.isRealtimeConnected
-                              ? Icons.wifi_tethering_rounded
-                              : Icons.sync_problem_rounded,
-                          color: realtime.isRealtimeConnected
-                              ? AppColors.mint
-                              : AppColors.coral,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      realtime.isRealtimeConnected
-                          ? copy.realtimeActive
-                          : copy.realtimeWaiting,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: TechNetGradientHeader(
+              title: copy.activity,
+              subtitle: realtime.isRealtimeConnected
+                  ? copy.realtimeActive
+                  : copy.realtimeWaiting,
+              trailing: Icon(
+                realtime.isRealtimeConnected
+                    ? Icons.wifi_tethering_rounded
+                    : Icons.sync_problem_rounded,
+                color: Colors.white,
               ),
             ),
-            if (realtime.notifications.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: FriendlyState(
-                  icon: Icons.mark_email_read_outlined,
-                  title: copy.activityEmptyTitle,
-                  message: copy.activityEmptyHint,
-                ),
-              )
-            else
-              SliverList.separated(
-                itemCount: realtime.notifications.length,
-                separatorBuilder: (_, __) =>
-                    const Divider(height: 1, indent: 78),
-                itemBuilder: (context, index) {
-                  final item = realtime.notifications[index];
-                  final type = '${item['type'] ?? 'activity'}';
-                  final reaction = type.contains('reaction');
-                  return ListTile(
+          ),
+          if (realtime.notifications.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: FriendlyState(
+                icon: Icons.mark_email_read_outlined,
+                title: copy.activityEmptyTitle,
+                message: copy.activityEmptyHint,
+              ),
+            )
+          else
+            SliverList.separated(
+              itemCount: realtime.notifications.length,
+              separatorBuilder: (_, __) => const Divider(height: 1, indent: 78),
+              itemBuilder: (context, index) {
+                final item = realtime.notifications[index];
+                final type = '${item['type'] ?? 'activity'}';
+                final reaction = type.contains('reaction');
+                return ResponsivePage(
+                  child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 22,
                       vertical: 7,
@@ -93,12 +69,12 @@ class NotificationsScreen extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                     subtitle: Text(copy.justReceived),
-                  );
-                },
-              ),
-            const SliverToBoxAdapter(child: SizedBox(height: 110)),
-          ],
-        ),
+                  ),
+                );
+              },
+            ),
+          const SliverToBoxAdapter(child: SizedBox(height: 110)),
+        ],
       ),
     );
   }

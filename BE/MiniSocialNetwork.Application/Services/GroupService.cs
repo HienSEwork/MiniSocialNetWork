@@ -25,6 +25,7 @@ public class GroupService : IGroupService
             Id = Guid.NewGuid(),
             Name = req.Name.Trim(),
             Description = req.Description,
+            AvatarUrl = NormalizeUrl(req.AvatarUrl),
             OwnerId = userId,
             CreatedDate = DateTime.UtcNow,
             IsDeleted = false
@@ -56,6 +57,7 @@ public class GroupService : IGroupService
 
         group.Name = req.Name.Trim();
         group.Description = req.Description;
+        group.AvatarUrl = NormalizeUrl(req.AvatarUrl);
 
         await _repo.SaveChangesAsync();
     }
@@ -153,6 +155,12 @@ public class GroupService : IGroupService
         return groups.Select(MapToResponse).ToList();
     }
 
+    public async Task<List<GroupResponse>> GetJoinedAsync(string userId)
+    {
+        var groups = await _repo.GetJoinedAsync(userId);
+        return groups.Select(MapToResponse).ToList();
+    }
+
     public async Task<GroupResponse?> GetByIdAsync(Guid groupId)
     {
         var group = await _repo.GetByIdAsync(groupId);
@@ -189,6 +197,7 @@ public class GroupService : IGroupService
         Id = g.Id,
         Name = g.Name,
         Description = g.Description,
+        AvatarUrl = g.AvatarUrl,
         OwnerId = g.OwnerId,
         MemberCount = g.Members?.Count ?? 0,
         CreatedDate = g.CreatedDate,
@@ -201,4 +210,10 @@ public class GroupService : IGroupService
             JoinedDate = member.JoinedDate
         }).ToArray() ?? Array.Empty<GroupMemberResponse>()
     };
+
+    private static string? NormalizeUrl(string? value)
+    {
+        var url = value?.Trim();
+        return string.IsNullOrWhiteSpace(url) ? null : url;
+    }
 }

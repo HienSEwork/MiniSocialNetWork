@@ -85,7 +85,7 @@ class AuthProvider extends ChangeNotifier {
           displayName: '${user['displayName'] ?? user['userName'] ?? email}',
           email: '${user['email'] ?? email}',
           token: token,
-          avatarUrl: user['avatarUrl']?.toString(),
+          avatarUrl: _absoluteMediaUrl(user['avatarUrl']?.toString()),
           bio: user['bio']?.toString(),
         ),
       );
@@ -183,7 +183,7 @@ class AuthProvider extends ChangeNotifier {
           displayName: '${data['displayName'] ?? displayName.trim()}',
           email: _session!.email,
           token: _session!.token,
-          avatarUrl: data['avatarUrl']?.toString(),
+          avatarUrl: _absoluteMediaUrl(data['avatarUrl']?.toString()),
           bio: data['bio']?.toString(),
         ),
       );
@@ -214,7 +214,7 @@ class AuthProvider extends ChangeNotifier {
         bytes: bytes,
       );
       final data = _unwrapMap(raw);
-      final url = data['url']?.toString();
+      final url = _absoluteMediaUrl(data['url']?.toString());
       return url?.isNotEmpty == true
           ? url
           : _t('Could not upload the image.', 'Không thể tải ảnh lên.');
@@ -244,15 +244,24 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> _saveSession(UserSession value) async {
-    _session = value;
-    await _storage.write(key: 'user_id', value: value.userId);
-    await _storage.write(key: 'display_name', value: value.displayName);
-    await _storage.write(key: 'email', value: value.email);
-    await _storage.write(key: 'jwt_token', value: value.token);
-    await _storage.write(key: 'is_guest', value: '${value.isGuest}');
-    await _storage.write(key: 'avatar_url', value: value.avatarUrl);
-    await _storage.write(key: 'bio', value: value.bio);
-    _api.setSession(token: value.token, userId: value.userId);
+    final normalized = UserSession(
+      userId: value.userId,
+      displayName: value.displayName,
+      email: value.email,
+      token: value.token,
+      isGuest: value.isGuest,
+      avatarUrl: _absoluteMediaUrl(value.avatarUrl),
+      bio: value.bio,
+    );
+    _session = normalized;
+    await _storage.write(key: 'user_id', value: normalized.userId);
+    await _storage.write(key: 'display_name', value: normalized.displayName);
+    await _storage.write(key: 'email', value: normalized.email);
+    await _storage.write(key: 'jwt_token', value: normalized.token);
+    await _storage.write(key: 'is_guest', value: '${normalized.isGuest}');
+    await _storage.write(key: 'avatar_url', value: normalized.avatarUrl);
+    await _storage.write(key: 'bio', value: normalized.bio);
+    _api.setSession(token: normalized.token, userId: normalized.userId);
     notifyListeners();
   }
 
@@ -272,5 +281,17 @@ class AuthProvider extends ChangeNotifier {
       return map;
     }
     return const {};
+  }
+
+  String? _absoluteMediaUrl(String? value) {
+    final url = value?.trim();
+    if (url == null || url.isEmpty) return null;
+    if (url.startsWith('assets/')) return url;
+    final parsed = Uri.tryParse(url);
+    if (parsed?.hasScheme == true) return url;
+
+    final origin = _api.baseUrl.replaceFirst(RegExp(r'/api/?$'), '');
+    if (url.startsWith('/')) return '$origin$url';
+    return '$origin/$url';
   }
 }

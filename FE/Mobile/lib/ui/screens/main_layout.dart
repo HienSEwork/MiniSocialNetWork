@@ -20,7 +20,6 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout> {
   int _index = 0;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -36,7 +35,7 @@ class _MainLayoutState extends State<MainLayout> {
       builder: (context, constraints) {
         final copy = AppCopy.of(context);
         final pages = [
-          HomeScreen(onOpenMenu: () => _scaffoldKey.currentState?.openDrawer()),
+          const HomeScreen(),
           const GroupsScreen(),
           const ChatScreen(),
           const NotificationsScreen(),
@@ -149,11 +148,7 @@ class _MainLayoutState extends State<MainLayout> {
           );
         }
         return Scaffold(
-          key: _scaffoldKey,
           extendBody: true,
-          drawer: TechNetSideDrawer(
-            onSelect: (value) => setState(() => _index = value),
-          ),
           body: content,
           bottomNavigationBar: SafeArea(
             minimum: const EdgeInsets.fromLTRB(12, 0, 12, 10),
@@ -170,11 +165,25 @@ class _MainLayoutState extends State<MainLayout> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(32),
-                child: NavigationBar(
-                  selectedIndex: _index,
-                  onDestinationSelected: (value) =>
-                      setState(() => _index = value),
-                  destinations: destinations,
+                child: DecoratedBox(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF7A68FF),
+                        Color(0xFF5436E8),
+                        Color(0xFF35106F),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: NavigationBar(
+                    backgroundColor: Colors.transparent,
+                    selectedIndex: _index,
+                    onDestinationSelected: (value) =>
+                        setState(() => _index = value),
+                    destinations: destinations,
+                  ),
                 ),
               ),
             ),

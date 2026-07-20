@@ -73,6 +73,14 @@ public class GroupRepository : IGroupRepository
             .OrderByDescending(x => x.CreatedDate)
             .ToListAsync();
 
+    public async Task<List<Group>> GetJoinedAsync(string userId)
+        => await _context.Groups
+            .Where(x => !x.IsDeleted && x.Members.Any(member => member.UserId == userId))
+            .Include(x => x.Members)
+            .ThenInclude(member => member.User)
+            .OrderByDescending(x => x.CreatedDate)
+            .ToListAsync();
+
     public async Task<Group?> GetByIdAsync(Guid id)
         => await _context.Groups
             .Include(g => g.Members)

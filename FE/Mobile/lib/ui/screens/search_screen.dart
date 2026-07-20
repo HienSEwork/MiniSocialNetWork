@@ -222,16 +222,11 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             Row(
               children: [
-                CircleAvatar(
+                UserAvatar(
+                  label: group.name,
+                  imageUrl: group.avatarUrl,
                   radius: 30,
-                  backgroundColor: AppColors.mint.withValues(alpha: .14),
-                  child: Text(
-                    group.initials,
-                    style: const TextStyle(
-                      color: AppColors.mint,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
+                  accent: AppColors.mint,
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -491,15 +486,10 @@ class _GroupResult extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: CircleAvatar(
-          backgroundColor: AppColors.mint.withValues(alpha: .14),
-          child: Text(
-            group.initials,
-            style: const TextStyle(
-              color: AppColors.mint,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
+        leading: UserAvatar(
+          label: group.name,
+          imageUrl: group.avatarUrl,
+          accent: AppColors.mint,
         ),
         title: _HighlightedText(
           text: group.name,

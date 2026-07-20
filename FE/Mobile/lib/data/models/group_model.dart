@@ -6,12 +6,14 @@ class SocialGroup {
     required this.ownerId,
     required this.memberCount,
     required this.createdDate,
+    this.avatarUrl,
   });
 
   factory SocialGroup.fromJson(Map<String, dynamic> json) => SocialGroup(
     id: '${json['id'] ?? ''}',
     name: '${json['name'] ?? 'Nhóm chưa đặt tên'}',
     description: '${json['description'] ?? ''}',
+    avatarUrl: json['avatarUrl']?.toString(),
     ownerId: '${json['ownerId'] ?? ''}',
     memberCount: _asInt(json['memberCount']),
     createdDate:
@@ -22,6 +24,7 @@ class SocialGroup {
   final String id;
   final String name;
   final String description;
+  final String? avatarUrl;
   final String ownerId;
   final int memberCount;
   final DateTime createdDate;

@@ -790,6 +790,18 @@
         }
       }
     },
+    "/api/groups/mine": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/groups/{id}": {
       "get": {
         "tags": [

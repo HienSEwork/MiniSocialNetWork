@@ -20,105 +20,133 @@ class ProfileScreen extends StatelessWidget {
     final copy = AppCopy.of(context);
 
     return Scaffold(
-      body: ResponsivePage(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(
-            22,
-            24,
-            22,
-            MediaQuery.paddingOf(context).bottom + 110,
-          ),
-          children: [
-            Text(
-              copy.profile,
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: TechNetGradientHeader(
+              title: copy.profile,
+              subtitle: session?.email ?? copy.member,
             ),
-            const SizedBox(height: 20),
-            Card(
+          ),
+          SliverToBoxAdapter(
+            child: ResponsivePage(
               child: Padding(
-                padding: const EdgeInsets.all(22),
-                child: Row(
-                  children: [
-                    UserAvatar(
-                      label: auth.displayName,
-                      imageUrl: session?.avatarUrl,
-                      radius: 34,
-                      accent: AppColors.coral,
-                    ),
-                    const SizedBox(width: 17),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            auth.displayName,
-                            style: Theme.of(context).textTheme.titleLarge,
+                padding: const EdgeInsets.fromLTRB(22, 20, 22, 0),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(22),
+                    child: Row(
+                      children: [
+                        UserAvatar(
+                          label: auth.displayName,
+                          imageUrl: session?.avatarUrl,
+                          radius: 34,
+                          accent: AppColors.coral,
+                        ),
+                        const SizedBox(width: 17),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                auth.displayName,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                session?.isGuest == true
+                                    ? copy.exploreMode
+                                    : session?.bio?.isNotEmpty == true
+                                    ? session!.bio!
+                                    : session?.email ?? copy.member,
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            session?.isGuest == true
-                                ? copy.exploreMode
-                                : session?.bio?.isNotEmpty == true
-                                ? session!.bio!
-                                : session?.email ?? copy.member,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        IconButton.filledTonal(
+                          tooltip: copy.editProfile,
+                          onPressed: () => _editProfile(context),
+                          icon: const Icon(Icons.edit_outlined),
+                        ),
+                      ],
                     ),
-                    IconButton.filledTonal(
-                      tooltip: copy.editProfile,
-                      onPressed: () => _editProfile(context),
-                      icon: const Icon(Icons.edit_outlined),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 22),
-            Text(copy.app, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 10),
-            Card(
-              child: Column(
-                children: [
-                  SwitchListTile.adaptive(
-                    value: dark,
-                    onChanged: settings.toggleTheme,
-                    secondary: Icon(
-                      dark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
-                    ),
-                    title: Text(copy.darkMode),
-                    subtitle: Text(copy.darkModeHint),
-                  ),
-                  const Divider(height: 1, indent: 64),
-                  ListTile(
-                    leading: const Icon(Icons.translate_rounded),
-                    title: Text(copy.language),
-                    subtitle: Text(
-                      settings.isEnglish ? 'English' : 'Tiếng Việt',
-                    ),
-                    trailing: const Icon(Icons.chevron_right_rounded),
-                    onTap: () => _chooseLanguage(context, settings),
-                  ),
-                ],
+          ),
+          SliverToBoxAdapter(
+            child: ResponsivePage(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(22, 22, 22, 0),
+                child: Text(
+                  copy.app,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ),
             ),
-            const SizedBox(height: 22),
-            OutlinedButton.icon(
-              onPressed: auth.logout,
-              icon: const Icon(Icons.logout_rounded),
-              label: Padding(
-                padding: EdgeInsets.symmetric(vertical: 13),
-                child: Text(copy.signOut),
+          ),
+          SliverToBoxAdapter(
+            child: ResponsivePage(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
+                child: Card(
+                  child: Column(
+                    children: [
+                      SwitchListTile.adaptive(
+                        value: dark,
+                        onChanged: settings.toggleTheme,
+                        secondary: Icon(
+                          dark
+                              ? Icons.dark_mode_rounded
+                              : Icons.light_mode_rounded,
+                        ),
+                        title: Text(copy.darkMode),
+                        subtitle: Text(copy.darkModeHint),
+                      ),
+                      const Divider(height: 1, indent: 64),
+                      ListTile(
+                        leading: const Icon(Icons.translate_rounded),
+                        title: Text(copy.language),
+                        subtitle: Text(
+                          settings.isEnglish ? 'English' : 'Tiếng Việt',
+                        ),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => _chooseLanguage(context, settings),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+          SliverToBoxAdapter(
+            child: ResponsivePage(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  22,
+                  22,
+                  22,
+                  MediaQuery.paddingOf(context).bottom + 110,
+                ),
+                child: OutlinedButton.icon(
+                  onPressed: auth.logout,
+                  icon: const Icon(Icons.logout_rounded),
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 13),
+                    child: Text(copy.signOut),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -195,18 +223,11 @@ class ProfileScreen extends StatelessWidget {
                               copy.uploadFailed,
                               error: true,
                             );
-                          } else if (result.startsWith('http://') ||
-                              result.startsWith('https://')) {
+                          } else {
                             setSheetState(() {
                               avatarUrl = result;
                               avatarName = image.name;
                             });
-                          } else {
-                            showResultMessage(
-                              sheetContext,
-                              result,
-                              error: true,
-                            );
                           }
                         },
                   icon: uploading

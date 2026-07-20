@@ -73,6 +73,7 @@ public static class DemoDataSeeder
             if (existing == null) continue;
             existing.Name = GroupNames[i];
             existing.Description = GroupDescriptions[i];
+            existing.AvatarUrl = GroupAvatarAssets[i];
         }
         await context.SaveChangesAsync();
 
@@ -88,6 +89,7 @@ public static class DemoDataSeeder
                 Id = Guid.NewGuid(),
                 Name = GroupNames[i],
                 Description = GroupDescriptions[i],
+                AvatarUrl = GroupAvatarAssets[i],
                 OwnerId = owner.Id,
                 CreatedDate = DateTime.UtcNow.AddDays(-30 + i),
                 IsDeleted = false
@@ -339,6 +341,30 @@ public static class DemoDataSeeder
         "Flutter Mobile Pro", ".NET Backend Guild", "Productivity Tools", "Startup AI Garage",
         "Prompt Engineering", "Machine Learning Lab", "Web Performance", "Smart Home & IoT",
         "Game Dev Corner", "Open Source Việt", "Tech News Radar", "Sinh viên IT"
+    ];
+
+    private static readonly string[] GroupAvatarAssets =
+    [
+        "assets/images/group_ai_lab.png",
+        "assets/images/group_pc_workstation.png",
+        "assets/images/group_laptop_creator.png",
+        "assets/images/group_gear_setup.png",
+        "assets/images/group_gpu_gaming.png",
+        "assets/images/group_devops_cloud.png",
+        "assets/images/group_data_analyst.png",
+        "assets/images/group_cybersecurity.png",
+        "assets/images/group_flutter_mobile.png",
+        "assets/images/group_dotnet_backend.png",
+        "assets/images/group_productivity.png",
+        "assets/images/group_startup_ai.png",
+        "assets/images/group_prompt_engineering.png",
+        "assets/images/group_machine_learning.png",
+        "assets/images/group_web_performance.png",
+        "assets/images/group_iot.png",
+        "assets/images/group_game_dev.png",
+        "assets/images/group_open_source.png",
+        "assets/images/group_tech_news.png",
+        "assets/images/group_students_it.png"
     ];
 
     private static readonly string[] OldGroupNames =

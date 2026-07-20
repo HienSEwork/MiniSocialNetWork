@@ -21,6 +21,9 @@ public sealed class GroupsController : ControllerBase
     [AllowAnonymous, HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] GroupQuery query) => Ok(await _service.SearchAsync(query));
 
+    [HttpGet("mine")]
+    public async Task<IActionResult> Mine() => Ok(await _service.GetJoinedAsync(CurrentUserId));
+
     [AllowAnonymous, HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {

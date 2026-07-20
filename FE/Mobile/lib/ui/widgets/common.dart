@@ -70,7 +70,11 @@ class UserAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final initial = label.trim().isEmpty ? 'T' : label.trim()[0].toUpperCase();
     final url = imageUrl?.trim();
-    final image = url?.isNotEmpty == true ? NetworkImage(url!) : null;
+    final image = url?.isNotEmpty == true
+        ? url!.startsWith('assets/')
+              ? AssetImage(url) as ImageProvider
+              : NetworkImage(url)
+        : null;
     return CircleAvatar(
       radius: radius,
       backgroundColor: accent.withValues(alpha: .14),
@@ -104,6 +108,74 @@ class ResponsivePage extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
         child: child,
+      ),
+    );
+  }
+}
+
+class TechNetGradientHeader extends StatelessWidget {
+  const TechNetGradientHeader({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.trailing,
+  });
+
+  final String title;
+  final String? subtitle;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.violet, AppColors.grape, AppColors.electric],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: ResponsivePage(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 18, 20, 26),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                            ),
+                      ),
+                      if (subtitle?.isNotEmpty == true) ...[
+                        const SizedBox(height: 5),
+                        Text(
+                          subtitle!,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: .72),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                if (trailing != null) ...[const SizedBox(width: 12), trailing!],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
