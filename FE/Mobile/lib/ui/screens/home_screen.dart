@@ -340,8 +340,10 @@ class _StoryTile extends StatelessWidget {
                           ),
                         )
                       else if (mediaUrl?.isNotEmpty == true)
-                        Image.network(
-                          mediaUrl!,
+                        OptimizedNetworkImage(
+                          url: mediaUrl!,
+                          width: 76,
+                          height: 76,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) =>
                               _StoryTextPreview(story: story),
@@ -733,8 +735,10 @@ class _StoryPage extends StatelessWidget {
                   ),
                 )
               else if (mediaUrl?.isNotEmpty == true)
-                Image.network(
-                  mediaUrl!,
+                OptimizedNetworkImage(
+                  url: mediaUrl!,
+                  width: 760,
+                  height: 980,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
                     color: AppColors.ink,
@@ -1199,8 +1203,10 @@ class _TechNetBanner extends StatelessWidget {
                       width: 112,
                       height: 112,
                       child: mediaUrl?.isNotEmpty == true
-                          ? Image.network(
-                              mediaUrl!,
+                          ? OptimizedNetworkImage(
+                              url: mediaUrl!,
+                              width: 112,
+                              height: 112,
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) => Container(
                                 color: Colors.white.withValues(alpha: .14),
@@ -1425,8 +1431,10 @@ Future<void> showStorySheet(BuildContext context, {SocialStory? story}) async {
                   borderRadius: BorderRadius.circular(18),
                   child: SizedBox(
                     height: 180,
-                    child: Image.network(
-                      media.text,
+                    child: OptimizedNetworkImage(
+                      url: media.text,
+                      width: 720,
+                      height: 360,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => Container(
                         color: AppColors.indigo.withValues(alpha: .1),

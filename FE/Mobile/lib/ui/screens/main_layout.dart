@@ -44,13 +44,6 @@ class _MainLayoutState extends State<MainLayout> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final copy = AppCopy.of(context);
-        final pages = [
-          HomeScreen(key: ValueKey('home-$_reloadVersion')),
-          CommunityHubScreen(key: ValueKey('community-$_reloadVersion')),
-          TechJobScreen(key: ValueKey('tech-job-$_reloadVersion')),
-          NotificationsScreen(key: ValueKey('activity-$_reloadVersion')),
-          ProfileScreen(key: ValueKey('profile-$_reloadVersion')),
-        ];
         final destinations = [
           NavigationDestination(
             icon: const Icon(Icons.home_outlined),
@@ -79,7 +72,10 @@ class _MainLayoutState extends State<MainLayout> {
           ),
         ];
         final wide = constraints.maxWidth >= AppConstants.compactBreakpoint;
-        final content = IndexedStack(index: _index, children: pages);
+        final content = _LazyMainStack(
+          index: _index,
+          reloadVersion: _reloadVersion,
+        );
         if (wide) {
           return Scaffold(
             body: SafeArea(
@@ -200,4 +196,49 @@ class _MainLayoutState extends State<MainLayout> {
       },
     );
   }
+}
+
+class _LazyMainStack extends StatefulWidget {
+  const _LazyMainStack({required this.index, required this.reloadVersion});
+
+  final int index;
+  final int reloadVersion;
+
+  @override
+  State<_LazyMainStack> createState() => _LazyMainStackState();
+}
+
+class _LazyMainStackState extends State<_LazyMainStack> {
+  final Set<int> _visited = {0};
+
+  @override
+  void didUpdateWidget(covariant _LazyMainStack oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _visited.add(widget.index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        for (var index = 0; index < 5; index++)
+          if (_visited.contains(index))
+            Offstage(
+              offstage: widget.index != index,
+              child: TickerMode(
+                enabled: widget.index == index,
+                child: _buildPage(index),
+              ),
+            ),
+      ],
+    );
+  }
+
+  Widget _buildPage(int index) => switch (index) {
+    0 => HomeScreen(key: ValueKey('home-${widget.reloadVersion}')),
+    1 => CommunityHubScreen(key: ValueKey('community-${widget.reloadVersion}')),
+    2 => TechJobScreen(key: ValueKey('tech-job-${widget.reloadVersion}')),
+    3 => NotificationsScreen(key: ValueKey('activity-${widget.reloadVersion}')),
+    _ => ProfileScreen(key: ValueKey('profile-${widget.reloadVersion}')),
+  };
 }

@@ -222,6 +222,9 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<String?> requestPasswordReset(String email) async {
+    if (!email.trim().contains('@')) {
+      return _t('Email is not valid.', 'Email chua dung dinh dang.');
+    }
     try {
       final raw = await _api.post(
         '/auth/forgot-password',
@@ -229,6 +232,68 @@ class AuthProvider extends ChangeNotifier {
       );
       final data = _unwrapMap(raw);
       return data['resetToken']?.toString() ?? data['message']?.toString();
+    } on ApiFailure catch (error) {
+      return error.message;
+    }
+  }
+
+  Future<String?> resetPassword({
+    required String email,
+    required String token,
+    required String newPassword,
+  }) async {
+    if (!email.trim().contains('@')) {
+      return _t('Email is not valid.', 'Email chua dung dinh dang.');
+    }
+    if (token.trim().isEmpty) {
+      return _t('Please enter the reset token.', 'Nhap reset token.');
+    }
+    if (newPassword.length < 6) {
+      return _t(
+        'Password needs at least 6 characters.',
+        'Mat khau can it nhat 6 ky tu.',
+      );
+    }
+    try {
+      await _api.post(
+        '/auth/reset-password',
+        data: {
+          'email': email.trim(),
+          'token': token.trim(),
+          'newPassword': newPassword,
+        },
+      );
+      return null;
+    } on ApiFailure catch (error) {
+      return error.message;
+    }
+  }
+
+  Future<String?> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    if (_session == null || _session!.isGuest) {
+      return _t(
+        'Please sign in to change your password.',
+        'Hay dang nhap de doi mat khau.',
+      );
+    }
+    if (currentPassword.isEmpty) {
+      return _t('Please enter current password.', 'Nhap mat khau hien tai.');
+    }
+    if (newPassword.length < 6) {
+      return _t(
+        'Password needs at least 6 characters.',
+        'Mat khau can it nhat 6 ky tu.',
+      );
+    }
+    try {
+      await _api.post(
+        '/auth/change-password',
+        data: {'currentPassword': currentPassword, 'newPassword': newPassword},
+      );
+      return null;
     } on ApiFailure catch (error) {
       return error.message;
     }

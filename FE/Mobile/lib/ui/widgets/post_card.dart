@@ -26,126 +26,129 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final copy = AppCopy.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                UserAvatar(
-                  label: post.authorLabel,
-                  imageUrl: post.authorAvatarUrl,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post.authorLabel,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${post.groupName ?? copy.communityFallback}  •  ${_relativeTime(context, post.createdDate)}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+    return RepaintBoundary(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  UserAvatar(
+                    label: post.authorLabel,
+                    imageUrl: post.authorAvatarUrl,
                   ),
-                ),
-                IconButton(
-                  onPressed: () => _showPostOptions(context),
-                  icon: const Icon(Icons.more_horiz_rounded),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          post.authorLabel,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${post.groupName ?? copy.communityFallback}  •  ${_relativeTime(context, post.createdDate)}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: colors.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => _showPostOptions(context),
+                    icon: const Icon(Icons.more_horiz_rounded),
+                  ),
+                ],
+              ),
+              if (post.content.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _PostContent(
+                  content: post.content,
+                  highlightQuery: highlightQuery,
                 ),
               ],
-            ),
-            if (post.content.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _PostContent(
-                content: post.content,
-                highlightQuery: highlightQuery,
-              ),
-            ],
-            if (post.mediaUrl?.isNotEmpty == true) ...[
-              const SizedBox(height: 16),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: AspectRatio(
-                  aspectRatio: 16 / 10,
-                  child: Image.network(
-                    post.mediaUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: AppColors.indigo.withValues(alpha: .08),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.broken_image_outlined,
-                            color: AppColors.indigo,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(copy.mediaLoadFailed),
-                        ],
+              if (post.mediaUrl?.isNotEmpty == true) ...[
+                const SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 10,
+                    child: OptimizedNetworkImage(
+                      url: post.mediaUrl!,
+                      width: 720,
+                      height: 450,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        color: AppColors.indigo.withValues(alpha: .08),
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.broken_image_outlined,
+                              color: AppColors.indigo,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(copy.mediaLoadFailed),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
+              ],
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  _ReactionSummary(post: post),
+                  const SizedBox(width: 16),
+                  _Metric(
+                    icon: Icons.chat_bubble_rounded,
+                    color: AppColors.indigo,
+                    value: post.commentCount,
+                  ),
+                  const Spacer(),
+                  Text(
+                    post.reactionCount + post.commentCount == 0
+                        ? copy.startConversation
+                        : copy.gettingAttention,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 22),
+              Row(
+                children: [
+                  Expanded(
+                    child: _Action(
+                      icon: _reactionIcon(post.currentUserReaction),
+                      label: copy.react,
+                      onTap: () => _showReactions(context),
+                    ),
+                  ),
+                  Expanded(
+                    child: _Action(
+                      icon: Icons.mode_comment_outlined,
+                      label: copy.comment,
+                      onTap: () => _showComments(context),
+                    ),
+                  ),
+                  _Action(
+                    icon: Icons.ios_share_rounded,
+                    label: '',
+                    onTap: () => showUnavailable(context, copy.share),
+                  ),
+                ],
               ),
             ],
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                _ReactionSummary(post: post),
-                const SizedBox(width: 16),
-                _Metric(
-                  icon: Icons.chat_bubble_rounded,
-                  color: AppColors.indigo,
-                  value: post.commentCount,
-                ),
-                const Spacer(),
-                Text(
-                  post.reactionCount + post.commentCount == 0
-                      ? copy.startConversation
-                      : copy.gettingAttention,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: colors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-            const Divider(height: 22),
-            Row(
-              children: [
-                Expanded(
-                  child: _Action(
-                    icon: _reactionIcon(post.currentUserReaction),
-                    label: copy.react,
-                    onTap: () => _showReactions(context),
-                  ),
-                ),
-                Expanded(
-                  child: _Action(
-                    icon: Icons.mode_comment_outlined,
-                    label: copy.comment,
-                    onTap: () => _showComments(context),
-                  ),
-                ),
-                _Action(
-                  icon: Icons.ios_share_rounded,
-                  label: '',
-                  onTap: () => showUnavailable(context, copy.share),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );

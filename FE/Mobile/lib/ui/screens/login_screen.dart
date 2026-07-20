@@ -93,7 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () => showUnavailable(context, copy.forgotPassword),
+                onPressed: auth.isLoading
+                    ? null
+                    : () => showForgotPasswordSheet(context, _email.text),
                 child: Text(copy.forgotPassword),
               ),
             ),
@@ -147,4 +149,175 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+Future<void> showForgotPasswordSheet(
+  BuildContext context,
+  String initialEmail,
+) async {
+  final auth = context.read<AuthProvider>();
+  final email = TextEditingController(text: initialEmail.trim());
+  final token = TextEditingController();
+  final password = TextEditingController();
+  var resetToken = '';
+  var requesting = false;
+  var resetting = false;
+  var obscure = true;
+
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+    ),
+    builder: (sheetContext) => StatefulBuilder(
+      builder: (context, setSheetState) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          22,
+          18,
+          22,
+          MediaQuery.viewInsetsOf(context).bottom + 22,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Forgot password',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Close',
+                    onPressed: () => Navigator.pop(sheetContext),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              TextField(
+                controller: email,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  prefixIcon: Icon(Icons.alternate_email_rounded),
+                ),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: requesting || resetting
+                    ? null
+                    : () async {
+                        setSheetState(() => requesting = true);
+                        final result = await auth.requestPasswordReset(
+                          email.text,
+                        );
+                        if (!sheetContext.mounted) return;
+                        setSheetState(() {
+                          requesting = false;
+                          if (result != null && result.length > 30) {
+                            resetToken = result;
+                            token.text = result;
+                          }
+                        });
+                        showResultMessage(
+                          sheetContext,
+                          result != null && result.length > 30
+                              ? 'Reset token da tao, hay nhap mat khau moi.'
+                              : result ?? 'Hay kiem tra email reset password.',
+                          error: result == null,
+                        );
+                      },
+                icon: requesting
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.key_rounded),
+                label: const Text('Lay reset token'),
+              ),
+              if (resetToken.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                SelectableText(
+                  resetToken,
+                  maxLines: 3,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+              const SizedBox(height: 14),
+              TextField(
+                controller: token,
+                minLines: 1,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Reset token',
+                  prefixIcon: Icon(Icons.password_rounded),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: password,
+                obscureText: obscure,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  labelText: 'New password',
+                  prefixIcon: const Icon(Icons.lock_reset_rounded),
+                  suffixIcon: IconButton(
+                    tooltip: obscure ? 'Show password' : 'Hide password',
+                    onPressed: () => setSheetState(() => obscure = !obscure),
+                    icon: Icon(
+                      obscure
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              FilledButton.icon(
+                onPressed: resetting
+                    ? null
+                    : () async {
+                        setSheetState(() => resetting = true);
+                        final error = await auth.resetPassword(
+                          email: email.text,
+                          token: token.text,
+                          newPassword: password.text,
+                        );
+                        if (!sheetContext.mounted) return;
+                        setSheetState(() => resetting = false);
+                        if (error == null) {
+                          Navigator.pop(sheetContext);
+                          showResultMessage(
+                            context,
+                            'Da dat lai mat khau. Dang nhap lai bang mat khau moi.',
+                          );
+                        } else {
+                          showResultMessage(sheetContext, error, error: true);
+                        }
+                      },
+                icon: resetting
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.save_outlined),
+                label: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13),
+                  child: Text('Reset password'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }

@@ -172,9 +172,18 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const Divider(height: 1, indent: 64),
                       ListTile(
+                        leading: const Icon(Icons.lock_reset_rounded),
+                        title: const Text('Change password'),
+                        subtitle: const Text('Doi mat khau tai khoan'),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        enabled: session?.isGuest != true,
+                        onTap: () => showChangePasswordSheet(context),
+                      ),
+                      const Divider(height: 1, indent: 64),
+                      ListTile(
                         leading: const Icon(Icons.storefront_outlined),
                         title: const Text('Marketplace'),
-                        subtitle: const Text('Sàn mua bán đồ tech'),
+                        subtitle: const Text('San mua ban do tech'),
                         trailing: const Icon(Icons.chevron_right_rounded),
                         onTap: () => context.push('/marketplace'),
                       ),
@@ -183,7 +192,7 @@ class ProfileScreen extends StatelessWidget {
                         leading: const Icon(Icons.translate_rounded),
                         title: Text(copy.language),
                         subtitle: Text(
-                          settings.isEnglish ? 'English' : 'Tiếng Việt',
+                          settings.isEnglish ? 'English' : 'Tiáº¿ng Viá»‡t',
                         ),
                         trailing: const Icon(Icons.chevron_right_rounded),
                         onTap: () => chooseLanguageSheet(context, settings),
@@ -278,13 +287,13 @@ class _MarketplaceSectionState extends State<_MarketplaceSection> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Sàn cá nhân',
+                    'SÃ n cÃ¡ nhÃ¢n',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 if (stats != null)
                   Text(
-                    '${stats.activeCount}/${stats.limit} • Đã bán ${stats.soldCount}',
+                    '${stats.activeCount}/${stats.limit} â€¢ ÄÃ£ bÃ¡n ${stats.soldCount}',
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
               ],
@@ -299,7 +308,7 @@ class _MarketplaceSectionState extends State<_MarketplaceSection> {
               )
             else if (_items.isEmpty)
               Text(
-                'Chưa có sản phẩm trên sàn cá nhân.',
+                'ChÆ°a cÃ³ sáº£n pháº©m trÃªn sÃ n cÃ¡ nhÃ¢n.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -321,7 +330,7 @@ class _MarketplaceSectionState extends State<_MarketplaceSection> {
                   child: OutlinedButton.icon(
                     onPressed: () => context.push('/marketplace'),
                     icon: const Icon(Icons.open_in_new_rounded),
-                    label: const Text('Mở sàn'),
+                    label: const Text('Má»Ÿ sÃ n'),
                   ),
                 ),
                 if (widget.editable) ...[
@@ -336,7 +345,7 @@ class _MarketplaceSectionState extends State<_MarketplaceSection> {
                               await _load();
                             },
                       icon: const Icon(Icons.add_rounded),
-                      label: const Text('Đăng bán'),
+                      label: const Text('ÄÄƒng bÃ¡n'),
                     ),
                   ),
                 ],
@@ -410,7 +419,7 @@ class _AchievementSectionState extends State<_AchievementSection> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Thành tích',
+                    'ThÃ nh tÃ­ch',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
@@ -431,7 +440,7 @@ class _AchievementSectionState extends State<_AchievementSection> {
               )
             else if (_achievements.isEmpty)
               Text(
-                'Chưa có dữ liệu thành tích.',
+                'ChÆ°a cÃ³ dá»¯ liá»‡u thÃ nh tÃ­ch.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -594,7 +603,7 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
               )
             else if (portfolio == null || portfolio.isEmpty)
               Text(
-                'Chưa có portfolio. Thêm vai trò, kỹ năng và project nổi bật.',
+                'ChÆ°a cÃ³ portfolio. ThÃªm vai trÃ², ká»¹ nÄƒng vÃ  project ná»•i báº­t.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -675,32 +684,36 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Chỉnh portfolio',
+                  'Chá»‰nh portfolio',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: title,
-                  decoration: const InputDecoration(labelText: 'Vai trò'),
+                  decoration: const InputDecoration(labelText: 'Vai trÃ²'),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: bio,
                   minLines: 2,
                   maxLines: 4,
-                  decoration: const InputDecoration(labelText: 'Giới thiệu'),
+                  decoration: const InputDecoration(
+                    labelText: 'Giá»›i thiá»‡u',
+                  ),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: skills,
                   decoration: const InputDecoration(
-                    labelText: 'Kỹ năng, cách nhau bằng dấu phẩy',
+                    labelText: 'Ká»¹ nÄƒng, cÃ¡ch nhau báº±ng dáº¥u pháº©y',
                   ),
                 ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: location,
-                  decoration: const InputDecoration(labelText: 'Địa điểm'),
+                  decoration: const InputDecoration(
+                    labelText: 'Äá»‹a Ä‘iá»ƒm',
+                  ),
                 ),
                 const SizedBox(height: 10),
                 TextField(
@@ -716,7 +729,7 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
                 TextField(
                   controller: project,
                   decoration: const InputDecoration(
-                    labelText: 'Project nổi bật',
+                    labelText: 'Project ná»•i báº­t',
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -746,7 +759,7 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
                             );
                             if (!sheetContext.mounted) return;
                             Navigator.pop(sheetContext);
-                            showResultMessage(context, 'Đã lưu portfolio.');
+                            showResultMessage(context, 'ÄÃ£ lÆ°u portfolio.');
                           } on ApiFailure catch (error) {
                             if (!sheetContext.mounted) return;
                             setSheetState(() => saving = false);
@@ -766,7 +779,7 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
                       : const Icon(Icons.save_outlined),
                   label: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 13),
-                    child: Text('Lưu portfolio'),
+                    child: Text('LÆ°u portfolio'),
                   ),
                 ),
               ],
@@ -953,7 +966,7 @@ Future<void> chooseLanguageSheet(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: const [
-            RadioListTile<String>(value: 'vi', title: Text('Tiếng Việt')),
+            RadioListTile<String>(value: 'vi', title: Text('Tiáº¿ng Viá»‡t')),
             RadioListTile<String>(value: 'en', title: Text('English')),
           ],
         ),
@@ -961,4 +974,152 @@ Future<void> chooseLanguageSheet(
     ),
   );
   if (code != null) await settings.setLanguage(code);
+}
+
+Future<void> showChangePasswordSheet(BuildContext context) async {
+  final auth = context.read<AuthProvider>();
+  final current = TextEditingController();
+  final next = TextEditingController();
+  final confirm = TextEditingController();
+  var saving = false;
+  var obscureCurrent = true;
+  var obscureNext = true;
+  var obscureConfirm = true;
+
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+    ),
+    builder: (sheetContext) => StatefulBuilder(
+      builder: (context, setSheetState) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          22,
+          18,
+          22,
+          MediaQuery.viewInsetsOf(context).bottom + 22,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Change password',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Close',
+                    onPressed: () => Navigator.pop(sheetContext),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              _PasswordField(
+                controller: current,
+                label: 'Current password',
+                obscure: obscureCurrent,
+                onToggle: () =>
+                    setSheetState(() => obscureCurrent = !obscureCurrent),
+              ),
+              const SizedBox(height: 10),
+              _PasswordField(
+                controller: next,
+                label: 'New password',
+                obscure: obscureNext,
+                onToggle: () => setSheetState(() => obscureNext = !obscureNext),
+              ),
+              const SizedBox(height: 10),
+              _PasswordField(
+                controller: confirm,
+                label: 'Confirm new password',
+                obscure: obscureConfirm,
+                onToggle: () =>
+                    setSheetState(() => obscureConfirm = !obscureConfirm),
+              ),
+              const SizedBox(height: 18),
+              FilledButton.icon(
+                onPressed: saving
+                    ? null
+                    : () async {
+                        if (next.text != confirm.text) {
+                          showResultMessage(
+                            sheetContext,
+                            'Mat khau xac nhan khong khop.',
+                            error: true,
+                          );
+                          return;
+                        }
+                        setSheetState(() => saving = true);
+                        final error = await auth.changePassword(
+                          currentPassword: current.text,
+                          newPassword: next.text,
+                        );
+                        if (!sheetContext.mounted) return;
+                        setSheetState(() => saving = false);
+                        if (error == null) {
+                          Navigator.pop(sheetContext);
+                          showResultMessage(context, 'Da doi mat khau.');
+                        } else {
+                          showResultMessage(sheetContext, error, error: true);
+                        }
+                      },
+                icon: saving
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.save_outlined),
+                label: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13),
+                  child: Text('Save password'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+class _PasswordField extends StatelessWidget {
+  const _PasswordField({
+    required this.controller,
+    required this.label,
+    required this.obscure,
+    required this.onToggle,
+  });
+
+  final TextEditingController controller;
+  final String label;
+  final bool obscure;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      obscureText: obscure,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: const Icon(Icons.lock_outline_rounded),
+        suffixIcon: IconButton(
+          tooltip: obscure ? 'Show password' : 'Hide password',
+          onPressed: onToggle,
+          icon: Icon(
+            obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+          ),
+        ),
+      ),
+    );
+  }
 }

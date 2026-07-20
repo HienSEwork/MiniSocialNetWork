@@ -41,4 +41,12 @@ public sealed class AuthController : ControllerBase
         await _authService.ResetPasswordAsync(request);
         return NoContent();
     }
+
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+    {
+        await _authService.ChangePasswordAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!, request);
+        return NoContent();
+    }
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MiniSocialNetwork.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e8fc371b966c0851d724acdf9363fe9e766fb9e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+afe1d492959910f2f0c054e33483d6bbda867274")]
 [assembly: System.Reflection.AssemblyProductAttribute("MiniSocialNetwork.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MiniSocialNetwork.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

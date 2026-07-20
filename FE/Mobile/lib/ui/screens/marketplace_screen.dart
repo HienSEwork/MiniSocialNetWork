@@ -202,8 +202,10 @@ class MarketplaceItemCard extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 if (item.mediaUrl?.isNotEmpty == true)
-                  Image.network(
-                    item.mediaUrl!,
+                  OptimizedNetworkImage(
+                    url: item.mediaUrl!,
+                    width: 720,
+                    height: 420,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => _ProductFallback(item: item),
                   )
@@ -600,8 +602,10 @@ Future<void> showMarketplaceItemSheet(
                   borderRadius: BorderRadius.circular(18),
                   child: AspectRatio(
                     aspectRatio: 16 / 9,
-                    child: Image.network(
-                      mediaUrl,
+                    child: OptimizedNetworkImage(
+                      url: mediaUrl,
+                      width: 720,
+                      height: 405,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => _ProductFallback(
                         item: item ?? _draftItem(category.text),

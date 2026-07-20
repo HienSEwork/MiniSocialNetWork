@@ -94,6 +94,19 @@ public sealed class AuthService : IAuthService
         EnsureSucceeded(await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword));
     }
 
+    public async Task ChangePasswordAsync(string userId, ChangePasswordRequest request)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null || user.IsDeleted) throw new KeyNotFoundException("User not found");
+        if (request.NewPassword.Length < 6)
+            throw new ArgumentException("Password must contain at least 6 characters");
+
+        EnsureSucceeded(await _userManager.ChangePasswordAsync(
+            user,
+            request.CurrentPassword,
+            request.NewPassword));
+    }
+
     private async Task<AuthResponse> BuildAuthResponseAsync(AppUser user)
     {
         var token = await _tokenService.CreateAsync(user);

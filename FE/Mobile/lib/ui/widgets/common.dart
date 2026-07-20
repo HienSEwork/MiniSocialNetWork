@@ -73,20 +73,61 @@ class UserAvatar extends StatelessWidget {
     final image = url?.isNotEmpty == true
         ? url!.startsWith('assets/')
               ? AssetImage(url) as ImageProvider
-              : NetworkImage(url)
+              : ResizeImage(
+                  NetworkImage(url),
+                  width: (radius * 2.4).round(),
+                  height: (radius * 2.4).round(),
+                )
         : null;
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: accent.withValues(alpha: .14),
-      foregroundImage: image,
-      onForegroundImageError: image == null ? null : (_, __) {},
-      child: Text(
-        initial,
-        style: TextStyle(
-          color: accent,
-          fontWeight: FontWeight.w900,
-          fontSize: radius * .72,
+    return RepaintBoundary(
+      child: CircleAvatar(
+        radius: radius,
+        backgroundColor: accent.withValues(alpha: .14),
+        foregroundImage: image,
+        onForegroundImageError: image == null ? null : (_, __) {},
+        child: Text(
+          initial,
+          style: TextStyle(
+            color: accent,
+            fontWeight: FontWeight.w900,
+            fontSize: radius * .72,
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class OptimizedNetworkImage extends StatelessWidget {
+  const OptimizedNetworkImage({
+    super.key,
+    required this.url,
+    required this.width,
+    required this.height,
+    this.fit = BoxFit.cover,
+    this.errorBuilder,
+  });
+
+  final String url;
+  final double width;
+  final double height;
+  final BoxFit fit;
+  final ImageErrorWidgetBuilder? errorBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    final dpr = MediaQuery.devicePixelRatioOf(context).clamp(1.0, 3.0);
+    return RepaintBoundary(
+      child: Image.network(
+        url,
+        fit: fit,
+        width: width,
+        height: height,
+        cacheWidth: (width * dpr).round(),
+        cacheHeight: (height * dpr).round(),
+        filterQuality: FilterQuality.low,
+        gaplessPlayback: true,
+        errorBuilder: errorBuilder,
       ),
     );
   }
