@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MiniSocialNetwork.Domain.Entities;
+using System.Collections.Generic;
 
 namespace MiniSocialNetwork.Infrastructure.Persistence;
 
@@ -18,6 +19,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<AchievementDefinition> AchievementDefinitions { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
     public DbSet<MarketplaceItem> MarketplaceItems { get; set; }
+    public DbSet<FriendRequest> FriendRequests { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -137,5 +139,23 @@ public class AppDbContext : IdentityDbContext<AppUser>
             .WithMany()
             .HasForeignKey(item => item.SellerId)
             .OnDelete(DeleteBehavior.NoAction);
+        // FriendRequest configuration
+        builder.Entity<FriendRequest>(fr =>
+        {
+            fr.HasKey(x => x.Id);
+            fr.HasOne(x => x.Requester)
+                .WithMany()
+                .HasForeignKey(x => x.RequesterId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            fr.HasOne(x => x.Addressee)
+                .WithMany()
+                .HasForeignKey(x => x.AddresseeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // optional index to speed lookups by requester/addressee/status
+            fr.HasIndex(x => new { x.RequesterId, x.AddresseeId });
+            fr.HasIndex(x => new { x.AddresseeId, x.Status });
+        });
     }
 }

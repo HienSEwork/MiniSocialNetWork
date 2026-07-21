@@ -5,6 +5,7 @@ import '../../core/constants.dart';
 import '../../core/app_copy.dart';
 import '../../data/providers/community_provider.dart';
 import 'community_hub_screen.dart';
+import 'friend_list_screen.dart';
 import 'home_screen.dart';
 import 'notifications_screen.dart';
 import 'profile_screen.dart';
@@ -59,6 +60,11 @@ class _MainLayoutState extends State<MainLayout> {
             icon: const Icon(Icons.work_outline_rounded),
             selectedIcon: const Icon(Icons.work_rounded),
             label: 'Tech Job',
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.people_outline_rounded),
+            selectedIcon: const Icon(Icons.people_rounded),
+            label: 'Bạn bè',
           ),
           NavigationDestination(
             icon: const Icon(Icons.notifications_none_rounded),
@@ -221,7 +227,7 @@ class _LazyMainStackState extends State<_LazyMainStack> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        for (var index = 0; index < 5; index++)
+        for (var index = 0; index < 6; index++)
           if (_visited.contains(index))
             Offstage(
               offstage: widget.index != index,
@@ -238,7 +244,8 @@ class _LazyMainStackState extends State<_LazyMainStack> {
     0 => HomeScreen(key: ValueKey('home-${widget.reloadVersion}')),
     1 => CommunityHubScreen(key: ValueKey('community-${widget.reloadVersion}')),
     2 => TechJobScreen(key: ValueKey('tech-job-${widget.reloadVersion}')),
-    3 => NotificationsScreen(key: ValueKey('activity-${widget.reloadVersion}')),
+    3 => FriendListScreen(key: ValueKey('friends-${widget.reloadVersion}')),
+    4 => NotificationsScreen(key: ValueKey('activity-${widget.reloadVersion}')),
     _ => ProfileScreen(key: ValueKey('profile-${widget.reloadVersion}')),
   };
 }

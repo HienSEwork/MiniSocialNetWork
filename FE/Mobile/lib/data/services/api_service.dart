@@ -41,12 +41,23 @@ class ApiService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          if (_token?.isNotEmpty == true) {
+          final isPublicAuthRoute = options.path.contains('/auth/login') ||
+              options.path.contains('/auth/register') ||
+              options.path.contains('/auth/forgot-password') ||
+              options.path.contains('/auth/reset-password');
+
+          if (!isPublicAuthRoute && _token?.isNotEmpty == true) {
             options.headers['Authorization'] = 'Bearer $_token';
+          } else {
+            options.headers.remove('Authorization');
           }
-          if (_userId?.isNotEmpty == true) {
+
+          if (_userId?.isNotEmpty == true && !isPublicAuthRoute) {
             options.headers['X-User-Id'] = _userId;
+          } else {
+            options.headers.remove('X-User-Id');
           }
+
           handler.next(options);
         },
       ),

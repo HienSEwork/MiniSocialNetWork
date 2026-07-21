@@ -36,3 +36,21 @@ C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Infrastructure.deps.json
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Infrastructure.dll
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Infrastructure.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Infrastructure.deps.json
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Infrastructure.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Infrastructure.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Application.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Application.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\bin\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.csproj.AssemblyReference.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.AssemblyInfoInputs.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.AssemblyInfo.cs
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.csproj.CoreCompileInputs.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.sourcelink.json
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSoci.B7F0354D.Up2Date
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\refint\MiniSocialNetwork.Infrastructure.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\MiniSocialNetwork.Infrastructure.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Infrastructure\obj\Debug\net8.0\ref\MiniSocialNetwork.Infrastructure.dll

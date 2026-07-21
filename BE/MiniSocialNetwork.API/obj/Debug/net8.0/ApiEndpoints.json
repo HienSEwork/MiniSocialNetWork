@@ -20,26 +20,6 @@
     ]
   },
   {
-    "ContainingType": "MiniSocialNetwork.API.Controllers.AchievementsController",
-    "Method": "Me",
-    "RelativePath": "api/achievements/me",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IReadOnlyCollection\u00601[[MiniSocialNetwork.Application.DTOs.Achievement.AchievementResponse, MiniSocialNetwork.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
     "ContainingType": "MiniSocialNetwork.API.Controllers.AdminController",
     "Method": "GetPostsPerDay",
     "RelativePath": "api/admin/posts-per-day",
@@ -330,6 +310,111 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.FriendsController",
+    "Method": "GetFriends",
+    "RelativePath": "api/friends",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.FriendsController",
+    "Method": "RemoveFriend",
+    "RelativePath": "api/friends/{friendId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "friendId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.FriendsController",
+    "Method": "Recommendations",
+    "RelativePath": "api/friends/recommendations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "take",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.FriendsController",
+    "Method": "GetIncomingRequests",
+    "RelativePath": "api/friends/requests",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.FriendsController",
+    "Method": "SendRequest",
+    "RelativePath": "api/friends/requests/{addresseeId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "addresseeId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.FriendsController",
+    "Method": "RespondRequest",
+    "RelativePath": "api/friends/requests/{requestId}/respond",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "MiniSocialNetwork.Application.DTOs.Friend.RespondFriendRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MiniSocialNetwork.API.Controllers.FriendsController",
+    "Method": "Search",
+    "RelativePath": "api/friends/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "keyword",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "MiniSocialNetwork.API.Controllers.GroupsController",
@@ -1080,32 +1165,6 @@
     "ReturnTypes": [
       {
         "Type": "MiniSocialNetwork.Application.DTOs.Auth.UserProfileResponse",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MiniSocialNetwork.API.Controllers.AchievementsController",
-    "Method": "Profile",
-    "RelativePath": "api/profiles/{userId}/achievements",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IReadOnlyCollection\u00601[[MiniSocialNetwork.Application.DTOs.Achievement.AchievementResponse, MiniSocialNetwork.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

@@ -4833,23 +4833,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ASUS_FX507Z\\.nuget\\packages\\": {},
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj",
+      "projectUniqueName": "C:\\University\\SU26\\New folder\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj",
       "projectName": "MiniSocialNetwork.API",
-      "projectPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj",
-      "packagesPath": "C:\\Users\\ASUS_FX507Z\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.API\\obj\\",
+      "projectPath": "C:\\University\\SU26\\New folder\\BE\\MiniSocialNetwork.API\\MiniSocialNetwork.API.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "C:\\University\\SU26\\New folder\\BE\\MiniSocialNetwork.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ASUS_FX507Z\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4858,17 +4858,18 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj": {
-              "projectPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj"
+            "C:\\University\\SU26\\New folder\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj": {
+              "projectPath": "C:\\University\\SU26\\New folder\\BE\\MiniSocialNetwork.Application\\MiniSocialNetwork.Application.csproj"
             },
-            "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\ASUS_FX507Z\\Downloads\\MiniSocial\\MiniSocialNetWork\\BE\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj"
+            "C:\\University\\SU26\\New folder\\BE\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj": {
+              "projectPath": "C:\\University\\SU26\\New folder\\BE\\MiniSocialNetwork.Infrastructure\\MiniSocialNetwork.Infrastructure.csproj"
             }
           }
         }

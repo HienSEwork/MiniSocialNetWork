@@ -32,3 +32,19 @@ C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Application.deps.json
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Application.dll
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Application.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\bin\Debug\net8.0\MiniSocialNetwork.Application.deps.json
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\bin\Debug\net8.0\MiniSocialNetwork.Application.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\bin\Debug\net8.0\MiniSocialNetwork.Application.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\bin\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\bin\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSocialNetwork.Application.csproj.AssemblyReference.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSocialNetwork.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSocialNetwork.Application.AssemblyInfoInputs.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSocialNetwork.Application.AssemblyInfo.cs
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSocialNetwork.Application.csproj.CoreCompileInputs.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSocialNetwork.Application.sourcelink.json
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSoci.51D1D23D.Up2Date
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSocialNetwork.Application.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\refint\MiniSocialNetwork.Application.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\MiniSocialNetwork.Application.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Application\obj\Debug\net8.0\ref\MiniSocialNetwork.Application.dll

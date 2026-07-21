@@ -8,6 +8,7 @@ import 'core/theme/app_theme.dart';
 import 'data/providers/auth_provider.dart';
 import 'data/providers/community_provider.dart';
 import 'data/providers/chat_provider.dart';
+import 'data/providers/friends_provider.dart';
 import 'data/providers/settings_provider.dart';
 import 'data/providers/search_provider.dart';
 
@@ -32,6 +33,14 @@ class AppBootstrap extends StatelessWidget {
                 ..setLanguage(settings.locale.languageCode),
         ),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, FriendsProvider>(
+          create: (_) => FriendsProvider(),
+          update: (_, auth, provider) {
+            final next = provider ?? FriendsProvider();
+            next.bindAuth(auth);
+            return next;
+          },
+        ),
         ChangeNotifierProxyProvider2<
           AuthProvider,
           SettingsProvider,

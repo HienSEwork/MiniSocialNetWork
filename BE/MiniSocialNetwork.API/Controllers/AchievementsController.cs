@@ -21,13 +21,11 @@ public sealed class AchievementsController : ControllerBase
 
     [Authorize]
     [HttpGet("achievements/me")]
-    [HttpGet("/api/achievements/me")]
     public async Task<ActionResult<IReadOnlyCollection<AchievementResponse>>> Me()
         => Ok(await GetForUserAsync(CurrentUserId, materialize: true));
 
     [AllowAnonymous]
     [HttpGet("profiles/{userId}/achievements")]
-    [HttpGet("/api/profiles/{userId}/achievements")]
     public async Task<ActionResult<IReadOnlyCollection<AchievementResponse>>> Profile(string userId)
     {
         Console.WriteLine($"Achievements.Profile invoked for userId={userId}");

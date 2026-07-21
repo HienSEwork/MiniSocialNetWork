@@ -26,3 +26,16 @@ C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\MiniSocialNetwork
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Domain.deps.json
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Domain.dll
 C:\Users\ASUS_FX507Z\Downloads\MiniSocial\MiniSocialNetWork\BE\artifacts\verify-api\MiniSocialNetwork.Domain.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.deps.json
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\bin\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.csproj.AssemblyReference.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.AssemblyInfoInputs.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.AssemblyInfo.cs
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.csproj.CoreCompileInputs.cache
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.sourcelink.json
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\refint\MiniSocialNetwork.Domain.dll
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\MiniSocialNetwork.Domain.pdb
+C:\University\SU26\New folder\BE\MiniSocialNetwork.Domain\obj\Debug\net8.0\ref\MiniSocialNetwork.Domain.dll
