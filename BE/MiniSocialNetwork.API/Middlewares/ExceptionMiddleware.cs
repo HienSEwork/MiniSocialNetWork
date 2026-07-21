@@ -1,5 +1,8 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Security.Authentication;
+
+using MiniSocialNetwork.Application.Exceptions;
 
 namespace MiniSocialNetwork.API.Middlewares;
 
@@ -22,22 +25,32 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception");
-            await HandleAsync(context, ex);
+            var status = GetStatusCode(ex);
+            if (status == HttpStatusCode.InternalServerError)
+                _logger.LogError(ex, "Unhandled exception");
+            else
+                _logger.LogWarning("Request failed with status {StatusCode}: {Message}", (int)status, ex.Message);
+
+            await HandleAsync(context, ex, status);
         }
     }
 
-    private static Task HandleAsync(HttpContext context, Exception ex)
+    private static HttpStatusCode GetStatusCode(Exception ex)
     {
-        var status = ex switch
+        return ex switch
         {
+            AuthenticationException => HttpStatusCode.Unauthorized,
             KeyNotFoundException => HttpStatusCode.NotFound,
             UnauthorizedAccessException => HttpStatusCode.Forbidden,
+            ConflictException => HttpStatusCode.Conflict,
             ArgumentException => HttpStatusCode.BadRequest,
             InvalidOperationException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
+    }
 
+    private static Task HandleAsync(HttpContext context, Exception ex, HttpStatusCode status)
+    {
         var payload = new ApiResponse<object?>
         {
             Success = false,

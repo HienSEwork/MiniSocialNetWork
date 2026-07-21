@@ -15,38 +15,26 @@ public class PostRepository : IPostRepository
         _context = context;
     }
 
+    public Task<PagedResult<Post>> GetFeedAsync(PostQuery query, string userId)
+        => PageAsync(
+            _context.Posts.Where(post =>
+                !post.IsDeleted &&
+                post.GroupId.HasValue &&
+                post.Group!.Members.Any(member => member.UserId == userId)),
+            query);
+
     public async Task<PagedResult<Post>> GetGroupFeedAsync(Guid groupId, PostQuery query)
     {
-        var q = _context.Posts
-            .Where(p => p.GroupId == groupId && !p.IsDeleted)
-            .Include(p => p.Comments)
-            .Include(p => p.Reactions)
-            .OrderByDescending(p => p.CreatedDate)
-            .AsQueryable();
-
-        var total = await q.CountAsync();
-
-        var page = query.Page < 1 ? 1 : query.Page;
-        var pageSize = query.PageSize < 1 ? 10 : query.PageSize;
-
-        var items = await q
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return new PagedResult<Post>
-        {
-            Items = items,
-            Total = total,
-            Page = page,
-            PageSize = pageSize
-        };
+        return await PageAsync(
+            _context.Posts.Where(p => p.GroupId == groupId && !p.IsDeleted), query);
     }
 
     public async Task<Post?> GetByIdAsync(Guid id)
         => await _context.Posts
             .Include(p => p.Comments)
             .Include(p => p.Reactions)
+            .Include(p => p.User)
+            .Include(p => p.Group)
             .FirstOrDefaultAsync(p => p.Id == id);
 
     public async Task AddAsync(Post post)
@@ -54,4 +42,19 @@ public class PostRepository : IPostRepository
 
     public async Task SaveChangesAsync()
         => await _context.SaveChangesAsync();
+
+    private static async Task<PagedResult<Post>> PageAsync(IQueryable<Post> queryable, PostQuery query)
+    {
+        var page = Math.Max(1, query.Page);
+        var pageSize = Math.Clamp(query.PageSize, 1, 50);
+        var queryWithIncludes = queryable
+            .Include(p => p.Comments)
+            .Include(p => p.Reactions)
+            .Include(p => p.User)
+            .Include(p => p.Group)
+            .OrderByDescending(p => p.CreatedDate);
+        var total = await queryWithIncludes.CountAsync();
+        var items = await queryWithIncludes.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        return new PagedResult<Post> { Items = items, Total = total, Page = page, PageSize = pageSize };
+    }
 }

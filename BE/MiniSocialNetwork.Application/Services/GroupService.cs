@@ -25,6 +25,7 @@ public class GroupService : IGroupService
             Id = Guid.NewGuid(),
             Name = req.Name.Trim(),
             Description = req.Description,
+            AvatarUrl = NormalizeUrl(req.AvatarUrl),
             OwnerId = userId,
             CreatedDate = DateTime.UtcNow,
             IsDeleted = false
@@ -51,11 +52,12 @@ public class GroupService : IGroupService
 
         var group = await GetActiveGroupAsync(groupId);
 
-        //if (group.OwnerId != userId)
-        //    throw new UnauthorizedAccessException("Only the owner can edit this group");
+        if (group.OwnerId != userId)
+            throw new UnauthorizedAccessException("Only the owner can edit this group");
 
         group.Name = req.Name.Trim();
         group.Description = req.Description;
+        group.AvatarUrl = NormalizeUrl(req.AvatarUrl);
 
         await _repo.SaveChangesAsync();
     }
@@ -64,8 +66,8 @@ public class GroupService : IGroupService
     {
         var group = await GetActiveGroupAsync(groupId);
 
-        //if (group.OwnerId != userId)
-        //    throw new UnauthorizedAccessException("Only the owner can delete this group");
+        if (group.OwnerId != userId)
+            throw new UnauthorizedAccessException("Only the owner can delete this group");
 
         group.IsDeleted = true;
 
@@ -110,8 +112,8 @@ public class GroupService : IGroupService
     {
         var group = await GetActiveGroupAsync(groupId);
 
-        //if (group.OwnerId != requesterId)
-        //    throw new UnauthorizedAccessException("Only the owner can remove members");
+        if (group.OwnerId != requesterId)
+            throw new UnauthorizedAccessException("Only the owner can remove members");
 
         if (targetUserId == group.OwnerId)
             throw new InvalidOperationException("Owner cannot be removed");
@@ -132,8 +134,8 @@ public class GroupService : IGroupService
 
         var group = await GetActiveGroupAsync(groupId);
 
-        //if (group.OwnerId != requesterId)
-        //    throw new UnauthorizedAccessException("Only the owner can change roles");
+        if (group.OwnerId != requesterId)
+            throw new UnauthorizedAccessException("Only the owner can change roles");
 
         if (targetUserId == group.OwnerId)
             throw new InvalidOperationException("Owner role cannot be changed");
@@ -150,6 +152,12 @@ public class GroupService : IGroupService
     public async Task<List<GroupResponse>> GetAllAsync()
     {
         var groups = await _repo.GetAllAsync();
+        return groups.Select(MapToResponse).ToList();
+    }
+
+    public async Task<List<GroupResponse>> GetJoinedAsync(string userId)
+    {
+        var groups = await _repo.GetJoinedAsync(userId);
         return groups.Select(MapToResponse).ToList();
     }
 
@@ -189,8 +197,23 @@ public class GroupService : IGroupService
         Id = g.Id,
         Name = g.Name,
         Description = g.Description,
+        AvatarUrl = g.AvatarUrl,
         OwnerId = g.OwnerId,
         MemberCount = g.Members?.Count ?? 0,
-        CreatedDate = g.CreatedDate
+        CreatedDate = g.CreatedDate,
+        Members = g.Members?.Select(member => new GroupMemberResponse
+        {
+            UserId = member.UserId,
+            DisplayName = member.User?.DisplayName ?? "Member",
+            AvatarUrl = member.User?.AvatarUrl,
+            Role = member.Role,
+            JoinedDate = member.JoinedDate
+        }).ToArray() ?? Array.Empty<GroupMemberResponse>()
     };
+
+    private static string? NormalizeUrl(string? value)
+    {
+        var url = value?.Trim();
+        return string.IsNullOrWhiteSpace(url) ? null : url;
+    }
 }

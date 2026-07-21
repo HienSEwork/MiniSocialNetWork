@@ -2,5 +2,5 @@
 {
     public bool Success { get; set; } = true;
     public string Message { get; set; } = "OK";
-    public T Data { get; set; }
+    public T Data { get; set; } = default!;
 }

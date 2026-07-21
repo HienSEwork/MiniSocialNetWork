@@ -16,9 +16,12 @@ public class GroupRepository : IGroupRepository
     }
     public async Task<PagedResult<Group>> SearchAsync(GroupQuery query)
     {
+        var page = Math.Max(1, query.Page);
+        var pageSize = Math.Clamp(query.PageSize, 1, 50);
         var q = _context.Groups
             .Where(x => !x.IsDeleted)
             .Include(x => x.Members)
+            .ThenInclude(member => member.User)
             .AsQueryable();
 
         // 🔍 SEARCH
@@ -50,28 +53,38 @@ public class GroupRepository : IGroupRepository
         // 📄 PAGINATION
         var data = await q
             .OrderByDescending(x => x.CreatedDate)
-            .Skip((query.Page - 1) * query.PageSize)
-            .Take(query.PageSize)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
         return new PagedResult<Group>
         {
             Items = data,
             Total = total,
-            Page = query.Page,
-            PageSize = query.PageSize
+            Page = page,
+            PageSize = pageSize
         };
     }
     public async Task<List<Group>> GetAllAsync()
         => await _context.Groups
             .Where(x => !x.IsDeleted)
             .Include(x => x.Members)
+            .ThenInclude(member => member.User)
+            .OrderByDescending(x => x.CreatedDate)
+            .ToListAsync();
+
+    public async Task<List<Group>> GetJoinedAsync(string userId)
+        => await _context.Groups
+            .Where(x => !x.IsDeleted && x.Members.Any(member => member.UserId == userId))
+            .Include(x => x.Members)
+            .ThenInclude(member => member.User)
             .OrderByDescending(x => x.CreatedDate)
             .ToListAsync();
 
     public async Task<Group?> GetByIdAsync(Guid id)
         => await _context.Groups
             .Include(g => g.Members)
+            .ThenInclude(member => member.User)
             .FirstOrDefaultAsync(x => x.Id == id);
 
     public async Task AddAsync(Group group)
