@@ -18,6 +18,9 @@ class CommunityHubScreen extends StatelessWidget {
             child: TechNetGradientHeader(
               title: 'Cong dong',
               subtitle: 'Marketplace, nhom va cac khong gian TechNet',
+              leading: Navigator.of(context).canPop()
+                  ? const HeaderBackButton()
+                  : null,
               trailing: IconButton.filled(
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.white,

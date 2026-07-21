@@ -239,11 +239,47 @@ class _MarketplaceSection extends StatefulWidget {
   State<_MarketplaceSection> createState() => _MarketplaceSectionState();
 }
 
+class _SectionMessage extends StatelessWidget {
+  const _SectionMessage({
+    required this.icon,
+    required this.message,
+    required this.comingSoon,
+  });
+
+  final IconData icon;
+  final String message;
+  final bool comingSoon;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = comingSoon
+        ? AppColors.indigo
+        : Theme.of(context).colorScheme.error;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            message,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: color,
+              fontWeight: comingSoon ? FontWeight.w700 : FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _MarketplaceSectionState extends State<_MarketplaceSection> {
   List<MarketplaceItem> _items = const [];
   MarketplaceStats? _stats;
   bool _loading = false;
   String? _error;
+  bool _comingSoon = false;
 
   @override
   void initState() {
@@ -265,8 +301,10 @@ class _MarketplaceSectionState extends State<_MarketplaceSection> {
       _items = _list(itemsRaw).map(MarketplaceItem.fromJson).toList();
       _stats = MarketplaceStats.fromJson(Map<String, dynamic>.from(statsRaw));
       _error = null;
+      _comingSoon = false;
     } on ApiFailure catch (error) {
-      _error = error.message;
+      _comingSoon = error.statusCode == 404;
+      _error = _comingSoon ? 'Tính năng sắp ra mắt.' : error.message;
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -302,9 +340,10 @@ class _MarketplaceSectionState extends State<_MarketplaceSection> {
             if (_loading)
               const LinearProgressIndicator()
             else if (_error != null)
-              Text(
-                _error!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              _SectionMessage(
+                icon: Icons.upcoming_outlined,
+                message: _error!,
+                comingSoon: _comingSoon,
               )
             else if (_items.isEmpty)
               Text(
@@ -328,7 +367,9 @@ class _MarketplaceSectionState extends State<_MarketplaceSection> {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () => context.push('/marketplace'),
+                    onPressed: _comingSoon
+                        ? () => showUnavailable(context, 'Sàn cá nhân')
+                        : () => context.push('/marketplace'),
                     icon: const Icon(Icons.open_in_new_rounded),
                     label: const Text('Má»Ÿ sÃ n'),
                   ),
@@ -337,8 +378,9 @@ class _MarketplaceSectionState extends State<_MarketplaceSection> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: FilledButton.icon(
-                      onPressed:
-                          stats != null && stats.activeCount >= stats.limit
+                      onPressed: _comingSoon
+                          ? () => showUnavailable(context, 'Đăng bán')
+                          : stats != null && stats.activeCount >= stats.limit
                           ? null
                           : () async {
                               await showMarketplaceItemSheet(context);
@@ -380,6 +422,7 @@ class _AchievementSectionState extends State<_AchievementSection> {
   List<UserAchievement> _achievements = const [];
   bool _loading = false;
   String? _error;
+  bool _comingSoon = false;
 
   @override
   void initState() {
@@ -397,8 +440,10 @@ class _AchievementSectionState extends State<_AchievementSection> {
           : await ApiService.instance.get('/achievements/me');
       _achievements = _list(raw).map(UserAchievement.fromJson).toList();
       _error = null;
+      _comingSoon = false;
     } on ApiFailure catch (error) {
-      _error = error.message;
+      _comingSoon = error.statusCode == 404;
+      _error = _comingSoon ? 'Tính năng sắp ra mắt.' : error.message;
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -434,9 +479,10 @@ class _AchievementSectionState extends State<_AchievementSection> {
             if (_loading)
               const LinearProgressIndicator()
             else if (_error != null)
-              Text(
-                _error!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              _SectionMessage(
+                icon: Icons.upcoming_outlined,
+                message: _error!,
+                comingSoon: _comingSoon,
               )
             else if (_achievements.isEmpty)
               Text(
@@ -540,6 +586,7 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
   UserPortfolio? _portfolio;
   bool _loading = false;
   String? _error;
+  bool _comingSoon = false;
 
   @override
   void initState() {
@@ -555,8 +602,10 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
       final raw = await ApiService.instance.get('/profiles/$userId/portfolio');
       _portfolio = UserPortfolio.fromJson(Map<String, dynamic>.from(raw));
       _error = null;
+      _comingSoon = false;
     } on ApiFailure catch (error) {
-      _error = error.message;
+      _comingSoon = error.statusCode == 404;
+      _error = _comingSoon ? 'Tính năng sắp ra mắt.' : error.message;
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -583,7 +632,9 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
                 ),
                 if (widget.editable)
                   IconButton.filledTonal(
-                    onPressed: portfolio == null
+                    onPressed: _comingSoon
+                        ? () => showUnavailable(context, 'Portfolio')
+                        : portfolio == null
                         ? null
                         : () async {
                             await _editPortfolio(context, portfolio);
@@ -597,9 +648,10 @@ class _PortfolioSectionState extends State<_PortfolioSection> {
             if (_loading)
               const LinearProgressIndicator()
             else if (_error != null)
-              Text(
-                _error!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              _SectionMessage(
+                icon: Icons.upcoming_outlined,
+                message: _error!,
+                comingSoon: _comingSoon,
               )
             else if (portfolio == null || portfolio.isEmpty)
               Text(

@@ -133,10 +133,7 @@ class ApiService {
     final body = error.response?.data;
     if (status == 404) {
       return ApiFailure(
-        _t(
-          'The backend has not provided this API yet.',
-          'Backend chưa cung cấp API cho chức năng này.',
-        ),
+        _t('This feature is coming soon.', 'Tính năng sắp ra mắt.'),
         statusCode: 404,
       );
     }

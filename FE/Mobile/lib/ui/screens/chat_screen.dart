@@ -40,8 +40,10 @@ class _ChatScreenState extends State<ChatScreen> {
     final auth = context.watch<AuthProvider>();
     final chat = context.watch<ChatProvider>();
     final copy = AppCopy.of(context);
+    final canPop = Navigator.of(context).canPop();
     if (auth.session?.isGuest == true) {
       return Scaffold(
+        appBar: canPop ? AppBar(leading: const BackButton()) : null,
         body: FriendlyState(
           icon: Icons.lock_outline_rounded,
           title: copy.loginRequiredForChat,
@@ -61,6 +63,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   children: [
                     Row(
                       children: [
+                        if (canPop) ...[
+                          IconButton.filledTonal(
+                            tooltip: copy.back,
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: const Icon(Icons.arrow_back_rounded),
+                          ),
+                          const SizedBox(width: 12),
+                        ],
                         Expanded(
                           child: Text(
                             copy.chat,

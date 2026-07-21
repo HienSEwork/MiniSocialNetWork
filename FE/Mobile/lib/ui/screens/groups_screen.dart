@@ -52,6 +52,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 },
                 onChanged: () => setState(() {}),
                 onCreate: () => _showCreateGroup(context),
+                showBack: Navigator.of(context).canPop(),
               ),
             ),
             if (provider.isLoading && provider.groups.isEmpty)
@@ -222,6 +223,7 @@ class _GroupsHero extends StatelessWidget {
     required this.onClear,
     required this.onChanged,
     required this.onCreate,
+    required this.showBack,
   });
 
   final TextEditingController search;
@@ -229,6 +231,7 @@ class _GroupsHero extends StatelessWidget {
   final VoidCallback onClear;
   final VoidCallback onChanged;
   final VoidCallback onCreate;
+  final bool showBack;
 
   @override
   Widget build(BuildContext context) {
@@ -251,6 +254,10 @@ class _GroupsHero extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    if (showBack) ...[
+                      const HeaderBackButton(),
+                      const SizedBox(width: 12),
+                    ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

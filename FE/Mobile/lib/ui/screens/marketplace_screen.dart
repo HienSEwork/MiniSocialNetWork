@@ -70,6 +70,9 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                 subtitle: stats == null
                     ? 'San mua ban do tech trong TechNet'
                     : 'Dang ban ${stats.activeCount}/${stats.limit} - Da ban ${stats.soldCount}',
+                leading: Navigator.of(context).canPop()
+                    ? const HeaderBackButton()
+                    : null,
                 trailing: IconButton.filled(
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white,

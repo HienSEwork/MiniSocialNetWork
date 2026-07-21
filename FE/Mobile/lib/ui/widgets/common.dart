@@ -159,11 +159,13 @@ class TechNetGradientHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
+    this.leading,
     this.trailing,
   });
 
   final String title;
   final String? subtitle;
+  final Widget? leading;
   final Widget? trailing;
 
   @override
@@ -183,6 +185,7 @@ class TechNetGradientHeader extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 26),
             child: Row(
               children: [
+                if (leading != null) ...[leading!, const SizedBox(width: 12)],
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,6 +221,31 @@ class TechNetGradientHeader extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class HeaderBackButton extends StatelessWidget {
+  const HeaderBackButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final copy = AppCopy.of(context);
+    return IconButton.filled(
+      style: IconButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: AppColors.grape,
+      ),
+      tooltip: copy.back,
+      onPressed: () {
+        final navigator = Navigator.of(context);
+        if (navigator.canPop()) {
+          navigator.pop();
+          return;
+        }
+        context.go('/');
+      },
+      icon: const Icon(Icons.arrow_back_rounded),
     );
   }
 }
@@ -468,7 +496,11 @@ void showUnavailable(BuildContext context, String feature) {
   final copy = AppCopy.of(context);
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(copy.unavailable(feature)),
+      content: Text(
+        copy.isEnglish
+            ? '$feature is coming soon.'
+            : '$feature là tính năng sắp ra mắt.',
+      ),
       action: SnackBarAction(label: copy.understood, onPressed: () {}),
     ),
   );

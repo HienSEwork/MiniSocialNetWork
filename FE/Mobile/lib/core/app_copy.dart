@@ -46,8 +46,8 @@ class AppCopy {
   String get back => _english ? 'Back' : 'Quay lại';
   String get understood => _english ? 'Got it' : 'Đã hiểu';
   String unavailable(String feature) => _english
-      ? '$feature is not available yet.'
-      : '$feature hiện chưa khả dụng.';
+      ? '$feature is coming soon.'
+      : '$feature là tính năng sắp ra mắt.';
 
   String get communityFallback => _english ? 'Community' : 'Cộng đồng';
   String minutesAgo(int value) => _english ? '${value}m ago' : '$value phút';

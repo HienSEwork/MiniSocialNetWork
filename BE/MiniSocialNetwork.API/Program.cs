@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MiniSocialNetwork.API.Hubs;
+using Microsoft.AspNetCore.Routing;
 using MiniSocialNetwork.API.Middlewares;
 using MiniSocialNetwork.API.Services;
 using MiniSocialNetwork.Application.Interfaces;
@@ -120,12 +121,37 @@ app.UseSwaggerUI();
 if (!app.Environment.IsDevelopment()) app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles();
+app.UseRouting();
 app.UseCors("MobileAndWeb");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<ChatHub>("/hubs/chat");
 app.MapHub<NotificationHub>("/hubs/notifications");
+// Log registered endpoints for debugging routing issues
+var dataSource = app.Services.GetRequiredService<EndpointDataSource>();
+Console.WriteLine("--- Registered endpoints ---");
+foreach (var ep in dataSource.Endpoints)
+{
+    Console.WriteLine(ep.DisplayName ?? ep.ToString());
+}
+// Also write endpoints to a file for easier inspection
+try
+{
+    // Give the app a moment to finish endpoint registration
+    Task.Run(async () =>
+    {
+        await Task.Delay(1000);
+        var lines = dataSource.Endpoints.Select(e =>
+        {
+            if (e is RouteEndpoint re)
+                return $"{re.RoutePattern.RawText} :: {e.DisplayName}";
+            return e.DisplayName ?? e.ToString();
+        }).ToArray();
+        System.IO.File.WriteAllLines("runtime_endpoints.txt", lines);
+    });
+}
+catch { /* best-effort logging */ }
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();

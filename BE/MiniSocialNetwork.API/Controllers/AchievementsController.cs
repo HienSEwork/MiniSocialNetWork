@@ -21,13 +21,20 @@ public sealed class AchievementsController : ControllerBase
 
     [Authorize]
     [HttpGet("achievements/me")]
+    [HttpGet("/api/achievements/me")]
     public async Task<ActionResult<IReadOnlyCollection<AchievementResponse>>> Me()
         => Ok(await GetForUserAsync(CurrentUserId, materialize: true));
 
     [AllowAnonymous]
     [HttpGet("profiles/{userId}/achievements")]
+    [HttpGet("/api/profiles/{userId}/achievements")]
     public async Task<ActionResult<IReadOnlyCollection<AchievementResponse>>> Profile(string userId)
-        => Ok(await GetForUserAsync(userId, materialize: false));
+    {
+        Console.WriteLine($"Achievements.Profile invoked for userId={userId}");
+        var result = await GetForUserAsync(userId, materialize: false);
+        Console.WriteLine($"Achievements.Profile returning {result?.Count ?? 0} items for {userId}");
+        return Ok(result);
+    }
 
     private async Task<IReadOnlyCollection<AchievementResponse>> GetForUserAsync(
         string userId,
