@@ -3,6 +3,7 @@
     --surface: #ffffff;
     --surface-2: #f6f7f9;
     --text: #1c1e21;
+    --text-primary: #111;
     --text-muted: #65676b;
     --border: #e4e6eb;
     --primary: #4f46e5;
@@ -217,3 +218,99 @@ textarea.input { resize: vertical; min-height: 90px; }
 .flex { display: flex; align-items: center; gap: 10px; }
 .spacer { flex: 1; }
 .muted { color: var(--text-muted); }
+
+/* Ensure handshake icon visible and friend UI styling */
+.icon-handshake { color: var(--primary) !important; }
+
+/* Friend UI customizations (kept) */
+
+/* Friend card smaller, rounded, stacked layout */
+.friend-card {
+    padding: 12px;
+    border-radius: 12px;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+    background: var(--card-bg, #fff);
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+.friend-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* smaller avatar */
+.friend-card .avatar-lg {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 8px;
+}
+
+/* name on top */
+.friend-card .friend-name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 8px;
+    color: var(--text-primary, #111);
+}
+
+/* profile link at bottom
+   Make buttons take ~90% of the friend-card width by adding horizontal padding to the container.
+   Buttons themselves are full-width of that padded area. */
+.friend-card .friend-actions {
+    margin-top: 10px;
+    width: 100%;
+    padding: 0 5%;            /* 5% left + 5% right => buttons will occupy ~90% of parent width */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+}
+
+/* make buttons fill the padded area and center their content */
+.friend-card .friend-actions .btn {
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* ensure forms containing buttons expand to full padded width */
+.friend-card .friend-actions form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* compact grid gap */
+.grid-friends {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+/* Requests list spacing */
+.requests-list .request-item {
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: var(--card-bg, #fff);
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+.requests-list .request-body { flex:1; text-align:left; }
+.requests-list .request-avatar { width:48px; height:48px; border-radius:50%; object-fit:cover; }
+
+/* small helpers for buttons with icons */
+.btn .bi { margin-right:6px; vertical-align:middle; font-size:0.95em; }
+
+/* reduce font-size for small UI */
+.friend-card, .requests-list .request-item { font-size: 0.95rem; }

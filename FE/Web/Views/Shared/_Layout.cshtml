@@ -29,6 +29,7 @@
             <a class="topnav-item" asp-controller="Groups" asp-action="Index" title="@Context.L("nav.groups")"><i class="bi bi-people-fill"></i></a>
             @if (User.Identity?.IsAuthenticated == true)
             {
+                    <a class="topnav-item" asp-controller="Friends" asp-action="Index" title="Bạn bè"><i class="bi bi-person-fill"></i></a>
                 <a class="topnav-item" asp-controller="Chat" asp-action="Index" title="@Context.L("nav.chat")"><i class="bi bi-chat-dots-fill"></i></a>
             }
             @if (User.IsAdmin())

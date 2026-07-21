@@ -1,0 +1,42 @@
+﻿@model List<MiniSocialNetwork.Web.Models.FriendRequestDto>
+@{
+    ViewData["Title"] = "Lời mời kết bạn";
+}
+<h2 style="margin-top:0">Lời mời kết bạn</h2>
+
+<div class="card card-pad requests-list">
+    <div class="card-title" style="margin:0">Lời mời đến</div>
+    <div style="margin-top:12px">
+        @if (!Model.Any())
+        {
+            <div class="empty">Không có lời mời kết bạn</div>
+        }
+        else
+        {
+            foreach (var r in Model)
+            {
+                <div class="request-item">
+                    <img class="request-avatar" src="@UiHelpers.Avatar(r.RequesterAvatarUrl, r.RequesterName)" />
+                    <div class="request-body">
+                        <div style="font-weight:600">@r.RequesterName</div>
+                        <div class="muted" style="font-size:12px">@r.CreatedDate.ToLocalTime().ToString("g")</div>
+                    </div>
+                    <div style="display:flex;gap:8px">
+                        <form asp-action="Respond" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="requestId" value="@r.Id" />
+                            <input type="hidden" name="accept" value="true" />
+                            <button class="btn btn-primary btn-sm" type="submit"><i class="bi bi-handshake-fill"></i> Chấp nhận</button>
+                        </form>
+                        <form asp-action="Respond" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="requestId" value="@r.Id" />
+                            <input type="hidden" name="accept" value="false" />
+                            <button class="btn btn-ghost btn-sm" type="submit"><i class="bi bi-x-lg"></i> Từ chối</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

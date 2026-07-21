@@ -76,6 +76,8 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IFriendService, FriendService>();             // <-- ADDED
+builder.Services.AddScoped<IFriendRepository, FriendRepository>();     // <-- ADDED
 builder.Services.AddSingleton<IContentFilter, TfIdfContentFilter>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ICommentService, CommentService>();

@@ -1,0 +1,112 @@
+﻿@model MiniSocialNetwork.Web.Models.FriendsIndexViewModel
+@{
+    ViewData["Title"] = "Bạn bè";
+}
+<h2 style="margin-top:0">Bạn bè <a class="btn btn-ghost btn-sm" asp-action="Requests" style="margin-left:8px"><i class="bi bi-list-check"></i> Lời mời</a></h2>
+
+<div class="flex" style="gap:20px;align-items:flex-start">
+    <div style="flex:1">
+        <div class="card card-pad">
+            <div class="flex" style="align-items:center;gap:8px">
+                <div class="card-title" style="margin:0">Bạn bè của bạn</div>
+                <span class="spacer"></span>
+                <form method="get" asp-action="Index" style="display:flex;gap:8px;align-items:center">
+                    <input name="q" value="@ViewData["Query"]" placeholder="Tìm bạn" />
+                    <button class="btn btn-ghost btn-sm" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+            </div>
+
+            <div style="margin-top:12px" class="grid-friends">
+                @if (!Model.Friends.Any())
+                {
+                    <div class="empty">Bạn chưa có bạn bè</div>
+                }
+                else
+                {
+                    foreach (var f in Model.Friends)
+                    {
+                        <div class="card friend-card">
+                            <div>
+                                <div class="friend-name">@f.DisplayName</div>
+                            </div>
+
+                            <img class="avatar-lg" src="@UiHelpers.Avatar(f.AvatarUrl, f.DisplayName)" />
+
+                            <div class="friend-actions">
+                                <a class="btn btn-ghost btn-sm" asp-controller="Profile" asp-action="Index" asp-route-id="@f.Id"><i class="bi bi-person"></i> Hồ sơ</a>
+                                <a class="btn btn-ghost btn-sm" asp-controller="Chat" asp-action="Index" asp-route-otherUserId="@f.Id"><i class="bi bi-chat-dots"></i> Chat</a>
+                                <form asp-action="Remove" method="post" style="display:inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@f.Id" />
+                                    <button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('Bạn chắc chắn muốn hủy kết bạn?')">
+                                        <i class="bi bi-person-dash"></i> Hủy kết bạn
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <div style="width:420px">
+        <div class="card card-pad" style="position:sticky;top:18px">
+            <div class="card-title" style="margin:0">Tìm người</div>
+            <form method="get" asp-action="Index" style="margin-top:12px;display:flex;gap:8px">
+                <input name="q" value="@ViewData["Query"]" placeholder="Tìm theo tên hoặc id" style="flex:1" />
+                <button class="btn btn-primary">Tìm</button>
+            </form>
+
+            <div style="margin-top:12px">
+                @if (!Model.SearchResults.Any())
+                {
+                    <div class="muted">Hãy tìm theo tên hoặc id</div>
+                }
+                else
+                {
+                    foreach (var u in Model.SearchResults)
+                    {
+                        <div class="flex" style="align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f6f6f6">
+                            <img class="avatar-sm" src="@UiHelpers.Avatar(u.AvatarUrl, u.DisplayName)" />
+                            <div style="min-width:0">
+                                <div style="font-weight:600">@u.DisplayName</div>
+                            </div>
+                            <div class="spacer"></div>
+                            <div>
+                                @if (u.RelationshipStatus == 1)
+                                {
+                                    <span class="muted">Đã là bạn</span>
+                                }
+                                else if (u.RelationshipStatus == 2)
+                                {
+                                    <span class="muted">Đang chờ</span>
+                                }
+                                else if (u.RelationshipStatus == 3)
+                                {
+                                    <form asp-action="Send" method="post" style="display:inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@u.Id" />
+                                        <button class="btn btn-primary btn-sm" type="submit"><i class="bi bi-handshake-fill"></i> Phản hồi</button>
+                                    </form>
+                                }
+                                else if (u.RelationshipStatus == 4)
+                                {
+                                    <span class="muted">Đã từ chối gần đây</span>
+                                }
+                                else
+                                {
+                                    <form asp-action="Send" method="post" style="display:inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@u.Id" />
+                                        <button class="btn btn-primary btn-sm" type="submit"><i class="bi bi-handshake-fill"></i> Kết bạn</button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

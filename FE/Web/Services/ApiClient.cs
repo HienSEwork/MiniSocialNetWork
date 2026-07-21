@@ -342,4 +342,61 @@ public sealed class ApiClient
         var res = await _http.DeleteAsync($"/api/admin/users/{userId}");
         await EnsureSuccess(res);
     }
+
+    // ---- Friends (new) ----
+    public async Task<List<FriendDto>> GetFriendsAsync()
+    {
+        Authorize();
+        var res = await _http.GetAsync("/api/friends");
+        return await Read<List<FriendDto>>(res);
+    }
+
+    public async Task<List<FriendRequestDto>> GetIncomingFriendRequestsAsync()
+    {
+        Authorize();
+        var res = await _http.GetAsync("/api/friends/requests");
+        return await Read<List<FriendRequestDto>>(res);
+    }
+
+    public async Task<Guid> SendFriendRequestAsync(string addresseeId)
+    {
+        Authorize();
+        var res = await _http.PostAsync($"/api/friends/requests/{Uri.EscapeDataString(addresseeId)}", null);
+        if (res.StatusCode == HttpStatusCode.Created)
+        {
+            var doc = await res.Content.ReadFromJsonAsync<JsonElement>(Json);
+            if (doc.ValueKind == JsonValueKind.Object && doc.TryGetProperty("id", out var idEl))
+            {
+                if (idEl.ValueKind == JsonValueKind.String && Guid.TryParse(idEl.GetString(), out var g)) return g;
+                if (idEl.ValueKind == JsonValueKind.Null) return Guid.Empty;
+            }
+            return Guid.Empty;
+        }
+        await EnsureSuccess(res);
+        return Guid.Empty;
+    }
+
+    public async Task RespondFriendRequestAsync(Guid requestId, bool accept)
+    {
+        Authorize();
+        var res = await _http.PostAsJsonAsync($"/api/friends/requests/{requestId}/respond", new { accept }, Json);
+        await EnsureSuccess(res);
+    }
+
+    public async Task<List<FriendSearchDto>> SearchUsersForFriendsAsync(string? keyword)
+    {
+        Authorize();
+        var url = "/api/friends/search" + (string.IsNullOrWhiteSpace(keyword) ? "" : $"?keyword={Uri.EscapeDataString(keyword)}");
+        var res = await _http.GetAsync(url);
+        return await Read<List<FriendSearchDto>>(res);
+    }
+
+    // Added DeleteFriendAsync to call DELETE /api/friends/{friendId}
+    public async Task DeleteFriendAsync(string friendId)
+    {
+        if (string.IsNullOrWhiteSpace(friendId)) throw new ArgumentException(nameof(friendId));
+        Authorize();
+        var res = await _http.DeleteAsync($"/api/friends/{Uri.EscapeDataString(friendId)}");
+        await EnsureSuccess(res);
+    }
 }

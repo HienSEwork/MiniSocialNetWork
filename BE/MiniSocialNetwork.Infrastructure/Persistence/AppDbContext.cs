@@ -13,6 +13,9 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<Message> Messages { get; set; }
 
+    // New
+    public DbSet<FriendRequest> FriendRequests { get; set; }
+
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
@@ -76,5 +79,24 @@ public class AppDbContext : IdentityDbContext<AppUser>
         builder.Entity<Reaction>()
             .HasIndex(r => new { r.PostId, r.UserId })
             .IsUnique();
+
+        // FriendRequest configuration
+        builder.Entity<FriendRequest>(fr =>
+        {
+            fr.HasKey(x => x.Id);
+            fr.HasOne(x => x.Requester)
+                .WithMany()
+                .HasForeignKey(x => x.RequesterId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            fr.HasOne(x => x.Addressee)
+                .WithMany()
+                .HasForeignKey(x => x.AddresseeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // optional index to speed lookups by requester/addressee/status
+            fr.HasIndex(x => new { x.RequesterId, x.AddresseeId });
+            fr.HasIndex(x => new { x.AddresseeId, x.Status });
+        });
     }
 }

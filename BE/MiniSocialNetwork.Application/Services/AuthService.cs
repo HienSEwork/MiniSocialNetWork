@@ -48,11 +48,10 @@ public sealed class AuthService : IAuthService
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email.Trim());
-        if (user.IsDeleted)
-            throw new AuthenticationException("You cannot accept system with this account");
+        // Check null first, then IsDeleted and password
         if (user == null || user.IsDeleted || !await _userManager.CheckPasswordAsync(user, request.Password))
             throw new AuthenticationException("Email or password is incorrect");
-        
+
         return await BuildAuthResponseAsync(user);
     }
 

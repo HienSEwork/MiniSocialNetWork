@@ -17,6 +17,7 @@
             <a class="side-item" asp-controller="Groups" asp-action="Index"><span style="font-size:22px;width:40px;text-align:center"><i class="bi bi-people-fill" style="color:var(--primary)"></i></span><span class="name">@Context.L("nav.groups")</span></a>
             @if (User.Identity?.IsAuthenticated == true)
             {
+                <a class="side-item" asp-controller="Friends" asp-action="Index"><span style="font-size:22px;width:40px;text-align:center"><i class="bi bi-person-fill" style="color:var(--primary)"></i></span><span class="name">Bạn bè</span></a>
                 <a class="side-item" asp-controller="Chat" asp-action="Index"><span style="font-size:22px;width:40px;text-align:center"><i class="bi bi-chat-dots-fill" style="color:var(--primary)"></i></span><span class="name">@Context.L("nav.chat")</span></a>
             }
             @if (User.IsAdmin())
@@ -84,6 +85,7 @@
                     <a class="btn btn-ghost btn-block" style="margin-top:8px" asp-controller="Groups" asp-action="Index">@Context.L("groups.discover")</a>
                 </div>
             }
+
         </div>
     </aside>
 </div>
