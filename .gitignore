@@ -1,0 +1,11 @@
+.vs/
+bin/
+obj/
+[Bb]uild/
+.dart_tool/
+.flutter-plugins-dependencies
+android/.gradle/
+android/.kotlin/
+**/flutter/ephemeral/
+*.log
+**/wwwroot/uploads/
