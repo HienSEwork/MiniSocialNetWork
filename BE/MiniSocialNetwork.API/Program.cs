@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MiniSocialNetwork.API.Hubs;
 using MiniSocialNetwork.API.Middlewares;
-using MiniSocialNetwork.API.Services;
+using MiniSocialNetwork.API.Hubs;
 using MiniSocialNetwork.Application.Interfaces;
 using MiniSocialNetwork.Application.Interfaces.Repositories;
 using MiniSocialNetwork.Application.Services;
@@ -22,8 +22,9 @@ builder.Services.AddSignalR();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    var cultures = new[] { "vi", "en" };
-    options.SetDefaultCulture("vi").AddSupportedCultures(cultures).AddSupportedUICultures(cultures);
+    options.SetDefaultCulture("vi")
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -71,8 +72,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors(options => options.AddPolicy("MobileAndWeb", policy =>
     policy.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(_ => true).AllowCredentials()));
 
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITokenService, JwtTokenService>();
+// DI - application / repository
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IPostService, PostService>();
@@ -92,6 +92,30 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddSingleton<IRealtimeNotifier, SignalRRealtimeNotifier>();
 
+// Chat DI
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IChatService, ChatService>();
+
+// SignalR
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
+
+// Optional: allow browser clients (e.g. local SPA) to connect. Adjust origins for production.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(_ => true)
+            .AllowCredentials();
+    });
+});
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -117,20 +141,18 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseRequestLocalization();
 app.UseSwagger();
 app.UseSwaggerUI();
-if (!app.Environment.IsDevelopment()) app.UseHttpsRedirection();
-app.UseDefaultFiles();
-app.UseStaticFiles();
-app.UseCors("MobileAndWeb");
-app.UseAuthentication();
+
+app.UseHttpsRedirection();
+
+// Ensure routing and CORS run before hubs/endpoints
+app.UseRouting();
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<ChatHub>("/hubs/chat");
-app.MapHub<NotificationHub>("/hubs/notifications");
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await context.Database.MigrateAsync();
-}
-await IdentitySeeder.SeedRolesAsync(app.Services);
-await DemoDataSeeder.SeedAsync(app.Services);
+
+// Map SignalR hubs after routing is configured
+app.MapHub<ChatHub>("/chatHub");
+app.MapHub<NotificationHub>("/notificationHub");
+
 app.Run();

@@ -1,58 +1,77 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Collections.Concurrent;
 using MiniSocialNetwork.Application.DTOs.Chat;
 using MiniSocialNetwork.Application.Interfaces;
 
 namespace MiniSocialNetwork.API.Hubs;
 
-[Authorize]
-public sealed class ChatHub : Hub
+public class ChatHub : Hub
 {
-    private static readonly ConcurrentDictionary<string, int> Connections = new();
     private readonly IChatService _chatService;
-    public ChatHub(IChatService chatService) => _chatService = chatService;
 
-    public async Task SendMessage(SendMessageRequest request)
+    public ChatHub(IChatService chatService)
     {
-        var senderId = Context.User!.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var message = await _chatService.SendAsync(senderId, request);
-        if (message.IsGroupMessage)
-            await Clients.Group(GroupName(message.GroupId!.Value)).SendAsync("ReceiveMessage", message);
+        _chatService = chatService;
+    }
+
+    // Generic SendMessage method used by clients.
+    // If groupId is provided -> group message; otherwise a private message to receiverId.
+    public async Task<MessageDto> SendMessage(string? receiverId, Guid? groupId, string content)
+    {
+        var senderId = Context.UserIdentifier
+                       ?? Context.GetHttpContext()?.Request.Headers["X-User-Id"].FirstOrDefault()
+                       ?? "demo-user";
+
+        var isGroupMessage = groupId.HasValue;
+
+        var dto = await _chatService.SendMessageAsync(senderId, receiverId, groupId, content, isGroupMessage);
+
+        if (isGroupMessage)
+        {
+            // group name uses groupId string so clients can join by the same string
+            var groupName = groupId!.Value.ToString();
+            await Clients.Group(groupName).SendAsync("ReceiveGroupMessage", dto);
+        }
         else
         {
-            await Clients.User(message.ReceiverId!).SendAsync("ReceiveMessage", message);
-            await Clients.Caller.SendAsync("ReceiveMessage", message);
+            if (!string.IsNullOrWhiteSpace(receiverId))
+            {
+                // deliver to receiver and caller
+                await Clients.User(receiverId).SendAsync("ReceivePrivateMessage", dto);
+                await Clients.Caller.SendAsync("ReceivePrivateMessage", dto);
+            }
+            else
+            {
+                // fallback: send to caller only
+                await Clients.Caller.SendAsync("ReceivePrivateMessage", dto);
+            }
         }
+
+        return dto;
     }
 
-    public async Task JoinGroup(Guid groupId)
+    // Join group (groupName = groupId.ToString() on clients)
+    public Task JoinGroup(string groupName)
+        => Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+
+    public Task LeaveGroup(string groupName)
+        => Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+
+    // Load private history between current user and another user
+    public async Task<List<MessageDto>> GetPrivateHistory(string otherUserId, int limit = 50)
     {
-        var userId = Context.User!.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        await _chatService.EnsureGroupMemberAsync(groupId, userId);
-        await Groups.AddToGroupAsync(Context.ConnectionId, GroupName(groupId));
+        var currentUser = Context.UserIdentifier
+            ?? Context.GetHttpContext()?.Request.Headers["X-User-Id"].FirstOrDefault()
+            ?? "demo-user";
+
+        return await _chatService.GetPrivateHistoryAsync(currentUser, otherUserId, limit);
     }
 
-    public override async Task OnConnectedAsync()
+    // Load group history for a given group id
+    public async Task<List<MessageDto>> GetGroupHistory(Guid groupId, int limit = 100)
     {
-        var userId = Context.User!.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        Connections.AddOrUpdate(userId, 1, (_, count) => count + 1);
-        await Clients.All.SendAsync("UserPresenceChanged", new { userId, isOnline = true });
-        await base.OnConnectedAsync();
+        return await _chatService.GetGroupHistoryAsync(groupId, limit);
     }
 
-    public override async Task OnDisconnectedAsync(Exception? exception)
-    {
-        var userId = Context.User!.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var remaining = Connections.AddOrUpdate(userId, 0, (_, count) => Math.Max(0, count - 1));
-        if (remaining == 0)
-        {
-            Connections.TryRemove(userId, out _);
-            await Clients.All.SendAsync("UserPresenceChanged", new { userId, isOnline = false });
-        }
-        await base.OnDisconnectedAsync(exception);
-    }
-
-    private static string GroupName(Guid groupId) => $"group:{groupId}";
+    public override Task OnConnectedAsync() => base.OnConnectedAsync();
+    public override Task OnDisconnectedAsync(Exception? exception) => base.OnDisconnectedAsync(exception);
 }
